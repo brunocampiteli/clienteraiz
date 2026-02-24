@@ -149,6 +149,21 @@ export type Challenge = {
   active: boolean;
 };
 
+export type AdminRoute = {
+  id: string;
+  name: string;
+  description: string;
+  barIds: string[];
+  durationDays: number;
+  startDate: string;
+  prize: string;
+  bonusPoints: number;
+  difficulty: "fácil" | "médio" | "difícil";
+  active: boolean;
+  participantsCount: number;
+  completedCount: number;
+};
+
 export const challenges: Challenge[] = [
   {
     id: "ch_1",
@@ -210,6 +225,65 @@ export const users: User[] = [
     whatsapp: "+55 41 95555-4444",
     createdAt: "2026-01-12",
     status: "active",
+  },
+];
+
+export const adminRoutes: AdminRoute[] = [
+  {
+    id: "ar_1",
+    name: "Rota do Centro",
+    description: "Explore os melhores bares do centro em uma semana.",
+    barIds: ["bar_1", "bar_3", "bar_2"],
+    durationDays: 7,
+    startDate: "2026-02-17",
+    prize: "1 Balde Eisenbahn",
+    bonusPoints: 200,
+    difficulty: "fácil",
+    active: true,
+    participantsCount: 142,
+    completedCount: 38,
+  },
+  {
+    id: "ar_2",
+    name: "Happy Hour Raiz",
+    description: "A rota perfeita para sexta-feira. 4 bares, drinks e petiscos.",
+    barIds: ["bar_2", "bar_1", "bar_4", "bar_3"],
+    durationDays: 7,
+    startDate: "2026-02-20",
+    prize: "2 Baldes Eisenbahn + Camiseta",
+    bonusPoints: 350,
+    difficulty: "médio",
+    active: true,
+    participantsCount: 89,
+    completedCount: 12,
+  },
+  {
+    id: "ar_3",
+    name: "Maratona Raiz",
+    description: "Para os mais dedicados! 5 bares em um fim de semana.",
+    barIds: ["bar_1", "bar_2", "bar_4", "bar_3", "bar_1"],
+    durationDays: 14,
+    startDate: "2026-03-01",
+    prize: "Kit Raiz Premium + 3 Baldes",
+    bonusPoints: 500,
+    difficulty: "difícil",
+    active: false,
+    participantsCount: 0,
+    completedCount: 0,
+  },
+  {
+    id: "ar_4",
+    name: "Tour Cervejeiro",
+    description: "Visitou 3 bares com cervejas artesanais e completou a rota.",
+    barIds: ["bar_4", "bar_1", "bar_2"],
+    durationDays: 7,
+    startDate: "2026-02-10",
+    prize: "Caneca Exclusiva CR",
+    bonusPoints: 150,
+    difficulty: "fácil",
+    active: false,
+    participantsCount: 210,
+    completedCount: 87,
   },
 ];
 

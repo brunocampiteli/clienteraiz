@@ -31,6 +31,7 @@ const items: Item[] = [
   },
   { label: "Ranking", href: "/admin/ranking" },
   { label: "Notas enviadas", href: "/admin/receipts" },
+  { label: "Rotas", href: "/admin/routes" },
   { label: "Desafios", href: "/admin/challenges" },
   { label: "Prêmios", href: "/admin/prizes" },
   { label: "Consumo mínimo", href: "/admin/minimum-spend" },

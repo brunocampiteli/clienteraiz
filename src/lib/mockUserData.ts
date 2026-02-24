@@ -3,8 +3,17 @@ export type AppUser = {
   name: string;
   phone: string;
   city: string;
+  email: string;
   pointsTotal: number;
+  pointsThisMonth: number;
   level: string;
+  levelProgress: number; // 0-100
+  nextLevel: string;
+  nextLevelPoints: number;
+  barsVisited: number;
+  receiptsApproved: number;
+  memberSince: string;
+  avatarColor: string;
 };
 
 export type AppBar = {
@@ -18,6 +27,8 @@ export type AppBar = {
   distanceKm: number;
   openingHours: string;
   rules: string;
+  rating: number;
+  category: string;
   prizes: { id: string; name: string; points: number }[];
 };
 
@@ -27,21 +38,39 @@ export type PointsHistoryItem = {
   barId: string;
   barName: string;
   points: number;
+  status: "approved" | "pending" | "rejected";
 };
 
 export type RankingItem = {
   position: number;
   userName: string;
   points: number;
+  barsVisited: number;
   isCurrentUser?: boolean;
+  avatarColor: string;
 };
 
-export type AppRoute = {
+export type RouteBar = {
+  barId: string;
+  barName: string;
+  neighborhood: string;
+  visited: boolean;
+  points: number;
+};
+
+export type GameRoute = {
   id: string;
   name: string;
-  barsCount: number;
-  etaMinutes: number;
   description: string;
+  emoji: string;
+  difficulty: "fácil" | "médio" | "difícil";
+  bars: RouteBar[];
+  bonusPoints: number;
+  prize: string;
+  prizeEmoji: string;
+  deadline: string;
+  totalParticipants: number;
+  status: "active" | "completed" | "locked";
 };
 
 export type TreasureMission = {
@@ -50,15 +79,46 @@ export type TreasureMission = {
   description: string;
   progress: number;
   total: number;
+  reward: string;
+  emoji: string;
 };
+
+export type Achievement = {
+  id: string;
+  title: string;
+  description: string;
+  emoji: string;
+  unlocked: boolean;
+  date?: string;
+};
+
+/* ── Old types kept for compatibility ── */
+export type AppRoute = {
+  id: string;
+  name: string;
+  barsCount: number;
+  etaMinutes: number;
+  description: string;
+};
+
+/* ── Data ── */
 
 export const currentUser: AppUser = {
   id: "app_usr_1",
   name: "Ana Paula",
   phone: "+55 11 98888-7777",
   city: "São Paulo",
+  email: "ana.paula@email.com",
   pointsTotal: 1240,
+  pointsThisMonth: 340,
   level: "Raiz Bronze",
+  levelProgress: 62,
+  nextLevel: "Raiz Prata",
+  nextLevelPoints: 2000,
+  barsVisited: 8,
+  receiptsApproved: 12,
+  memberSince: "2025-11",
+  avatarColor: "#2D6A4F",
 };
 
 export const bars: AppBar[] = [
@@ -74,6 +134,8 @@ export const bars: AppBar[] = [
     distanceKm: 1.2,
     openingHours: "Seg–Dom • 12:00–23:00",
     rules: "Para pontuar, consumo mínimo de R$ 50 por nota.",
+    rating: 4.7,
+    category: "Boteco",
     prizes: [
       { id: "p1", name: "Camiseta Cliente Raiz", points: 900 },
       { id: "p2", name: "Vale Chopp", points: 450 },
@@ -91,6 +153,8 @@ export const bars: AppBar[] = [
     distanceKm: 4.8,
     openingHours: "Ter–Dom • 16:00–02:00",
     rules: "Para pontuar, consumo mínimo de R$ 40 por nota.",
+    rating: 4.5,
+    category: "Pub",
     prizes: [
       { id: "p3", name: "Caneca personalizada", points: 700 },
       { id: "p4", name: "Combo petiscos", points: 500 },
@@ -108,6 +172,8 @@ export const bars: AppBar[] = [
     distanceKm: 2.3,
     openingHours: "Qua–Dom • 17:00–01:00",
     rules: "Para pontuar, consumo mínimo de R$ 60 por nota.",
+    rating: 4.8,
+    category: "Choperia",
     prizes: [{ id: "p5", name: "Boné Cliente Raiz", points: 650 }],
   },
   {
@@ -122,16 +188,23 @@ export const bars: AppBar[] = [
     distanceKm: 6.1,
     openingHours: "Seg–Sex • 11:00–22:00",
     rules: "Para pontuar, consumo mínimo de R$ 35 por nota.",
+    rating: 4.3,
+    category: "Boteco",
     prizes: [{ id: "p6", name: "Vale sobremesa", points: 300 }],
   },
 ];
 
 export const pointsHistory: PointsHistoryItem[] = [
-  { id: "ph_1", date: "2026-01-23", barId: "app_bar_1", barName: "Bar do Centro", points: 120 },
-  { id: "ph_2", date: "2026-01-21", barId: "app_bar_2", barName: "Vila Pub", points: 80 },
-  { id: "ph_3", date: "2026-01-18", barId: "app_bar_1", barName: "Bar do Centro", points: 60 },
-  { id: "ph_4", date: "2026-01-15", barId: "app_bar_3", barName: "Chopp & Cia", points: 140 },
+  { id: "ph_1", date: "2026-02-22", barId: "app_bar_1", barName: "Bar do Centro", points: 120, status: "approved" },
+  { id: "ph_2", date: "2026-02-20", barId: "app_bar_2", barName: "Vila Pub", points: 80, status: "approved" },
+  { id: "ph_5", date: "2026-02-19", barId: "app_bar_3", barName: "Chopp & Cia", points: 60, status: "pending" },
+  { id: "ph_3", date: "2026-02-15", barId: "app_bar_1", barName: "Bar do Centro", points: 60, status: "approved" },
+  { id: "ph_4", date: "2026-02-10", barId: "app_bar_3", barName: "Chopp & Cia", points: 140, status: "approved" },
+  { id: "ph_6", date: "2026-01-28", barId: "app_bar_4", barName: "Boteco da Praça", points: 35, status: "approved" },
+  { id: "ph_7", date: "2026-01-20", barId: "app_bar_2", barName: "Vila Pub", points: 80, status: "rejected" },
 ];
+
+const avatarColors = ["#2D6A4F", "#C8962E", "#5C3D2E", "#3B7A57", "#8B6514", "#7A5240"];
 
 export const ranking: RankingItem[] = Array.from({ length: 20 }).map((_, i) => {
   const position = i + 1;
@@ -141,54 +214,143 @@ export const ranking: RankingItem[] = Array.from({ length: 20 }).map((_, i) => {
     position,
     userName: isCurrentUser ? currentUser.name : `Usuário ${position}`,
     points: 2500 - position * 70,
+    barsVisited: Math.max(1, 15 - position),
     isCurrentUser,
+    avatarColor: isCurrentUser ? currentUser.avatarColor : avatarColors[i % avatarColors.length],
   };
 });
 
-export const routes: AppRoute[] = [
+export const gameRoutes: GameRoute[] = [
   {
-    id: "route_1",
+    id: "gr_1",
     name: "Rota do Centro",
-    barsCount: 3,
-    etaMinutes: 180,
-    description: "Uma rota rápida com bares próximos e bons pontos para começar.",
+    description: "Explore os melhores bares do centro em uma noite. Visite todos e ganhe bônus!",
+    emoji: "🏙️",
+    difficulty: "fácil",
+    bars: [
+      { barId: "app_bar_1", barName: "Bar do Centro", neighborhood: "Centro", visited: true, points: 50 },
+      { barId: "app_bar_4", barName: "Boteco da Praça", neighborhood: "Botafogo", visited: true, points: 35 },
+      { barId: "app_bar_2", barName: "Vila Pub", neighborhood: "Cambuí", visited: false, points: 40 },
+    ],
+    bonusPoints: 200,
+    prize: "1 Balde Eisenbahn",
+    prizeEmoji: "🍺",
+    deadline: "2026-03-01",
+    totalParticipants: 142,
+    status: "active",
   },
   {
-    id: "route_2",
-    name: "Rota do Happy Hour",
-    barsCount: 4,
-    etaMinutes: 240,
-    description: "Perfeita para o final do dia, com paradas clássicas e prêmios fáceis.",
+    id: "gr_2",
+    name: "Happy Hour Raiz",
+    description: "A rota perfeita para sexta-feira. 4 bares, drinks, petiscos e muitos pontos.",
+    emoji: "🌆",
+    difficulty: "médio",
+    bars: [
+      { barId: "app_bar_2", barName: "Vila Pub", neighborhood: "Cambuí", visited: false, points: 40 },
+      { barId: "app_bar_1", barName: "Bar do Centro", neighborhood: "Centro", visited: false, points: 50 },
+      { barId: "app_bar_3", barName: "Chopp & Cia", neighborhood: "Batel", visited: false, points: 60 },
+      { barId: "app_bar_4", barName: "Boteco da Praça", neighborhood: "Botafogo", visited: false, points: 35 },
+    ],
+    bonusPoints: 350,
+    prize: "2 Baldes Eisenbahn + Camiseta",
+    prizeEmoji: "🏆",
+    deadline: "2026-03-15",
+    totalParticipants: 89,
+    status: "active",
   },
   {
-    id: "route_3",
-    name: "Rota Raiz",
-    barsCount: 5,
-    etaMinutes: 320,
-    description: "Para quem quer pontuar forte e explorar vários bares no mesmo rolê.",
+    id: "gr_3",
+    name: "Maratona Raiz",
+    description: "Para os mais dedicados! 5 bares em um fim de semana. Prêmio exclusivo para quem completar.",
+    emoji: "🔥",
+    difficulty: "difícil",
+    bars: [
+      { barId: "app_bar_1", barName: "Bar do Centro", neighborhood: "Centro", visited: false, points: 50 },
+      { barId: "app_bar_2", barName: "Vila Pub", neighborhood: "Cambuí", visited: false, points: 40 },
+      { barId: "app_bar_3", barName: "Chopp & Cia", neighborhood: "Batel", visited: false, points: 60 },
+      { barId: "app_bar_4", barName: "Boteco da Praça", neighborhood: "Botafogo", visited: false, points: 35 },
+      { barId: "app_bar_1", barName: "Bar do Centro", neighborhood: "Centro", visited: false, points: 50 },
+    ],
+    bonusPoints: 500,
+    prize: "Kit Raiz Premium + 3 Baldes",
+    prizeEmoji: "👑",
+    deadline: "2026-03-30",
+    totalParticipants: 34,
+    status: "locked",
+  },
+  {
+    id: "gr_4",
+    name: "Tour Cervejeiro",
+    description: "Visitou 3 bares com cervejas artesanais e completou a rota. Parabéns!",
+    emoji: "🍻",
+    difficulty: "fácil",
+    bars: [
+      { barId: "app_bar_3", barName: "Chopp & Cia", neighborhood: "Batel", visited: true, points: 60 },
+      { barId: "app_bar_1", barName: "Bar do Centro", neighborhood: "Centro", visited: true, points: 50 },
+      { barId: "app_bar_2", barName: "Vila Pub", neighborhood: "Cambuí", visited: true, points: 40 },
+    ],
+    bonusPoints: 150,
+    prize: "Caneca Exclusiva CR",
+    prizeEmoji: "🍺",
+    deadline: "2026-02-20",
+    totalParticipants: 210,
+    status: "completed",
   },
 ];
+
+/* Legacy alias */
+export const routes: AppRoute[] = gameRoutes.map((r) => ({
+  id: r.id,
+  name: r.name,
+  barsCount: r.bars.length,
+  etaMinutes: r.bars.length * 60,
+  description: r.description,
+}));
 
 export const treasureMissions: TreasureMission[] = [
   {
     id: "m1",
-    title: "Missão 1: Primeiro check-in",
+    title: "Primeiro check-in",
     description: "Visite 1 bar participante e registre uma nota.",
     progress: 1,
     total: 1,
+    reward: "+50 pontos bônus",
+    emoji: "📍",
   },
   {
     id: "m2",
-    title: "Missão 2: Trinca Raiz",
+    title: "Trinca Raiz",
     description: "Pontue em 3 bares diferentes.",
     progress: 2,
     total: 3,
+    reward: "+150 pontos bônus",
+    emoji: "🎯",
   },
   {
     id: "m3",
-    title: "Missão 3: Caçador de prêmios",
+    title: "Caçador de prêmios",
     description: "Resgate 1 prêmio.",
     progress: 0,
     total: 1,
+    reward: "Badge exclusivo",
+    emoji: "🏅",
   },
+  {
+    id: "m4",
+    title: "Maratonista",
+    description: "Complete 3 rotas em um mês.",
+    progress: 1,
+    total: 3,
+    reward: "+500 pontos bônus",
+    emoji: "🏃",
+  },
+];
+
+export const achievements: Achievement[] = [
+  { id: "a1", title: "Primeiro Bar", description: "Visitou seu primeiro bar", emoji: "🎉", unlocked: true, date: "2025-11-10" },
+  { id: "a2", title: "Nota Aprovada", description: "Primeira nota fiscal aprovada", emoji: "✅", unlocked: true, date: "2025-11-10" },
+  { id: "a3", title: "5 Bares", description: "Visitou 5 bares diferentes", emoji: "⭐", unlocked: true, date: "2025-12-15" },
+  { id: "a4", title: "Top 10", description: "Entrou no Top 10 do ranking", emoji: "🏆", unlocked: false },
+  { id: "a5", title: "Rota Completa", description: "Completou uma rota inteira", emoji: "🗺️", unlocked: true, date: "2026-02-20" },
+  { id: "a6", title: "Raiz de Verdade", description: "Acumulou 5000 pontos", emoji: "👑", unlocked: false },
 ];
