@@ -12,9 +12,9 @@ export default function AppRankingPage() {
         <Card>
           <div className="flex items-center justify-between">
             <div>
-              <div className="text-sm font-medium text-zinc-600">Sua posição</div>
-              <div className="mt-1 text-lg font-semibold text-zinc-900">#{current.position}</div>
-              <div className="mt-1 text-sm text-zinc-600">{current.points} pontos</div>
+              <div className="text-sm font-medium text-cr-brown-600">Sua posição</div>
+              <div className="mt-1 text-lg font-bold text-cr-brown-900 font-display">#{current.position}</div>
+              <div className="mt-1 text-sm text-cr-brown-600">{current.points} pontos</div>
             </div>
             <Badge variant="neutral">Destaque</Badge>
           </div>
@@ -23,8 +23,8 @@ export default function AppRankingPage() {
 
       <Card>
         <div className="mb-3">
-          <div className="text-sm font-semibold text-zinc-900">Ranking geral</div>
-          <div className="mt-1 text-xs text-zinc-500">Top 20 (mock)</div>
+          <div className="text-sm font-semibold text-cr-brown-900">Ranking geral</div>
+          <div className="mt-1 text-xs text-cr-brown-400">Top 20 (mock)</div>
         </div>
 
         <Table>
@@ -37,9 +37,9 @@ export default function AppRankingPage() {
           </THead>
           <TBody>
             {ranking.map((r) => (
-              <TR key={r.position} className={r.isCurrentUser ? "bg-zinc-50" : undefined}>
+              <TR key={r.position} className={r.isCurrentUser ? "bg-cr-cream-100" : undefined}>
                 <TD className="whitespace-nowrap">{r.position}</TD>
-                <TD className={r.isCurrentUser ? "font-semibold text-zinc-900" : undefined}>{r.userName}</TD>
+                <TD className={r.isCurrentUser ? "font-semibold text-cr-brown-900" : undefined}>{r.userName}</TD>
                 <TD className="whitespace-nowrap">{r.points}</TD>
               </TR>
             ))}

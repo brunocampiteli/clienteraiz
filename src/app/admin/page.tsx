@@ -43,8 +43,8 @@ export default function AdminHomePage() {
   return (
     <div className="space-y-6">
       <div>
-        <div className="text-2xl font-semibold tracking-tight text-zinc-900">Dashboard</div>
-        <div className="mt-1 text-sm text-zinc-600">Visão geral do sistema</div>
+        <div className="text-2xl font-bold tracking-tight text-cr-brown-900 font-display">Dashboard</div>
+        <div className="mt-1 text-sm text-cr-brown-600">Visão geral do sistema</div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -77,18 +77,18 @@ export default function AdminHomePage() {
       <div className="grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <div className="mb-4">
-            <div className="text-sm font-medium text-zinc-900">Notas enviadas por dia (7 dias)</div>
-            <div className="mt-1 text-xs text-zinc-500">Mock chart</div>
+            <div className="text-sm font-semibold text-cr-brown-900">Notas enviadas por dia (7 dias)</div>
+            <div className="mt-1 text-xs text-cr-brown-400">Mock chart</div>
           </div>
           <div className="flex h-52 items-end gap-2">
             {chartData.map((d) => (
               <div key={d.day} className="flex w-full flex-col items-center gap-2">
                 <div
-                  className="w-full rounded-md bg-zinc-900/90"
+                  className="w-full rounded-lg bg-gradient-to-t from-cr-green-800 to-cr-green-600"
                   style={{ height: `${Math.max(8, Math.round((d.value / max) * 100))}%` }}
                   title={`${d.day}: ${d.value}`}
                 />
-                <div className="text-xs text-zinc-600">{d.day}</div>
+                <div className="text-xs font-medium text-cr-brown-400">{d.day}</div>
               </div>
             ))}
           </div>
@@ -96,21 +96,21 @@ export default function AdminHomePage() {
 
         <Card>
           <div className="mb-4">
-            <div className="text-sm font-medium text-zinc-900">Resumo</div>
-            <div className="mt-1 text-xs text-zinc-500">Mock</div>
+            <div className="text-sm font-semibold text-cr-brown-900">Resumo</div>
+            <div className="mt-1 text-xs text-cr-brown-400">Mock</div>
           </div>
           <div className="space-y-3">
-            <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3">
-              <div className="text-xs text-zinc-500">Taxa de aprovação</div>
-              <div className="mt-1 text-xl font-semibold text-zinc-900">82%</div>
+            <div className="rounded-xl border border-cr-brown-100 bg-cr-cream-100 p-3">
+              <div className="text-xs text-cr-brown-400">Taxa de aprovação</div>
+              <div className="mt-1 text-xl font-bold text-cr-green-700 font-display">82%</div>
             </div>
-            <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3">
-              <div className="text-xs text-zinc-500">Tempo médio de análise</div>
-              <div className="mt-1 text-xl font-semibold text-zinc-900">1d 4h</div>
+            <div className="rounded-xl border border-cr-brown-100 bg-cr-cream-100 p-3">
+              <div className="text-xs text-cr-brown-400">Tempo médio de análise</div>
+              <div className="mt-1 text-xl font-bold text-cr-brown-900 font-display">1d 4h</div>
             </div>
-            <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3">
-              <div className="text-xs text-zinc-500">Bares ativos</div>
-              <div className="mt-1 text-xl font-semibold text-zinc-900">
+            <div className="rounded-xl border border-cr-brown-100 bg-cr-cream-100 p-3">
+              <div className="text-xs text-cr-brown-400">Bares ativos</div>
+              <div className="mt-1 text-xl font-bold text-cr-brown-900 font-display">
                 {bars.filter((b) => b.active).length}
               </div>
             </div>
@@ -122,22 +122,22 @@ export default function AdminHomePage() {
         <Card>
           <div className="mb-4 flex items-start justify-between gap-3">
             <div>
-              <div className="text-sm font-medium text-zinc-900">Ranking do mês (Top 3)</div>
-              <div className="mt-1 text-xs text-zinc-500">Reseta todo mês • premiados do mês</div>
+              <div className="text-sm font-semibold text-cr-brown-900">Ranking do mês (Top 3)</div>
+              <div className="mt-1 text-xs text-cr-brown-400">Reseta todo mês</div>
             </div>
-            <Link className="text-xs font-medium text-zinc-900 hover:underline" href="/admin/ranking">
+            <Link className="text-xs font-semibold text-cr-green-700 hover:underline" href="/admin/ranking">
               Ver tudo
             </Link>
           </div>
 
           <div className="space-y-2">
             {top3.map((r) => (
-              <div key={r.position} className="flex items-center justify-between rounded-lg border border-zinc-200 bg-zinc-50 p-3">
+              <div key={r.position} className="flex items-center justify-between rounded-xl border border-cr-brown-100 bg-cr-cream-100 p-3">
                 <div>
-                  <div className="text-sm font-medium text-zinc-900">{r.userName}</div>
-                  <div className="mt-1 text-xs text-zinc-500">{r.points} pts</div>
+                  <div className="text-sm font-semibold text-cr-brown-900">{r.userName}</div>
+                  <div className="mt-1 text-xs text-cr-brown-400">{r.points} pts</div>
                 </div>
-                <Badge variant={r.position === 1 ? "success" : r.position === 2 ? "neutral" : "warning"}>Top {r.position}</Badge>
+                <Badge variant={r.position === 1 ? "gold" : r.position === 2 ? "success" : "neutral"}>Top {r.position}</Badge>
               </div>
             ))}
           </div>
@@ -145,8 +145,8 @@ export default function AdminHomePage() {
 
         <Card className="lg:col-span-2">
           <div className="mb-4">
-            <div className="text-sm font-medium text-zinc-900">Últimas notas</div>
-            <div className="mt-1 text-xs text-zinc-500">Mock data</div>
+            <div className="text-sm font-semibold text-cr-brown-900">Últimas notas</div>
+            <div className="mt-1 text-xs text-cr-brown-400">Mock data</div>
           </div>
 
           <Table>
@@ -173,8 +173,6 @@ export default function AdminHomePage() {
           </Table>
         </Card>
       </div>
-
-      
     </div>
   );
 }

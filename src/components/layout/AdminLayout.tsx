@@ -12,7 +12,7 @@ export function AdminLayout({ children }: Props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   return (
-    <div className="min-h-screen bg-zinc-50">
+    <div className="min-h-screen bg-cr-cream-50">
       <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-72 lg:flex-col">
         <Sidebar />
       </div>
@@ -20,10 +20,10 @@ export function AdminLayout({ children }: Props) {
       {mobileOpen ? (
         <div className="lg:hidden">
           <div
-            className="fixed inset-0 z-40 bg-black/30"
+            className="fixed inset-0 z-40 bg-black/40"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="fixed inset-y-0 left-0 z-50 w-72 bg-white shadow-xl">
+          <div className="fixed inset-y-0 left-0 z-50 w-72 shadow-2xl">
             <Sidebar onNavigate={() => setMobileOpen(false)} />
           </div>
         </div>

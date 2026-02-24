@@ -37,8 +37,8 @@ export default function BarsListPage() {
     <div className="space-y-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <div className="text-2xl font-semibold tracking-tight text-zinc-900">Bares</div>
-          <div className="mt-1 text-sm text-zinc-600">Lista de bares cadastrados</div>
+          <div className="text-2xl font-bold tracking-tight text-cr-brown-900 font-display">Bares</div>
+          <div className="mt-1 text-sm text-cr-brown-600">Lista de bares cadastrados</div>
         </div>
         <Link href="/admin/bars/new">
           <Button>Novo</Button>
@@ -50,7 +50,7 @@ export default function BarsListPage() {
           <div className="w-full sm:max-w-sm">
             <Input placeholder="Buscar por fantasia, CNPJ, cidade, UF, bairro, CEP, endereço..." value={q} onChange={(e) => setQ(e.target.value)} />
           </div>
-          <div className="text-sm text-zinc-600">{filtered.length} resultado(s)</div>
+          <div className="text-sm text-cr-brown-600">{filtered.length} resultado(s)</div>
         </div>
 
         <Table>
@@ -68,7 +68,7 @@ export default function BarsListPage() {
           <TBody>
             {filtered.map((b) => (
               <TR key={b.id}>
-                <TD className="font-medium text-zinc-900">{b.name}</TD>
+                <TD className="font-medium text-cr-brown-900">{b.name}</TD>
                 <TD className="max-w-[320px] truncate" title={b.legalName}>
                   {b.legalName}
                 </TD>

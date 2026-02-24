@@ -57,55 +57,55 @@ export default function NewBarPage() {
   return (
     <div className="space-y-4">
       <div>
-        <div className="text-2xl font-semibold tracking-tight text-zinc-900">Cadastrar bar</div>
-        <div className="mt-1 text-sm text-zinc-600">Cadastro mock (sem API)</div>
+        <div className="text-2xl font-bold tracking-tight text-cr-brown-900 font-display">Cadastrar bar</div>
+        <div className="mt-1 text-sm text-cr-brown-600">Cadastro mock (sem API)</div>
       </div>
 
       <Card>
         <form className="space-y-4" onSubmit={onSubmit}>
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700">Nome fantasia</label>
+            <label className="mb-1 block text-sm font-medium text-cr-brown-600">Nome fantasia</label>
             <Input value={fantasyName} onChange={(e) => setFantasyName(e.target.value)} required />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700">Razão social</label>
+            <label className="mb-1 block text-sm font-medium text-cr-brown-600">Razão social</label>
             <Input value={legalName} onChange={(e) => setLegalName(e.target.value)} required />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700">CNPJ</label>
+            <label className="mb-1 block text-sm font-medium text-cr-brown-600">CNPJ</label>
             <Input value={cnpj} onChange={(e) => setCnpj(e.target.value)} required placeholder="00.000.000/0000-00" />
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-sm font-medium text-zinc-700">Cidade</label>
+              <label className="mb-1 block text-sm font-medium text-cr-brown-600">Cidade</label>
               <Input value={city} onChange={(e) => setCity(e.target.value)} required />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-zinc-700">UF</label>
+              <label className="mb-1 block text-sm font-medium text-cr-brown-600">UF</label>
               <Input value={state} onChange={(e) => setState(e.target.value)} required maxLength={2} />
             </div>
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700">Bairro</label>
+            <label className="mb-1 block text-sm font-medium text-cr-brown-600">Bairro</label>
             <Input value={neighborhood} onChange={(e) => setNeighborhood(e.target.value)} required />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700">Endereço</label>
+            <label className="mb-1 block text-sm font-medium text-cr-brown-600">Endereço</label>
             <Input value={address} onChange={(e) => setAddress(e.target.value)} required placeholder="Rua, número" />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700">CEP</label>
+            <label className="mb-1 block text-sm font-medium text-cr-brown-600">CEP</label>
             <Input value={cep} onChange={(e) => setCep(e.target.value)} required placeholder="00000-000" />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700">Consumo mínimo</label>
+            <label className="mb-1 block text-sm font-medium text-cr-brown-600">Consumo mínimo</label>
             <Input
               value={minimumSpend}
               onChange={(e) => setMinimumSpend(e.target.value)}

@@ -40,20 +40,20 @@ export function Header({ onOpenMobileMenu }: Props) {
   }
 
   return (
-    <header className="sticky top-0 z-30 border-b border-zinc-200 bg-white/80 backdrop-blur">
+    <header className="sticky top-0 z-30 border-b border-cr-brown-100 bg-white/90 backdrop-blur-md">
       <div className="flex items-center gap-3 px-4 py-3 sm:px-6 lg:px-8">
         <button
-          className="lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-md hover:bg-zinc-100"
+          className="lg:hidden inline-flex h-10 w-10 items-center justify-center rounded-lg hover:bg-cr-cream-200"
           onClick={onOpenMobileMenu}
           aria-label="Abrir menu"
           type="button"
         >
-          <IconMenu className="h-5 w-5 text-zinc-700" />
+          <IconMenu className="h-5 w-5 text-cr-brown-600" />
         </button>
 
         <div className="flex items-center gap-2">
-          <div className="text-sm font-semibold text-zinc-900">Cliente Raiz</div>
-          <div className="hidden sm:block text-xs text-zinc-500">Admin Dashboard</div>
+          <div className="text-sm font-bold text-cr-brown-900 font-display">Cliente Raiz</div>
+          <div className="hidden sm:block text-xs text-cr-brown-400">Admin Dashboard</div>
         </div>
 
         <div className="flex-1" />
@@ -63,35 +63,35 @@ export function Header({ onOpenMobileMenu }: Props) {
         </div>
 
         <button
-          className="inline-flex h-10 w-10 items-center justify-center rounded-md hover:bg-zinc-100"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-lg hover:bg-cr-cream-200"
           aria-label="Notificações"
           type="button"
         >
-          <IconBell className="h-5 w-5 text-zinc-700" />
+          <IconBell className="h-5 w-5 text-cr-brown-600" />
         </button>
 
         <div className="relative">
           <button
-            className="inline-flex items-center gap-2 rounded-md px-2 py-1.5 hover:bg-zinc-100"
+            className="inline-flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-cr-cream-200"
             onClick={() => setMenuOpen((v) => !v)}
             type="button"
           >
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-900 text-xs font-semibold text-white">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-cr-green-800 text-xs font-bold text-white">
               AD
             </div>
             <div className="hidden sm:block text-left">
-              <div className="text-sm font-medium text-zinc-900">Admin</div>
-              <div className="text-xs text-zinc-500">admin@cliente-raiz.com</div>
+              <div className="text-sm font-semibold text-cr-brown-900">Admin</div>
+              <div className="text-xs text-cr-brown-400">admin@cliente-raiz.com</div>
             </div>
           </button>
 
           {menuOpen ? (
             <div
-              className="absolute right-0 mt-2 w-56 rounded-xl border border-zinc-200 bg-white p-1 shadow-lg"
+              className="absolute right-0 mt-2 w-56 rounded-xl border border-cr-brown-100 bg-white p-1 shadow-lg"
               onMouseLeave={() => setMenuOpen(false)}
             >
               <button
-                className="w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-zinc-50"
+                className="w-full rounded-lg px-3 py-2 text-left text-sm text-cr-brown-700 hover:bg-cr-cream-100"
                 type="button"
                 onClick={() => {
                   setMenuOpen(false);

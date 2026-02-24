@@ -19,9 +19,9 @@ export default function AppPointsPage() {
   return (
     <div className="space-y-4">
       {receiptSent === "1" ? (
-        <Card className="border-emerald-200 bg-emerald-50">
-          <div className="text-sm font-semibold text-emerald-900">Nota enviada (pendente)</div>
-          <div className="mt-1 text-sm text-emerald-900/80">
+        <Card className="border-cr-green-200 bg-cr-green-50">
+          <div className="text-sm font-semibold text-cr-green-900">Nota enviada (pendente)</div>
+          <div className="mt-1 text-sm text-cr-green-800/80">
             Recebemos sua nota e ela entrou em <span className="font-semibold">análise</span>. Os pontos só serão
             confirmados após aprovação.
           </div>
@@ -29,12 +29,12 @@ export default function AppPointsPage() {
       ) : null}
 
       {bar ? (
-        <Card className="border-zinc-300 bg-zinc-50">
-          <div className="text-sm font-semibold text-zinc-900">Enviar nota fiscal</div>
-          <div className="mt-1 text-sm text-zinc-600">
+        <Card className="border-cr-brown-200 bg-cr-cream-100">
+          <div className="text-sm font-semibold text-cr-brown-900">Enviar nota fiscal</div>
+          <div className="mt-1 text-sm text-cr-brown-600">
             Você está enviando uma nota para: <span className="font-semibold">{bar.name}</span>
           </div>
-          <div className="mt-2 text-xs text-zinc-500">
+          <div className="mt-2 text-xs text-cr-brown-400">
             Ao enviar, a nota fica <span className="font-semibold">pendente</span> até aprovação. (mock)
           </div>
         </Card>
@@ -43,8 +43,8 @@ export default function AppPointsPage() {
       <Card>
         <div className="flex items-start justify-between">
           <div>
-            <div className="text-sm font-medium text-zinc-600">Total de pontos</div>
-            <div className="mt-2 text-3xl font-semibold tracking-tight text-zinc-900">
+            <div className="text-sm font-medium text-cr-brown-600">Total de pontos</div>
+            <div className="mt-2 text-3xl font-bold tracking-tight text-cr-brown-900 font-display">
               {currentUser.pointsTotal}
             </div>
           </div>
@@ -54,8 +54,8 @@ export default function AppPointsPage() {
 
       <Card>
         <div className="mb-3">
-          <div className="text-sm font-semibold text-zinc-900">Histórico</div>
-          <div className="mt-1 text-xs text-zinc-500">Mock</div>
+          <div className="text-sm font-semibold text-cr-brown-900">Histórico</div>
+          <div className="mt-1 text-xs text-cr-brown-400">Mock</div>
         </div>
 
         <Table>

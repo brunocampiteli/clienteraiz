@@ -21,19 +21,19 @@ export default function RankingPage() {
   return (
     <div className="space-y-4">
       <div>
-        <div className="text-2xl font-semibold tracking-tight text-zinc-900">Ranking</div>
-        <div className="mt-1 text-sm text-zinc-600">Ranking do mês (reseta todo mês) • premiados: Top 1, 2 e 3</div>
+        <div className="text-2xl font-bold tracking-tight text-cr-brown-900 font-display">Ranking</div>
+        <div className="mt-1 text-sm text-cr-brown-600">Ranking do mês (reseta todo mês) • premiados: Top 1, 2 e 3</div>
       </div>
 
       <Card>
         <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <div className="text-sm font-medium text-zinc-900">Período</div>
-            <div className="mt-1 text-xs text-zinc-500">Selecione o mês/ano para ver os ganhadores daquele mês</div>
+            <div className="text-sm font-semibold text-cr-brown-900">Período</div>
+            <div className="mt-1 text-xs text-cr-brown-400">Selecione o mês/ano para ver os ganhadores daquele mês</div>
           </div>
           <div className="w-full sm:max-w-[220px]">
             <select
-              className="h-10 w-full rounded-md border border-zinc-200 bg-white px-3 text-sm text-zinc-900"
+              className="h-10 w-full rounded-md border border-cr-brown-100 bg-white px-3 text-sm text-cr-brown-900"
               value={period}
               onChange={(e) => setPeriod(e.target.value)}
             >
@@ -52,9 +52,9 @@ export default function RankingPage() {
           <Card key={item.position}>
             <div className="flex items-start justify-between">
               <div>
-                <div className="text-sm font-medium text-zinc-900">{item.userName}</div>
-                <div className="mt-1 text-xs text-zinc-500">{item.points} pts</div>
-                <div className="mt-2 text-xs text-zinc-600">
+                <div className="text-sm font-semibold text-cr-brown-900">{item.userName}</div>
+                <div className="mt-1 text-xs text-cr-brown-400">{item.points} pts</div>
+                <div className="mt-2 text-xs text-cr-brown-600">
                   Prêmio: {item.position === 1 ? prizeTop1?.name ?? "—" : item.position === 2 ? prizeTop2?.name ?? "—" : prizeTop3?.name ?? "—"}
                 </div>
               </div>
@@ -68,21 +68,21 @@ export default function RankingPage() {
 
       <Card>
         <div className="mb-3">
-          <div className="text-sm font-medium text-zinc-900">Prêmios do mês</div>
-          <div className="mt-1 text-xs text-zinc-500">Vinculados ao Top 1/2/3 do período selecionado</div>
+          <div className="text-sm font-semibold text-cr-brown-900">Prêmios do mês</div>
+          <div className="mt-1 text-xs text-cr-brown-400">Vinculados ao Top 1/2/3 do período selecionado</div>
         </div>
         <div className="grid gap-3 sm:grid-cols-3">
-          <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3">
-            <div className="text-xs font-medium text-zinc-600">Top 1</div>
-            <div className="mt-1 text-sm font-semibold text-zinc-900">{prizeTop1?.name ?? "—"}</div>
+          <div className="rounded-lg border border-cr-brown-100 bg-cr-cream-100 p-3">
+            <div className="text-xs font-medium text-cr-brown-600">Top 1</div>
+            <div className="mt-1 text-sm font-semibold text-cr-brown-900">{prizeTop1?.name ?? "—"}</div>
           </div>
-          <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3">
-            <div className="text-xs font-medium text-zinc-600">Top 2</div>
-            <div className="mt-1 text-sm font-semibold text-zinc-900">{prizeTop2?.name ?? "—"}</div>
+          <div className="rounded-lg border border-cr-brown-100 bg-cr-cream-100 p-3">
+            <div className="text-xs font-medium text-cr-brown-600">Top 2</div>
+            <div className="mt-1 text-sm font-semibold text-cr-brown-900">{prizeTop2?.name ?? "—"}</div>
           </div>
-          <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3">
-            <div className="text-xs font-medium text-zinc-600">Top 3</div>
-            <div className="mt-1 text-sm font-semibold text-zinc-900">{prizeTop3?.name ?? "—"}</div>
+          <div className="rounded-lg border border-cr-brown-100 bg-cr-cream-100 p-3">
+            <div className="text-xs font-medium text-cr-brown-600">Top 3</div>
+            <div className="mt-1 text-sm font-semibold text-cr-brown-900">{prizeTop3?.name ?? "—"}</div>
           </div>
         </div>
       </Card>

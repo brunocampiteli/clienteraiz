@@ -113,42 +113,42 @@ export default function ChallengesPage() {
   return (
     <div className="space-y-4">
       <div>
-        <div className="text-2xl font-semibold tracking-tight text-zinc-900">Desafios</div>
-        <div className="mt-1 text-sm text-zinc-600">Cadastro de desafios semanais (mock)</div>
+        <div className="text-2xl font-bold tracking-tight text-cr-brown-900 font-display">Desafios</div>
+        <div className="mt-1 text-sm text-cr-brown-600">Cadastro de desafios semanais (mock)</div>
       </div>
 
       <Card>
         <form onSubmit={onSubmit} className="grid gap-3 lg:grid-cols-6">
           <div className="lg:col-span-2">
-            <div className="mb-1 text-xs font-medium text-zinc-600">Semana</div>
+            <div className="mb-1 text-xs font-medium text-cr-brown-600">Semana</div>
             <Input value={week} onChange={(e) => setWeek(e.target.value)} placeholder="Ex.: 2026-W04" />
           </div>
           <div className="lg:col-span-4">
-            <div className="mb-1 text-xs font-medium text-zinc-600">Título</div>
+            <div className="mb-1 text-xs font-medium text-cr-brown-600">Título</div>
             <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex.: Visite 3 bares diferentes essa semana" />
           </div>
 
           <div className="lg:col-span-6">
-            <div className="mb-1 text-xs font-medium text-zinc-600">Descrição</div>
+            <div className="mb-1 text-xs font-medium text-cr-brown-600">Descrição</div>
             <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Detalhes do desafio..." />
           </div>
 
           <div className="lg:col-span-2">
-            <div className="mb-1 text-xs font-medium text-zinc-600">Recompensa (independente do ranking)</div>
+            <div className="mb-1 text-xs font-medium text-cr-brown-600">Recompensa (independente do ranking)</div>
             <Input value={rewardName} onChange={(e) => setRewardName(e.target.value)} placeholder="Ex.: Vale petiscos" />
           </div>
 
           <div className="lg:col-span-2">
-            <div className="mb-1 text-xs font-medium text-zinc-600">Pontos para o ranking (opcional)</div>
+            <div className="mb-1 text-xs font-medium text-cr-brown-600">Pontos para o ranking (opcional)</div>
             <Input value={rankingPoints} onChange={(e) => setRankingPoints(e.target.value)} placeholder="0" inputMode="numeric" />
           </div>
 
           <div className="lg:col-span-2 flex items-end gap-3">
-            <label className="flex items-center gap-2 text-sm text-zinc-700">
+            <label className="flex items-center gap-2 text-sm text-cr-brown-600">
               <input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} />
               Ativo
             </label>
-            <label className="flex items-center gap-2 text-sm text-zinc-700">
+            <label className="flex items-center gap-2 text-sm text-cr-brown-600">
               <input
                 type="checkbox"
                 checked={appliesToAllBars}
@@ -159,13 +159,13 @@ export default function ChallengesPage() {
           </div>
 
           <div className="lg:col-span-6">
-            <div className="mb-2 text-xs font-medium text-zinc-600">Bares participantes</div>
-            <div className={"rounded-lg border border-zinc-200 p-3 " + (appliesToAllBars ? "opacity-50" : "")}
+            <div className="mb-2 text-xs font-medium text-cr-brown-600">Bares participantes</div>
+            <div className={"rounded-lg border border-cr-brown-100 p-3 " + (appliesToAllBars ? "opacity-50" : "")}
               aria-disabled={appliesToAllBars}
             >
               <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 {bars.map((b) => (
-                  <label key={b.id} className="flex items-center gap-2 text-sm text-zinc-700">
+                  <label key={b.id} className="flex items-center gap-2 text-sm text-cr-brown-600">
                     <input
                       type="checkbox"
                       disabled={appliesToAllBars}
@@ -191,12 +191,12 @@ export default function ChallengesPage() {
       <Card>
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <div className="text-sm font-medium text-zinc-900">Desafios cadastrados</div>
-            <div className="mt-1 text-xs text-zinc-500">Filtre por semana</div>
+            <div className="text-sm font-semibold text-cr-brown-900">Desafios cadastrados</div>
+            <div className="mt-1 text-xs text-cr-brown-400">Filtre por semana</div>
           </div>
           <div className="w-full sm:max-w-[220px]">
             <select
-              className="h-10 w-full rounded-md border border-zinc-200 bg-white px-3 text-sm text-zinc-900"
+              className="h-10 w-full rounded-md border border-cr-brown-100 bg-white px-3 text-sm text-cr-brown-900"
               value={weekFilter}
               onChange={(e) => setWeekFilter(e.target.value)}
             >
@@ -227,13 +227,13 @@ export default function ChallengesPage() {
               <TR key={c.id}>
                 <TD className="whitespace-nowrap">{c.week}</TD>
                 <TD>
-                  <div className="font-medium text-zinc-900">{c.title}</div>
-                  <div className="mt-1 text-xs text-zinc-600">{c.description || "—"}</div>
+                  <div className="font-medium text-cr-brown-900">{c.title}</div>
+                  <div className="mt-1 text-xs text-cr-brown-600">{c.description || "—"}</div>
                 </TD>
-                <TD className="text-sm text-zinc-600">
+                <TD className="text-sm text-cr-brown-600">
                   {c.appliesToAllBars ? "Todos" : barLabels(c.barIds) || "—"}
                 </TD>
-                <TD className="text-sm text-zinc-600">{c.rewardName || "—"}</TD>
+                <TD className="text-sm text-cr-brown-600">{c.rewardName || "—"}</TD>
                 <TD className="whitespace-nowrap">{c.rankingPoints}</TD>
                 <TD>
                   {c.active ? <Badge variant="success">Ativo</Badge> : <Badge variant="neutral">Inativo</Badge>}

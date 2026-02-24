@@ -17,14 +17,14 @@ export default function AppProfilePage() {
   return (
     <div className="space-y-4">
       <Card>
-        <div className="text-sm font-medium text-zinc-600">Nome</div>
-        <div className="mt-1 text-base font-semibold text-zinc-900">{currentUser.name}</div>
+        <div className="text-sm font-medium text-cr-brown-600">Nome</div>
+        <div className="mt-1 text-base font-bold text-cr-brown-900 font-display">{currentUser.name}</div>
 
-        <div className="mt-4 text-sm font-medium text-zinc-600">Telefone</div>
-        <div className="mt-1 text-base font-semibold text-zinc-900">{currentUser.phone}</div>
+        <div className="mt-4 text-sm font-medium text-cr-brown-600">Telefone</div>
+        <div className="mt-1 text-base font-bold text-cr-brown-900 font-display">{currentUser.phone}</div>
 
-        <div className="mt-4 text-sm font-medium text-zinc-600">Cidade</div>
-        <div className="mt-1 text-base font-semibold text-zinc-900">{currentUser.city}</div>
+        <div className="mt-4 text-sm font-medium text-cr-brown-600">Cidade</div>
+        <div className="mt-1 text-base font-bold text-cr-brown-900 font-display">{currentUser.city}</div>
       </Card>
 
       <Button className="w-full" variant="secondary" onClick={logout} type="button">

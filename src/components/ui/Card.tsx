@@ -6,7 +6,7 @@ export function Card({ className, ...props }: Props) {
   return (
     <div
       className={[
-        "rounded-xl border border-zinc-200 bg-white p-4 shadow-sm",
+        "rounded-2xl border border-cr-brown-100 bg-white p-5 shadow-sm",
         className,
       ]
         .filter(Boolean)
@@ -25,7 +25,7 @@ export function CardHeader({ className, ...props }: Props) {
 export function CardTitle({ className, ...props }: Props) {
   return (
     <div
-      className={["text-sm font-medium text-zinc-600", className]
+      className={["text-sm font-medium text-cr-brown-600", className]
         .filter(Boolean)
         .join(" ")}
       {...props}
@@ -36,7 +36,7 @@ export function CardTitle({ className, ...props }: Props) {
 export function CardValue({ className, ...props }: Props) {
   return (
     <div
-      className={["mt-1 text-2xl font-semibold tracking-tight text-zinc-900", className]
+      className={["mt-1 text-2xl font-bold tracking-tight text-cr-brown-900 font-display", className]
         .filter(Boolean)
         .join(" ")}
       {...props}

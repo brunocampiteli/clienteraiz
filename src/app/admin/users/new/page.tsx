@@ -27,26 +27,26 @@ export default function NewUserPage() {
   return (
     <div className="space-y-4">
       <div>
-        <div className="text-2xl font-semibold tracking-tight text-zinc-900">Cadastrar usuário</div>
-        <div className="mt-1 text-sm text-zinc-600">Cadastro mock (sem API)</div>
+        <div className="text-2xl font-bold tracking-tight text-cr-brown-900 font-display">Cadastrar usuário</div>
+        <div className="mt-1 text-sm text-cr-brown-600">Cadastro mock (sem API)</div>
       </div>
 
       <Card>
         <form className="space-y-4" onSubmit={onSubmit}>
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700">Nome</label>
+            <label className="mb-1 block text-sm font-medium text-cr-brown-600">Nome</label>
             <Input value={name} onChange={(e) => setName(e.target.value)} required />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700">CPF</label>
+            <label className="mb-1 block text-sm font-medium text-cr-brown-600">CPF</label>
             <Input value={cpf} onChange={(e) => setCpf(e.target.value)} required placeholder="000.000.000-00" />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700">E-mail</label>
+            <label className="mb-1 block text-sm font-medium text-cr-brown-600">E-mail</label>
             <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700">WhatsApp</label>
+            <label className="mb-1 block text-sm font-medium text-cr-brown-600">WhatsApp</label>
             <Input value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} required placeholder="+55 11 9XXXX-XXXX" />
           </div>
 

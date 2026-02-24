@@ -41,8 +41,8 @@ export default function AppBarDetailPage() {
     return (
       <div className="space-y-4">
         <Card>
-          <div className="text-sm font-semibold text-zinc-900">Bar não encontrado</div>
-          <div className="mt-1 text-sm text-zinc-600">Esse bar não existe ou foi removido (mock).</div>
+          <div className="text-sm font-semibold text-cr-brown-900">Bar não encontrado</div>
+          <div className="mt-1 text-sm text-cr-brown-600">Esse bar não existe ou foi removido (mock).</div>
         </Card>
         <Link href="/app/bars">
           <Button variant="secondary" className="w-full">
@@ -79,8 +79,8 @@ export default function AppBarDetailPage() {
 
   return (
     <div className="space-y-4">
-      <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white">
-        <div className="h-40 w-full bg-zinc-100">
+      <div className="overflow-hidden rounded-2xl border border-cr-brown-100 bg-white">
+        <div className="h-40 w-full bg-cr-cream-200">
           <Image
             src={bar.imageUrl}
             alt={bar.name}
@@ -95,33 +95,33 @@ export default function AppBarDetailPage() {
       <Card>
         <div className="flex items-start justify-between gap-3">
           <div>
-            <div className="text-lg font-semibold text-zinc-900">{bar.name}</div>
-            <div className="mt-1 text-sm text-zinc-600">
+            <div className="text-lg font-bold text-cr-brown-900 font-display">{bar.name}</div>
+            <div className="mt-1 text-sm text-cr-brown-600">
               {bar.neighborhood} • {bar.city}
             </div>
-            <div className="mt-2 text-sm text-zinc-600">{bar.address}</div>
+            <div className="mt-2 text-sm text-cr-brown-600">{bar.address}</div>
           </div>
           <Badge variant="neutral">{bar.distanceKm.toFixed(1)} km</Badge>
         </div>
       </Card>
 
       <Card>
-        <div className="text-sm font-semibold text-zinc-900">Regras</div>
-        <div className="mt-2 text-sm text-zinc-700">{bar.rules}</div>
-        <div className="mt-3 text-sm text-zinc-700">
+        <div className="text-sm font-semibold text-cr-brown-900">Regras</div>
+        <div className="mt-2 text-sm text-cr-brown-600">{bar.rules}</div>
+        <div className="mt-3 text-sm text-cr-brown-600">
           Consumo mínimo para pontuar: <span className="font-semibold">{formatCurrency(bar.minimumSpend)}</span>
         </div>
       </Card>
 
       <Card>
-        <div className="text-sm font-semibold text-zinc-900">Horário</div>
-        <div className="mt-2 text-sm text-zinc-700">{bar.openingHours}</div>
+        <div className="text-sm font-semibold text-cr-brown-900">Horário</div>
+        <div className="mt-2 text-sm text-cr-brown-600">{bar.openingHours}</div>
       </Card>
 
       <Card>
-        <div className="text-sm font-semibold text-zinc-900">Mapa</div>
-        <div className="mt-2 text-sm text-zinc-600">{barSafe.address}</div>
-        <div className="mt-3 overflow-hidden rounded-xl border border-zinc-200 bg-zinc-50">
+        <div className="text-sm font-semibold text-cr-brown-900">Mapa</div>
+        <div className="mt-2 text-sm text-cr-brown-600">{barSafe.address}</div>
+        <div className="mt-3 overflow-hidden rounded-xl border border-cr-brown-100 bg-cr-cream-100">
           <iframe
             title={`Mapa - ${barSafe.name}`}
             src={`https://www.google.com/maps?q=${mapsQuery}&output=embed`}
@@ -157,11 +157,11 @@ export default function AppBarDetailPage() {
               setOpen(false);
             }}
           />
-          <div className="absolute bottom-0 left-0 right-0 rounded-t-2xl border border-zinc-200 bg-white p-4 shadow-xl">
+          <div className="absolute bottom-0 left-0 right-0 rounded-t-2xl border border-cr-brown-100 bg-white p-4 shadow-xl">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <div className="text-base font-semibold text-zinc-900">Enviar nota fiscal</div>
-                <div className="mt-1 text-sm text-zinc-600">
+                <div className="text-base font-bold text-cr-brown-900 font-display">Enviar nota fiscal</div>
+                <div className="mt-1 text-sm text-cr-brown-600">
                   {bar.name} • {bar.neighborhood} • {bar.city}
                 </div>
               </div>
@@ -179,27 +179,27 @@ export default function AppBarDetailPage() {
 
             <div className="mt-4 space-y-3">
               <div>
-                <label className="mb-1 block text-sm font-medium text-zinc-700">Foto da nota</label>
+                <label className="mb-1 block text-sm font-medium text-cr-brown-600">Foto da nota</label>
                 <input
                   type="file"
                   accept="image/*"
                   capture="environment"
-                  className="block w-full rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm"
+                  className="block w-full rounded-md border border-cr-brown-100 bg-white px-3 py-2 text-sm"
                   onChange={(e) => {
                     const next = e.target.files?.[0] ?? null;
                     setFile(next);
                   }}
                   disabled={submitting}
                 />
-                <div className="mt-1 text-xs text-zinc-500">
+                <div className="mt-1 text-xs text-cr-brown-400">
                   No celular, isso normalmente abre a câmera. (mock)
                 </div>
               </div>
 
               {previewUrl ? (
-                <div className="overflow-hidden rounded-xl border border-zinc-200 bg-zinc-50">
-                  <div className="px-3 py-2 text-xs font-medium text-zinc-600">Preview</div>
-                  <div className="h-48 w-full bg-zinc-100">
+                <div className="overflow-hidden rounded-xl border border-cr-brown-100 bg-cr-cream-100">
+                  <div className="px-3 py-2 text-xs font-medium text-cr-brown-600">Preview</div>
+                  <div className="h-48 w-full bg-cr-cream-200">
                     <Image
                       src={previewUrl}
                       alt="Preview da nota"

@@ -29,8 +29,8 @@ export default function UsersListPage() {
     <div className="space-y-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <div className="text-2xl font-semibold tracking-tight text-zinc-900">Usuários</div>
-          <div className="mt-1 text-sm text-zinc-600">Lista de usuários cadastrados</div>
+          <div className="text-2xl font-bold tracking-tight text-cr-brown-900 font-display">Usuários</div>
+          <div className="mt-1 text-sm text-cr-brown-600">Lista de usuários cadastrados</div>
         </div>
         <Link href="/admin/users/new">
           <Button>Novo</Button>
@@ -42,7 +42,7 @@ export default function UsersListPage() {
           <div className="w-full sm:max-w-sm">
             <Input placeholder="Buscar por nome, CPF, e-mail ou WhatsApp..." value={q} onChange={(e) => setQ(e.target.value)} />
           </div>
-          <div className="text-sm text-zinc-600">{filtered.length} resultado(s)</div>
+          <div className="text-sm text-cr-brown-600">{filtered.length} resultado(s)</div>
         </div>
 
         <Table>
@@ -59,7 +59,7 @@ export default function UsersListPage() {
           <TBody>
             {filtered.map((u) => (
               <TR key={u.id}>
-                <TD className="font-medium text-zinc-900">{u.name}</TD>
+                <TD className="font-medium text-cr-brown-900">{u.name}</TD>
                 <TD className="whitespace-nowrap">{u.cpf}</TD>
                 <TD>{u.email}</TD>
                 <TD className="whitespace-nowrap">{u.whatsapp}</TD>

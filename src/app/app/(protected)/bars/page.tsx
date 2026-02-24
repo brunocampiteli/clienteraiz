@@ -40,7 +40,7 @@ export default function AppBarsPage() {
     <div className="space-y-4">
       <div>
         <Input placeholder="Buscar por nome ou cidade..." value={q} onChange={(e) => setQ(e.target.value)} />
-        <div className="mt-2 text-xs text-zinc-500">{filtered.length} resultado(s)</div>
+        <div className="mt-2 text-xs text-cr-brown-400">{filtered.length} resultado(s)</div>
       </div>
 
       <div className="space-y-3">
@@ -49,7 +49,7 @@ export default function AppBarsPage() {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <div className="mb-2">
-                  <div className="h-16 w-16 overflow-hidden rounded-lg border border-zinc-200 bg-zinc-100">
+                  <div className="h-16 w-16 overflow-hidden rounded-lg border border-cr-brown-100 bg-cr-cream-200">
                     <Image
                       src={b.imageUrl}
                       alt={b.name}
@@ -61,19 +61,19 @@ export default function AppBarsPage() {
                   </div>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <div className="text-sm font-semibold text-zinc-900">{b.name}</div>
+                  <div className="text-sm font-semibold text-cr-brown-900">{b.name}</div>
                   {visitedBarIds.has(b.id) ? <Badge variant="success">Já visitou este mês</Badge> : null}
                 </div>
-                <div className="mt-1 text-xs text-zinc-500">
+                <div className="mt-1 text-xs text-cr-brown-400">
                   {b.neighborhood} • {b.city}
                 </div>
-                <div className="mt-2 text-xs text-zinc-500">Consumo mínimo</div>
-                <div className="text-sm font-semibold text-zinc-900">{formatCurrency(b.minimumSpend)}</div>
+                <div className="mt-2 text-xs text-cr-brown-400">Consumo mínimo</div>
+                <div className="text-sm font-semibold text-cr-brown-900">{formatCurrency(b.minimumSpend)}</div>
               </div>
 
               <div className="text-right">
-                <div className="text-xs text-zinc-500">Distância</div>
-                <div className="text-sm font-semibold text-zinc-900">{b.distanceKm.toFixed(1)} km</div>
+                <div className="text-xs text-cr-brown-400">Distância</div>
+                <div className="text-sm font-semibold text-cr-brown-900">{b.distanceKm.toFixed(1)} km</div>
                 <div className="mt-3">
                   <Link href={`/app/bars/${b.id}`}>
                     <Button>Ver detalhes</Button>

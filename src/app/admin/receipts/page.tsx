@@ -87,15 +87,15 @@ export default function ReceiptsPage() {
   return (
     <div className="space-y-4">
       <div>
-        <div className="text-2xl font-semibold tracking-tight text-zinc-900">Notas enviadas</div>
-        <div className="mt-1 text-sm text-zinc-600">Fila de validação (QR) e auditoria</div>
+        <div className="text-2xl font-bold tracking-tight text-cr-brown-900 font-display">Notas enviadas</div>
+        <div className="mt-1 text-sm text-cr-brown-600">Fila de validação (QR) e auditoria</div>
       </div>
 
       <Card>
         <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
           <div className="grid w-full gap-3 sm:grid-cols-2 lg:grid-cols-3">
             <div className="w-full">
-              <div className="mb-1 text-xs font-medium text-zinc-600">Busca</div>
+              <div className="mb-1 text-xs font-medium text-cr-brown-600">Busca</div>
               <Input
                 placeholder="Usuário, bar, status ou chave..."
                 value={q}
@@ -103,9 +103,9 @@ export default function ReceiptsPage() {
               />
             </div>
             <div className="w-full">
-              <div className="mb-1 text-xs font-medium text-zinc-600">Status</div>
+              <div className="mb-1 text-xs font-medium text-cr-brown-600">Status</div>
               <select
-                className="h-10 w-full rounded-md border border-zinc-200 bg-white px-3 text-sm text-zinc-900"
+                className="h-10 w-full rounded-md border border-cr-brown-100 bg-white px-3 text-sm text-cr-brown-900"
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
               >
@@ -118,9 +118,9 @@ export default function ReceiptsPage() {
               </select>
             </div>
             <div className="w-full">
-              <div className="mb-1 text-xs font-medium text-zinc-600">Motivo</div>
+              <div className="mb-1 text-xs font-medium text-cr-brown-600">Motivo</div>
               <select
-                className="h-10 w-full rounded-md border border-zinc-200 bg-white px-3 text-sm text-zinc-900"
+                className="h-10 w-full rounded-md border border-cr-brown-100 bg-white px-3 text-sm text-cr-brown-900"
                 value={reasonFilter}
                 onChange={(e) => setReasonFilter(e.target.value)}
               >
@@ -135,7 +135,7 @@ export default function ReceiptsPage() {
           </div>
 
           <div className="flex items-center justify-between gap-3">
-            <div className="text-sm text-zinc-600">{filtered.length} resultado(s)</div>
+            <div className="text-sm text-cr-brown-600">{filtered.length} resultado(s)</div>
             <Button
               variant="secondary"
               type="button"
@@ -175,7 +175,7 @@ export default function ReceiptsPage() {
                 <TD>{r.barName}</TD>
                 <TD className="whitespace-nowrap">{formatCurrency(r.amount)}</TD>
                 <TD>{statusBadge(r.status)}</TD>
-                <TD className="whitespace-nowrap text-sm text-zinc-600">{reasonLabel(r.reason)}</TD>
+                <TD className="whitespace-nowrap text-sm text-cr-brown-600">{reasonLabel(r.reason)}</TD>
               </TR>
             ))}
           </TBody>
@@ -191,11 +191,11 @@ export default function ReceiptsPage() {
             if (e.target === e.currentTarget) setSelectedId(null);
           }}
         >
-          <div className="w-full max-w-3xl rounded-xl border border-zinc-200 bg-white shadow-xl">
-            <div className="flex items-start justify-between gap-3 border-b border-zinc-200 p-4">
+          <div className="w-full max-w-3xl rounded-xl border border-cr-brown-100 bg-white shadow-xl">
+            <div className="flex items-start justify-between gap-3 border-b border-cr-brown-100 p-4">
               <div>
-                <div className="text-lg font-semibold text-zinc-900">Detalhe da nota</div>
-                <div className="mt-1 text-sm text-zinc-600">
+                <div className="text-lg font-semibold text-cr-brown-900">Detalhe da nota</div>
+                <div className="mt-1 text-sm text-cr-brown-600">
                   {selected.userName} • {selected.barName} • {selected.date}
                 </div>
               </div>
@@ -206,43 +206,43 @@ export default function ReceiptsPage() {
 
             <div className="grid gap-4 p-4 lg:grid-cols-2">
               <div className="space-y-3">
-                <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3">
-                  <div className="text-xs font-medium text-zinc-600">Status</div>
+                <div className="rounded-lg border border-cr-brown-100 bg-cr-cream-100 p-3">
+                  <div className="text-xs font-medium text-cr-brown-600">Status</div>
                   <div className="mt-1">{statusBadge(selected.status)}</div>
-                  <div className="mt-2 text-xs text-zinc-600">Motivo: {reasonLabel(selected.reason)}</div>
+                  <div className="mt-2 text-xs text-cr-brown-600">Motivo: {reasonLabel(selected.reason)}</div>
                 </div>
 
-                <div className="rounded-lg border border-zinc-200 p-3">
-                  <div className="text-xs font-medium text-zinc-600">Chave (access key)</div>
-                  <div className="mt-1 break-all font-mono text-xs text-zinc-900">{selected.accessKey ?? "—"}</div>
+                <div className="rounded-lg border border-cr-brown-100 p-3">
+                  <div className="text-xs font-medium text-cr-brown-600">Chave (access key)</div>
+                  <div className="mt-1 break-all font-mono text-xs text-cr-brown-900">{selected.accessKey ?? "—"}</div>
                 </div>
 
-                <div className="rounded-lg border border-zinc-200 p-3">
+                <div className="rounded-lg border border-cr-brown-100 p-3">
                   <div className="grid gap-3 sm:grid-cols-2">
                     <div>
-                      <div className="text-xs font-medium text-zinc-600">CNPJ do bar</div>
-                      <div className="mt-1 font-mono text-xs text-zinc-900">{selected.barCnpj ?? "—"}</div>
+                      <div className="text-xs font-medium text-cr-brown-600">CNPJ do bar</div>
+                      <div className="mt-1 font-mono text-xs text-cr-brown-900">{selected.barCnpj ?? "—"}</div>
                     </div>
                     <div>
-                      <div className="text-xs font-medium text-zinc-600">CNPJ emitente</div>
-                      <div className="mt-1 font-mono text-xs text-zinc-900">{selected.issuerCnpj ?? "—"}</div>
+                      <div className="text-xs font-medium text-cr-brown-600">CNPJ emitente</div>
+                      <div className="mt-1 font-mono text-xs text-cr-brown-900">{selected.issuerCnpj ?? "—"}</div>
                     </div>
                   </div>
                   {selected.barCnpj && selected.issuerCnpj ? (
-                    <div className="mt-2 text-xs text-zinc-600">
+                    <div className="mt-2 text-xs text-cr-brown-600">
                       Confere: {normalizeDigits(selected.barCnpj) === normalizeDigits(selected.issuerCnpj) ? "Sim" : "Não"}
                     </div>
                   ) : null}
                 </div>
 
-                <div className="rounded-lg border border-zinc-200 p-3">
-                  <div className="text-xs font-medium text-zinc-600">Valor</div>
-                  <div className="mt-1 text-sm font-semibold text-zinc-900">{formatCurrency(selected.amount)}</div>
-                  <div className="mt-2 text-xs text-zinc-600">Ação manual (mock): usar apenas em exceções</div>
+                <div className="rounded-lg border border-cr-brown-100 p-3">
+                  <div className="text-xs font-medium text-cr-brown-600">Valor</div>
+                  <div className="mt-1 text-sm font-semibold text-cr-brown-900">{formatCurrency(selected.amount)}</div>
+                  <div className="mt-2 text-xs text-cr-brown-600">Ação manual (mock): usar apenas em exceções</div>
                   <div className="mt-3">
-                    <div className="mb-1 text-xs font-medium text-zinc-600">Motivo (ao rejeitar)</div>
+                    <div className="mb-1 text-xs font-medium text-cr-brown-600">Motivo (ao rejeitar)</div>
                     <select
-                      className="h-10 w-full rounded-md border border-zinc-200 bg-white px-3 text-sm text-zinc-900"
+                      className="h-10 w-full rounded-md border border-cr-brown-100 bg-white px-3 text-sm text-cr-brown-900"
                       value={manualRejectReason}
                       onChange={(e) => setManualRejectReason(e.target.value as Receipt["reason"])}
                     >
@@ -318,8 +318,8 @@ export default function ReceiptsPage() {
               </div>
 
               <div className="space-y-3">
-                <div className="text-xs font-medium text-zinc-600">Imagem (evidência)</div>
-                <div className="overflow-hidden rounded-lg border border-zinc-200 bg-zinc-50">
+                <div className="text-xs font-medium text-cr-brown-600">Imagem (evidência)</div>
+                <div className="overflow-hidden rounded-lg border border-cr-brown-100 bg-cr-cream-100">
                   {selected.imageUrl ? (
                     <div className="relative aspect-[4/3] w-full">
                       <Image
@@ -331,10 +331,10 @@ export default function ReceiptsPage() {
                       />
                     </div>
                   ) : (
-                    <div className="flex aspect-[4/3] items-center justify-center text-sm text-zinc-600">Sem imagem</div>
+                    <div className="flex aspect-[4/3] items-center justify-center text-sm text-cr-brown-600">Sem imagem</div>
                   )}
                 </div>
-                <div className="text-xs text-zinc-600">
+                <div className="text-xs text-cr-brown-600">
                   A imagem só carrega ao abrir o detalhe (não pesa a listagem).
                 </div>
               </div>

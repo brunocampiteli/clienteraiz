@@ -43,20 +43,20 @@ export function AppHeader() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-zinc-200 bg-white/80 backdrop-blur">
+    <header className="sticky top-0 z-30 border-b border-cr-brown-100 bg-white/90 backdrop-blur-md">
       <div className="flex items-center justify-between px-4 py-3">
-        <div className="text-base font-semibold text-zinc-900">{title}</div>
+        <div className="text-base font-bold text-cr-brown-900 font-display">{title}</div>
         <div className="relative">
           <button
-            className="inline-flex h-10 w-10 items-center justify-center rounded-md hover:bg-zinc-100"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-lg hover:bg-cr-cream-200"
             aria-label="Notificações"
             type="button"
             onClick={() => setOpen(true)}
           >
-            <IconBell className="h-5 w-5 text-zinc-700" />
+            <IconBell className="h-5 w-5 text-cr-brown-600" />
           </button>
           {unread > 0 ? (
-            <div className="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-zinc-900 px-1 text-[11px] font-semibold text-white">
+            <div className="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-cr-gold-600 px-1 text-[11px] font-bold text-white">
               {unread > 99 ? "99+" : unread}
             </div>
           ) : null}

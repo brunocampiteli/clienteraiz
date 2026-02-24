@@ -64,8 +64,8 @@ export function NotificationsPanel({ open, onClose }: { open: boolean; onClose: 
         <div className="flex max-h-[80vh] flex-col">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <div className="text-lg font-semibold text-zinc-900">Notificações</div>
-              <div className="mt-1 text-sm text-zinc-600">Atualizações do sistema</div>
+              <div className="text-lg font-bold text-cr-brown-900 font-display">Notificações</div>
+              <div className="mt-1 text-sm text-cr-brown-600">Atualizações do sistema</div>
             </div>
             <Button type="button" variant="ghost" onClick={onClose}>
               Fechar
@@ -83,15 +83,15 @@ export function NotificationsPanel({ open, onClose }: { open: boolean; onClose: 
 
           <div className="mt-4 flex-1 space-y-2 overflow-auto">
             {items.length === 0 ? (
-              <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-3 text-sm text-zinc-600">Sem notificações</div>
+              <div className="rounded-lg border border-cr-brown-100 bg-cr-cream-100 p-3 text-sm text-cr-brown-600">Sem notificações</div>
             ) : (
               items.map((n) => (
                 <button
                   key={n.id}
                   type="button"
                   className={[
-                    "w-full rounded-lg border border-zinc-200 p-3 text-left transition-colors",
-                    n.readAt ? "bg-white" : "bg-zinc-50",
+                    "w-full rounded-lg border border-cr-brown-100 p-3 text-left transition-colors",
+                    n.readAt ? "bg-white" : "bg-cr-cream-100",
                   ].join(" ")}
                   onClick={() => {
                     markNotificationRead(n.id);
@@ -103,11 +103,11 @@ export function NotificationsPanel({ open, onClose }: { open: boolean; onClose: 
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <div className="text-sm font-medium text-zinc-900">{n.title}</div>
-                      {n.body ? <div className="mt-1 text-xs text-zinc-600">{n.body}</div> : null}
-                      <div className="mt-2 text-xs text-zinc-500">{formatDate(n.createdAt)}</div>
+                      <div className="text-sm font-semibold text-cr-brown-900">{n.title}</div>
+                      {n.body ? <div className="mt-1 text-xs text-cr-brown-600">{n.body}</div> : null}
+                      <div className="mt-2 text-xs text-cr-brown-400">{formatDate(n.createdAt)}</div>
                     </div>
-                    <div className="text-xs text-zinc-500">{n.readAt ? "Lida" : "Nova"}</div>
+                    <div className="text-xs text-cr-brown-400">{n.readAt ? "Lida" : "Nova"}</div>
                   </div>
                 </button>
               ))

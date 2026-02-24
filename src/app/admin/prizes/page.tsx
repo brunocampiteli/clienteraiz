@@ -76,16 +76,16 @@ export default function PrizesPage() {
   return (
     <div className="space-y-4">
       <div>
-        <div className="text-2xl font-semibold tracking-tight text-zinc-900">Prêmios</div>
-        <div className="mt-1 text-sm text-zinc-600">Cadastro e catálogo (mock)</div>
+        <div className="text-2xl font-bold tracking-tight text-cr-brown-900 font-display">Prêmios</div>
+        <div className="mt-1 text-sm text-cr-brown-600">Cadastro e catálogo (mock)</div>
       </div>
 
       <Card>
         <form onSubmit={onSubmit} className="grid gap-3 lg:grid-cols-4">
           <div>
-            <div className="mb-1 text-xs font-medium text-zinc-600">Mês/ano</div>
+            <div className="mb-1 text-xs font-medium text-cr-brown-600">Mês/ano</div>
             <select
-              className="h-10 w-full rounded-md border border-zinc-200 bg-white px-3 text-sm text-zinc-900"
+              className="h-10 w-full rounded-md border border-cr-brown-100 bg-white px-3 text-sm text-cr-brown-900"
               value={period}
               onChange={(e) => setPeriod(e.target.value)}
             >
@@ -97,13 +97,13 @@ export default function PrizesPage() {
             </select>
           </div>
           <div className="lg:col-span-2">
-            <div className="mb-1 text-xs font-medium text-zinc-600">Nome do prêmio</div>
+            <div className="mb-1 text-xs font-medium text-cr-brown-600">Nome do prêmio</div>
             <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex.: Vale chopp" />
           </div>
           <div>
-            <div className="mb-1 text-xs font-medium text-zinc-600">Top (opcional)</div>
+            <div className="mb-1 text-xs font-medium text-cr-brown-600">Top (opcional)</div>
             <select
-              className="h-10 w-full rounded-md border border-zinc-200 bg-white px-3 text-sm text-zinc-900"
+              className="h-10 w-full rounded-md border border-cr-brown-100 bg-white px-3 text-sm text-cr-brown-900"
               value={topRank}
               onChange={(e) => setTopRank(e.target.value)}
             >
@@ -142,14 +142,14 @@ export default function PrizesPage() {
           <TBody>
             {filtered.map((p) => (
               <TR key={p.id}>
-                <TD className="font-medium text-zinc-900">{p.name}</TD>
+                <TD className="font-medium text-cr-brown-900">{p.name}</TD>
                 <TD>
                   {p.topRank ? (
                     <Badge variant={p.topRank === 1 ? "success" : p.topRank === 2 ? "neutral" : "warning"}>
                       Top {p.topRank}
                     </Badge>
                   ) : (
-                    <span className="text-sm text-zinc-500">—</span>
+                    <span className="text-sm text-cr-brown-400">—</span>
                   )}
                 </TD>
                 <TD>
