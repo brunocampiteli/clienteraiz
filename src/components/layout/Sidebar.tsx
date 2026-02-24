@@ -36,6 +36,7 @@ const items: Item[] = [
   { label: "Prêmios", href: "/admin/prizes" },
   { label: "Consumo mínimo", href: "/admin/minimum-spend" },
   { label: "Redes sociais", href: "/admin/social" },
+  { label: "Notificações push", href: "/admin/notifications" },
 ];
 
 function NavLink({ href, label, active, onNavigate }: { href: string; label: string; active: boolean; onNavigate?: () => void }) {

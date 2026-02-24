@@ -17,6 +17,13 @@ const bitter = Bitter({
 export const metadata: Metadata = {
   title: "Cliente Raiz",
   description: "Cliente Raiz — Gamificação de bares e cervejarias",
+  manifest: "/manifest.json",
+  themeColor: "#1A3C2E",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Cliente Raiz",
+  },
 };
 
 export default function RootLayout({

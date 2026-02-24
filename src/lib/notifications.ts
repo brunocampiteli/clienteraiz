@@ -1,4 +1,4 @@
-export type AppNotificationType = "receipt_approved" | "new_nearby_bar" | "new_challenge";
+export type AppNotificationType = "receipt_approved" | "new_nearby_bar" | "new_challenge" | "push_notification";
 
 export type AppNotification = {
   id: string;
