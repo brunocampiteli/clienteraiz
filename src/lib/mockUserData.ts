@@ -298,6 +298,51 @@ export const gameRoutes: GameRoute[] = [
   },
 ];
 
+export type UserCheckIn = {
+  id: string;
+  date: string;
+  barId: string;
+  barName: string;
+  imageUrl: string;
+  instagramHandle?: string;
+  status: "pending" | "approved" | "rejected";
+  points: number;
+  rejectionReason?: string;
+};
+
+export const userCheckins: UserCheckIn[] = [
+  {
+    id: "uck_1",
+    date: "2026-02-23",
+    barId: "app_bar_1",
+    barName: "Bar do Centro",
+    imageUrl: "https://images.unsplash.com/photo-1546622891-02c72c1537b6?auto=format&fit=crop&w=800&q=60",
+    instagramHandle: "@anapaula_cr",
+    status: "pending",
+    points: 30,
+  },
+  {
+    id: "uck_2",
+    date: "2026-02-20",
+    barId: "app_bar_2",
+    barName: "Vila Pub",
+    imageUrl: "https://images.unsplash.com/photo-1574169208507-84376144848b?auto=format&fit=crop&w=800&q=60",
+    instagramHandle: "@anapaula_cr",
+    status: "approved",
+    points: 30,
+  },
+  {
+    id: "uck_3",
+    date: "2026-02-15",
+    barId: "app_bar_3",
+    barName: "Chopp & Cia",
+    imageUrl: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=800&q=60",
+    instagramHandle: "@anapaula_cr",
+    status: "approved",
+    points: 30,
+  },
+];
+
 /* Legacy alias */
 export const routes: AppRoute[] = gameRoutes.map((r) => ({
   id: r.id,

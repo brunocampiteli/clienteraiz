@@ -57,6 +57,12 @@ export default function AppBarDetailPage() {
   const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
   const [submitting, setSubmitting] = React.useState(false);
 
+  const [checkinOpen, setCheckinOpen] = React.useState(false);
+  const [checkinFile, setCheckinFile] = React.useState<File | null>(null);
+  const [checkinPreview, setCheckinPreview] = React.useState<string | null>(null);
+  const [checkinSubmitting, setCheckinSubmitting] = React.useState(false);
+  const [instagramHandle, setInstagramHandle] = React.useState("");
+
   React.useEffect(() => {
     if (!file) {
       setPreviewUrl(null);
@@ -66,6 +72,16 @@ export default function AppBarDetailPage() {
     setPreviewUrl(url);
     return () => { URL.revokeObjectURL(url); };
   }, [file]);
+
+  React.useEffect(() => {
+    if (!checkinFile) {
+      setCheckinPreview(null);
+      return;
+    }
+    const url = URL.createObjectURL(checkinFile);
+    setCheckinPreview(url);
+    return () => { URL.revokeObjectURL(url); };
+  }, [checkinFile]);
 
   if (!bar) {
     return (
@@ -93,6 +109,20 @@ export default function AppBarDetailPage() {
       router.push(`/app/points?barId=${barSafe.id}&receiptSent=1`);
     } finally {
       setSubmitting(false);
+    }
+  }
+
+  async function submitCheckin() {
+    if (!checkinFile) return;
+    setCheckinSubmitting(true);
+    try {
+      await new Promise((r) => setTimeout(r, 700));
+      setCheckinOpen(false);
+      setCheckinFile(null);
+      setInstagramHandle("");
+      router.push(`/app/checkin?barId=${barSafe.id}&sent=1`);
+    } finally {
+      setCheckinSubmitting(false);
     }
   }
 
@@ -206,8 +236,8 @@ export default function AppBarDetailPage() {
         </div>
       </Card>
 
-      {/* CTA */}
-      <div className="sticky bottom-16 z-20 bg-gradient-to-t from-cr-cream-50 via-cr-cream-50 to-transparent pt-4 pb-2">
+      {/* CTA Buttons */}
+      <div className="sticky bottom-16 z-20 bg-gradient-to-t from-cr-cream-50 via-cr-cream-50 to-transparent pt-4 pb-2 space-y-2">
         <Button
           type="button"
           onClick={() => setOpen(true)}
@@ -215,6 +245,14 @@ export default function AppBarDetailPage() {
         >
           <IconCamera className="h-5 w-5 mr-1" />
           Enviar nota fiscal
+        </Button>
+        <Button
+          type="button"
+          variant="accent"
+          onClick={() => setCheckinOpen(true)}
+          className="w-full !py-3 !text-sm shadow-md"
+        >
+          📸 Check-in Instagram
         </Button>
       </div>
 
@@ -282,6 +320,97 @@ export default function AppBarDetailPage() {
                 type="button"
                 className="w-full py-2 text-sm font-medium text-cr-brown-400 hover:text-cr-brown-600 cursor-pointer"
                 onClick={() => { if (!submitting) setOpen(false); }}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Instagram Check-in Modal */}
+      {checkinOpen && (
+        <div className="fixed inset-0 z-50">
+          <div
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            onClick={() => { if (!checkinSubmitting) setCheckinOpen(false); }}
+          />
+          <div className="absolute bottom-0 left-0 right-0 rounded-t-3xl bg-white p-5 shadow-2xl">
+            <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-cr-brown-200" />
+
+            <div className="text-base font-bold text-cr-brown-900 font-display">📸 Check-in Instagram</div>
+            <div className="mt-1 text-sm text-cr-brown-500">
+              {bar.name} • +30 pontos bônus
+            </div>
+
+            <div className="mt-4 rounded-xl bg-cr-gold-50 border border-cr-gold-200 px-4 py-3">
+              <div className="text-xs font-semibold text-cr-gold-700">Como funciona:</div>
+              <div className="mt-1 text-xs text-cr-gold-600 leading-relaxed">
+                1. Poste um story no Instagram marcando o bar<br />
+                2. Tire um print do story<br />
+                3. Envie o print aqui e ganhe 30 pontos bônus!
+              </div>
+            </div>
+
+            <div className="mt-4 space-y-4">
+              <div>
+                <label className="mb-1.5 block text-sm font-medium text-cr-brown-600">Seu @ no Instagram (opcional)</label>
+                <input
+                  type="text"
+                  placeholder="@seuperfil"
+                  value={instagramHandle}
+                  onChange={(e) => setInstagramHandle(e.target.value)}
+                  disabled={checkinSubmitting}
+                  className="h-10 w-full rounded-lg border border-cr-brown-100 bg-white px-3 text-sm text-cr-brown-900 placeholder:text-cr-brown-300 focus:border-cr-green-400 focus:outline-none focus:ring-1 focus:ring-cr-green-400"
+                />
+              </div>
+
+              <div>
+                <label className="mb-2 block text-sm font-medium text-cr-brown-600">Print do story</label>
+                <div className="rounded-2xl border-2 border-dashed border-cr-gold-300 bg-cr-gold-50/50 p-6 text-center transition-colors hover:border-cr-gold-400">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    className="absolute inset-0 opacity-0 cursor-pointer"
+                    style={{ position: "relative" }}
+                    onChange={(e) => setCheckinFile(e.target.files?.[0] ?? null)}
+                    disabled={checkinSubmitting}
+                  />
+                  <div className="text-2xl">📱</div>
+                  <div className="mt-2 text-sm font-medium text-cr-brown-500">
+                    {checkinFile ? checkinFile.name : "Toque para enviar o print do story"}
+                  </div>
+                </div>
+              </div>
+
+              {checkinPreview && (
+                <div className="overflow-hidden rounded-2xl border border-cr-brown-100 bg-cr-cream-50">
+                  <Image
+                    src={checkinPreview}
+                    alt="Preview do check-in"
+                    className="h-48 w-full object-contain"
+                    width={1200}
+                    height={400}
+                    unoptimized
+                  />
+                </div>
+              )}
+
+              <Button
+                className="w-full !py-3"
+                variant="accent"
+                type="button"
+                disabled={!checkinFile || checkinSubmitting}
+                onClick={submitCheckin}
+              >
+                {checkinSubmitting ? "Enviando..." : "Enviar check-in"}
+              </Button>
+
+              <button
+                type="button"
+                className="w-full py-2 text-sm font-medium text-cr-brown-400 hover:text-cr-brown-600 cursor-pointer"
+                onClick={() => { if (!checkinSubmitting) setCheckinOpen(false); }}
               >
                 Cancelar
               </button>

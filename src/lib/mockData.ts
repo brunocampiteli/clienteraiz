@@ -287,6 +287,66 @@ export const adminRoutes: AdminRoute[] = [
   },
 ];
 
+export type CheckIn = {
+  id: string;
+  date: string;
+  userName: string;
+  barName: string;
+  barId: string;
+  imageUrl: string;
+  instagramHandle?: string;
+  status: "pending" | "approved" | "rejected";
+  points: number;
+  rejectionReason?: string;
+};
+
+export const checkins: CheckIn[] = [
+  {
+    id: "ck_1",
+    date: "2026-02-23",
+    userName: "Ana Paula",
+    barName: "Bar do Centro",
+    barId: "bar_1",
+    imageUrl: "https://images.unsplash.com/photo-1546622891-02c72c1537b6?auto=format&fit=crop&w=800&q=60",
+    instagramHandle: "@anapaula_cr",
+    status: "pending",
+    points: 30,
+  },
+  {
+    id: "ck_2",
+    date: "2026-02-22",
+    userName: "Bruno Lima",
+    barName: "Vila Pub",
+    barId: "bar_2",
+    imageUrl: "https://images.unsplash.com/photo-1574169208507-84376144848b?auto=format&fit=crop&w=800&q=60",
+    instagramHandle: "@brunolima",
+    status: "approved",
+    points: 30,
+  },
+  {
+    id: "ck_3",
+    date: "2026-02-21",
+    userName: "Carla Souza",
+    barName: "Chopp & Cia",
+    barId: "bar_4",
+    imageUrl: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=800&q=60",
+    instagramHandle: "@carlasouza",
+    status: "rejected",
+    points: 30,
+    rejectionReason: "Story não mostra marcação do bar",
+  },
+  {
+    id: "ck_4",
+    date: "2026-02-20",
+    userName: "Diego Fernandes",
+    barName: "Bar do Centro",
+    barId: "bar_1",
+    imageUrl: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&w=800&q=60",
+    status: "approved",
+    points: 30,
+  },
+];
+
 export const receipts: Receipt[] = [
   {
     id: "rec_1",
