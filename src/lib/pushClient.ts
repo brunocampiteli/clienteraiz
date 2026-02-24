@@ -69,7 +69,7 @@ export async function subscribeToPush(): Promise<boolean> {
 
   const subscription = await ready.pushManager.subscribe({
     userVisibleOnly: true,
-    applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
+    applicationServerKey: urlBase64ToUint8Array(vapidPublicKey) as BufferSource,
   });
 
   try {
