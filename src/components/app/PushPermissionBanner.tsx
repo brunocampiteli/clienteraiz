@@ -38,15 +38,15 @@ export function PushPermissionBanner() {
   if (!visible) return null;
 
   return (
-    <div className="mx-4 mt-2 flex items-center gap-3 rounded-2xl border border-cr-green-200 bg-cr-green-50 px-4 py-3 shadow-sm">
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-cr-green-800 text-white text-base">
+    <div className="mx-4 mt-2 flex items-center gap-3 rounded-2xl border border-cr-yellow-600/30 bg-cr-dark-800 px-4 py-3 shadow-sm">
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-cr-yellow-600 text-cr-dark-800 text-base">
         🔔
       </div>
       <div className="flex-1 min-w-0">
-        <div className="text-sm font-semibold text-cr-green-900">
-          Ativar notificações
+        <div className="text-sm font-bold text-cr-cream-100">
+          Ativar notificacoes
         </div>
-        <div className="text-xs text-cr-green-700">
+        <div className="text-xs text-cr-dark-400">
           Receba avisos de notas aprovadas, desafios e novidades
         </div>
       </div>
@@ -54,9 +54,9 @@ export function PushPermissionBanner() {
         <button
           type="button"
           onClick={handleDismiss}
-          className="text-xs text-cr-brown-400 hover:text-cr-brown-600 transition-colors"
+          className="text-xs text-cr-dark-400 hover:text-cr-dark-300 transition-colors"
         >
-          Agora não
+          Agora nao
         </button>
         <Button
           variant="primary"
@@ -64,7 +64,7 @@ export function PushPermissionBanner() {
           onClick={handleEnable}
           disabled={loading}
         >
-          {loading ? "Ativando…" : "Ativar"}
+          {loading ? "Ativando..." : "Ativar"}
         </Button>
       </div>
     </div>

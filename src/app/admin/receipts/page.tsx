@@ -7,8 +7,9 @@ import { Input } from "@/components/ui/Input";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/Table";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { receipts, type Receipt } from "@/lib/mockData";
+import { receipts, type Receipt, bars } from "@/lib/mockData";
 import { addNotification } from "@/lib/notifications";
+import { useRoutes } from "@/lib/context/RouteContext";
 
 function formatCurrency(v: number) {
   return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -37,7 +38,21 @@ function normalizeDigits(v?: string) {
   return v.replace(/\D/g, "");
 }
 
+// Map user names to IDs and bar names to bar IDs for mock route triggers
+const USER_NAME_TO_ID: Record<string, string> = {
+  "Ana Paula": "app_usr_1",
+  "Bruno Lima": "usr_2",
+  "Carla Souza": "usr_3",
+  "Diego Fernandes": "usr_4",
+};
+
+function findBarIdByName(barName: string): string | null {
+  const bar = bars.find((b) => b.name === barName);
+  return bar?.id ?? null;
+}
+
 export default function ReceiptsPage() {
+  const { onBarVisitTriggered } = useRoutes();
   const [data, setData] = React.useState(() => receipts);
   const [q, setQ] = React.useState("");
   const [statusFilter, setStatusFilter] = React.useState<string>("");
@@ -85,17 +100,19 @@ export default function ReceiptsPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      {/* Page header */}
       <div>
-        <div className="text-2xl font-bold tracking-tight text-cr-brown-900 font-display">Notas enviadas</div>
-        <div className="mt-1 text-sm text-cr-brown-600">Fila de validação (QR) e auditoria</div>
+        <h1 className="text-3xl font-bold tracking-tight text-cr-brown-900 font-display">Notas enviadas</h1>
+        <p className="mt-1 text-sm text-cr-brown-500">Fila de validação (QR) e auditoria</p>
       </div>
 
+      {/* Filters + Table */}
       <Card>
-        <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-          <div className="grid w-full gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mb-5 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div className="grid w-full gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div className="w-full">
-              <div className="mb-1 text-xs font-medium text-cr-brown-600">Busca</div>
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Busca</label>
               <Input
                 placeholder="Usuário, bar, status ou chave..."
                 value={q}
@@ -103,9 +120,9 @@ export default function ReceiptsPage() {
               />
             </div>
             <div className="w-full">
-              <div className="mb-1 text-xs font-medium text-cr-brown-600">Status</div>
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Status</label>
               <select
-                className="h-10 w-full rounded-md border border-cr-brown-100 bg-white px-3 text-sm text-cr-brown-900"
+                className="admin-select"
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
               >
@@ -118,9 +135,9 @@ export default function ReceiptsPage() {
               </select>
             </div>
             <div className="w-full">
-              <div className="mb-1 text-xs font-medium text-cr-brown-600">Motivo</div>
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Motivo</label>
               <select
-                className="h-10 w-full rounded-md border border-cr-brown-100 bg-white px-3 text-sm text-cr-brown-900"
+                className="admin-select"
                 value={reasonFilter}
                 onChange={(e) => setReasonFilter(e.target.value)}
               >
@@ -135,9 +152,9 @@ export default function ReceiptsPage() {
           </div>
 
           <div className="flex items-center justify-between gap-3">
-            <div className="text-sm text-cr-brown-600">{filtered.length} resultado(s)</div>
+            <span className="whitespace-nowrap text-sm font-medium text-cr-brown-500">{filtered.length} resultado(s)</span>
             <Button
-              variant="secondary"
+              variant="ghost"
               type="button"
               onClick={() => {
                 setQ("");
@@ -173,76 +190,92 @@ export default function ReceiptsPage() {
                 <TD className="whitespace-nowrap">{r.date}</TD>
                 <TD>{r.userName}</TD>
                 <TD>{r.barName}</TD>
-                <TD className="whitespace-nowrap">{formatCurrency(r.amount)}</TD>
+                <TD className="whitespace-nowrap font-medium">{formatCurrency(r.amount)}</TD>
                 <TD>{statusBadge(r.status)}</TD>
-                <TD className="whitespace-nowrap text-sm text-cr-brown-600">{reasonLabel(r.reason)}</TD>
+                <TD className="whitespace-nowrap text-sm text-cr-brown-500">{reasonLabel(r.reason)}</TD>
               </TR>
             ))}
           </TBody>
         </Table>
       </Card>
 
+      {/* Detail modal */}
       {selected ? (
         <div
-          className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 sm:items-center"
+          className="fixed inset-0 z-50 flex items-end justify-center bg-cr-brown-950/60 backdrop-blur-sm p-4 sm:items-center"
           role="dialog"
           aria-modal="true"
           onMouseDown={(e) => {
             if (e.target === e.currentTarget) setSelectedId(null);
           }}
         >
-          <div className="w-full max-w-3xl rounded-xl border border-cr-brown-100 bg-white shadow-xl">
-            <div className="flex items-start justify-between gap-3 border-b border-cr-brown-100 p-4">
+          <div className="w-full max-w-3xl rounded-2xl border border-cr-brown-100 bg-white shadow-2xl">
+            {/* Modal header */}
+            <div className="flex items-start justify-between gap-3 border-b border-cr-brown-100 px-6 py-4">
               <div>
-                <div className="text-lg font-semibold text-cr-brown-900">Detalhe da nota</div>
-                <div className="mt-1 text-sm text-cr-brown-600">
-                  {selected.userName} • {selected.barName} • {selected.date}
-                </div>
+                <h2 className="text-lg font-bold tracking-tight text-cr-brown-900 font-display">Detalhe da nota</h2>
+                <p className="mt-1 text-sm text-cr-brown-500">
+                  {selected.userName} &bull; {selected.barName} &bull; {selected.date}
+                </p>
               </div>
               <Button variant="ghost" type="button" onClick={() => setSelectedId(null)}>
                 Fechar
               </Button>
             </div>
 
-            <div className="grid gap-4 p-4 lg:grid-cols-2">
-              <div className="space-y-3">
-                <div className="rounded-lg border border-cr-brown-100 bg-cr-cream-100 p-3">
-                  <div className="text-xs font-medium text-cr-brown-600">Status</div>
-                  <div className="mt-1">{statusBadge(selected.status)}</div>
-                  <div className="mt-2 text-xs text-cr-brown-600">Motivo: {reasonLabel(selected.reason)}</div>
+            {/* Modal body */}
+            <div className="grid gap-5 p-6 lg:grid-cols-2">
+              {/* Left column - Details & Actions */}
+              <div className="space-y-4">
+                {/* Status box */}
+                <div className="rounded-xl border border-cr-brown-100 bg-cr-brown-50 p-4">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Status</span>
+                  <div className="mt-2">{statusBadge(selected.status)}</div>
+                  <p className="mt-3 text-xs text-cr-brown-500">Motivo: {reasonLabel(selected.reason)}</p>
                 </div>
 
-                <div className="rounded-lg border border-cr-brown-100 p-3">
-                  <div className="text-xs font-medium text-cr-brown-600">Chave (access key)</div>
-                  <div className="mt-1 break-all font-mono text-xs text-cr-brown-900">{selected.accessKey ?? "—"}</div>
+                {/* Access key box */}
+                <div className="rounded-xl border border-cr-brown-100 bg-white p-4">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Chave (access key)</span>
+                  <div className="mt-2 break-all font-mono text-xs text-cr-brown-900">{selected.accessKey ?? "—"}</div>
                 </div>
 
-                <div className="rounded-lg border border-cr-brown-100 p-3">
-                  <div className="grid gap-3 sm:grid-cols-2">
+                {/* CNPJ box */}
+                <div className="rounded-xl border border-cr-brown-100 bg-white p-4">
+                  <div className="grid gap-4 sm:grid-cols-2">
                     <div>
-                      <div className="text-xs font-medium text-cr-brown-600">CNPJ do bar</div>
-                      <div className="mt-1 font-mono text-xs text-cr-brown-900">{selected.barCnpj ?? "—"}</div>
+                      <span className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">CNPJ do bar</span>
+                      <div className="mt-2 font-mono text-xs text-cr-brown-900">{selected.barCnpj ?? "—"}</div>
                     </div>
                     <div>
-                      <div className="text-xs font-medium text-cr-brown-600">CNPJ emitente</div>
-                      <div className="mt-1 font-mono text-xs text-cr-brown-900">{selected.issuerCnpj ?? "—"}</div>
+                      <span className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">CNPJ emitente</span>
+                      <div className="mt-2 font-mono text-xs text-cr-brown-900">{selected.issuerCnpj ?? "—"}</div>
                     </div>
                   </div>
                   {selected.barCnpj && selected.issuerCnpj ? (
-                    <div className="mt-2 text-xs text-cr-brown-600">
-                      Confere: {normalizeDigits(selected.barCnpj) === normalizeDigits(selected.issuerCnpj) ? "Sim" : "Não"}
+                    <div className="mt-3 flex items-center gap-1.5 text-xs">
+                      {normalizeDigits(selected.barCnpj) === normalizeDigits(selected.issuerCnpj) ? (
+                        <Badge variant="success">Confere</Badge>
+                      ) : (
+                        <Badge variant="danger">Não confere</Badge>
+                      )}
                     </div>
                   ) : null}
                 </div>
 
-                <div className="rounded-lg border border-cr-brown-100 p-3">
-                  <div className="text-xs font-medium text-cr-brown-600">Valor</div>
-                  <div className="mt-1 text-sm font-semibold text-cr-brown-900">{formatCurrency(selected.amount)}</div>
-                  <div className="mt-2 text-xs text-cr-brown-600">Ação manual (mock): usar apenas em exceções</div>
-                  <div className="mt-3">
-                    <div className="mb-1 text-xs font-medium text-cr-brown-600">Motivo (ao rejeitar)</div>
+                {/* Value & Manual actions box */}
+                <div className="rounded-xl border border-cr-brown-100 bg-white p-4">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Valor</span>
+                  <div className="mt-2 text-xl font-bold tracking-tight text-cr-brown-900 font-display">{formatCurrency(selected.amount)}</div>
+
+                  <div className="mt-4 rounded-lg border border-cr-gold-200 bg-cr-gold-50 px-3 py-2">
+                    <p className="text-xs font-medium text-cr-brown-600">Ação manual (mock): usar apenas em exceções</p>
+                  </div>
+
+                  <div className="mt-4">
+                    <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Motivo (ao rejeitar)</label>
                     <select
-                      className="h-10 w-full rounded-md border border-cr-brown-100 bg-white px-3 text-sm text-cr-brown-900"
+                      className="admin-select"
                       value={manualRejectReason}
                       onChange={(e) => setManualRejectReason(e.target.value as Receipt["reason"])}
                     >
@@ -253,10 +286,11 @@ export default function ReceiptsPage() {
                       <option value="PROVIDER_UNAVAILABLE">{reasonLabel("PROVIDER_UNAVAILABLE")}</option>
                     </select>
                   </div>
-                  <div className="mt-3 flex flex-wrap gap-2">
+
+                  <div className="mt-4 flex flex-wrap gap-2">
                     <Button
                       type="button"
-                      variant="secondary"
+                      variant="primary"
                       onClick={() => {
                         updateReceipt(selected.id, {
                           status: "approved",
@@ -269,6 +303,12 @@ export default function ReceiptsPage() {
                           body: `${selected.barName} • ${formatCurrency(selected.amount)}`,
                           href: "/app/points",
                         });
+                        // Trigger route bar visit
+                        const userId = USER_NAME_TO_ID[selected.userName];
+                        const barId = findBarIdByName(selected.barName);
+                        if (userId && barId) {
+                          onBarVisitTriggered(userId, barId);
+                        }
                         setSelectedId(null);
                       }}
                     >
@@ -276,7 +316,7 @@ export default function ReceiptsPage() {
                     </Button>
                     <Button
                       type="button"
-                      variant="secondary"
+                      variant="danger"
                       onClick={() => {
                         updateReceipt(selected.id, {
                           status: "rejected",
@@ -289,7 +329,7 @@ export default function ReceiptsPage() {
                     </Button>
                     <Button
                       type="button"
-                      variant="ghost"
+                      variant="secondary"
                       onClick={() => {
                         updateReceipt(selected.id, {
                           status: "pending_validation",
@@ -317,9 +357,10 @@ export default function ReceiptsPage() {
                 </div>
               </div>
 
+              {/* Right column - Image */}
               <div className="space-y-3">
-                <div className="text-xs font-medium text-cr-brown-600">Imagem (evidência)</div>
-                <div className="overflow-hidden rounded-lg border border-cr-brown-100 bg-cr-cream-100">
+                <span className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Imagem (evidência)</span>
+                <div className="overflow-hidden rounded-xl border border-cr-brown-100 bg-cr-brown-50">
                   {selected.imageUrl ? (
                     <div className="relative aspect-[4/3] w-full">
                       <Image
@@ -331,12 +372,12 @@ export default function ReceiptsPage() {
                       />
                     </div>
                   ) : (
-                    <div className="flex aspect-[4/3] items-center justify-center text-sm text-cr-brown-600">Sem imagem</div>
+                    <div className="flex aspect-[4/3] items-center justify-center text-sm text-cr-brown-400">Sem imagem</div>
                   )}
                 </div>
-                <div className="text-xs text-cr-brown-600">
+                <p className="text-xs text-cr-brown-400">
                   A imagem só carrega ao abrir o detalhe (não pesa a listagem).
-                </div>
+                </p>
               </div>
             </div>
           </div>

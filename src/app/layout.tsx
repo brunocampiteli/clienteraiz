@@ -1,24 +1,24 @@
 import type { Metadata } from "next";
-import { DM_Sans, Bitter } from "next/font/google";
+import { Nunito, Bebas_Neue } from "next/font/google";
 import "./globals.css";
 
-const dmSans = DM_Sans({
-  variable: "--font-dm-sans",
+const nunito = Nunito({
+  variable: "--font-nunito",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
-const bitter = Bitter({
-  variable: "--font-bitter",
+const bebasNeue = Bebas_Neue({
+  variable: "--font-bebas-neue",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["400"],
 });
 
 export const metadata: Metadata = {
   title: "Cliente Raiz",
-  description: "Cliente Raiz — Gamificação de bares e cervejarias",
+  description: "Cliente Raiz — Fidelidade no Balcão",
   manifest: "/manifest.json",
-  themeColor: "#1A3C2E",
+  themeColor: "#212121",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -34,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body
-        className={`${dmSans.variable} ${bitter.variable} antialiased`}
+        className={`${nunito.variable} ${bebasNeue.variable} antialiased`}
       >
         {children}
       </body>

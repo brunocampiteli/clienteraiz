@@ -19,15 +19,15 @@ function IconBell(props: React.SVGProps<SVGSVGElement>) {
 }
 
 function getTitle(pathname: string) {
-  if (pathname === "/app") return "Início";
-  if (pathname.startsWith("/app/bars/")) return "Bar";
-  if (pathname === "/app/bars") return "Bares";
-  if (pathname === "/app/points") return "Pontos";
-  if (pathname === "/app/ranking") return "Ranking";
-  if (pathname === "/app/profile") return "Perfil";
-  if (pathname === "/app/routes") return "Rotas prontas";
-  if (pathname === "/app/treasure") return "Caça ao tesouro";
-  return "Cliente Raiz";
+  if (pathname === "/app") return "INICIO";
+  if (pathname.startsWith("/app/bars/")) return "BAR";
+  if (pathname === "/app/bars") return "BARES";
+  if (pathname === "/app/points") return "PONTOS";
+  if (pathname === "/app/ranking") return "RANKING";
+  if (pathname === "/app/profile") return "PERFIL";
+  if (pathname === "/app/routes") return "ROTAS";
+  if (pathname === "/app/treasure") return "TESOUROS";
+  return "CLIENTE RAIZ";
 }
 
 export function AppHeader() {
@@ -43,20 +43,29 @@ export function AppHeader() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-cr-brown-100 bg-white/90 backdrop-blur-md">
+    <header className="sticky top-0 z-30 bg-cr-dark-800 border-b border-cr-dark-700">
       <div className="flex items-center justify-between px-4 py-3">
-        <div className="text-base font-bold text-cr-brown-900 font-display">{title}</div>
+        <div className="flex items-center gap-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-cr-yellow-600">
+            <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
+              <path d="M8 4h8l1.5 3H6.5L8 4Z" fill="#212121" />
+              <path d="M6.5 7h11v10a3.5 3.5 0 01-3.5 3.5h-4A3.5 3.5 0 016.5 17V7Z" fill="#212121" />
+              <path d="M17.5 10h2a2 2 0 012 2v2a2 2 0 01-2 2h-2" stroke="#212121" strokeWidth="1.5" />
+            </svg>
+          </div>
+          <div className="text-lg font-display text-cr-cream-100 tracking-wider">{title}</div>
+        </div>
         <div className="relative">
           <button
-            className="inline-flex h-10 w-10 items-center justify-center rounded-lg hover:bg-cr-cream-200"
-            aria-label="Notificações"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl hover:bg-cr-dark-700 transition-colors"
+            aria-label="Notificacoes"
             type="button"
             onClick={() => setOpen(true)}
           >
-            <IconBell className="h-5 w-5 text-cr-brown-600" />
+            <IconBell className="h-5 w-5 text-cr-dark-400" />
           </button>
           {unread > 0 ? (
-            <div className="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-cr-gold-600 px-1 text-[11px] font-bold text-white">
+            <div className="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-cr-yellow-600 px-1 text-[11px] font-bold text-cr-dark-800">
               {unread > 99 ? "99+" : unread}
             </div>
           ) : null}

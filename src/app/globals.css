@@ -2,70 +2,116 @@
 
 @theme inline {
   /* === Cliente Raiz Brand Colors === */
-  --color-cr-green-950: #0D1F17;
-  --color-cr-green-900: #1A3C2E;
-  --color-cr-green-800: #24523E;
-  --color-cr-green-700: #2D6A4F;
-  --color-cr-green-600: #3B7A57;
-  --color-cr-green-500: #4C9A6E;
-  --color-cr-green-400: #6DB88A;
-  --color-cr-green-300: #95D0A8;
-  --color-cr-green-200: #BFE5CB;
-  --color-cr-green-100: #E0F2E6;
-  --color-cr-green-50: #F0F9F2;
 
-  --color-cr-gold-900: #6B4D10;
-  --color-cr-gold-800: #8B6514;
-  --color-cr-gold-700: #A57B1B;
-  --color-cr-gold-600: #C8962E;
-  --color-cr-gold-500: #DAA832;
-  --color-cr-gold-400: #E8B94A;
-  --color-cr-gold-300: #F0CD6E;
-  --color-cr-gold-200: #F5DFA3;
-  --color-cr-gold-100: #FAF0D4;
-  --color-cr-gold-50: #FDF8EA;
+  /* Yellow / Amarelo Cema — Primary accent, CTAs */
+  --color-cr-yellow-950: #3D2E07;
+  --color-cr-yellow-900: #7A5C0E;
+  --color-cr-yellow-800: #B88A15;
+  --color-cr-yellow-700: #D9A31C;
+  --color-cr-yellow-600: #FBC02D;
+  --color-cr-yellow-500: #FCD04F;
+  --color-cr-yellow-400: #FDD972;
+  --color-cr-yellow-300: #FDE494;
+  --color-cr-yellow-200: #FEEFB7;
+  --color-cr-yellow-100: #FFF5D5;
+  --color-cr-yellow-50: #FFFAEB;
 
-  --color-cr-brown-900: #2C1810;
-  --color-cr-brown-800: #3D2B1F;
-  --color-cr-brown-700: #5C3D2E;
-  --color-cr-brown-600: #7A5240;
-  --color-cr-brown-500: #8B6352;
-  --color-cr-brown-400: #A68070;
-  --color-cr-brown-300: #C4A494;
-  --color-cr-brown-200: #DCC5B8;
-  --color-cr-brown-100: #EDE0D8;
-  --color-cr-brown-50: #F7F1ED;
+  /* Burgundy / Vermelho Bordô — Secondary accent, badges */
+  --color-cr-burgundy-950: #2D0519;
+  --color-cr-burgundy-900: #5A0A33;
+  --color-cr-burgundy-800: #880E4F;
+  --color-cr-burgundy-700: #A61260;
+  --color-cr-burgundy-600: #C41672;
+  --color-cr-burgundy-500: #D63D8C;
+  --color-cr-burgundy-400: #E466A6;
+  --color-cr-burgundy-300: #EE90BE;
+  --color-cr-burgundy-200: #F5BBD7;
+  --color-cr-burgundy-100: #FAE0EC;
+  --color-cr-burgundy-50: #FDF0F6;
 
-  --color-cr-cream-300: #EDE4D4;
-  --color-cr-cream-200: #F5EFE3;
-  --color-cr-cream-100: #FAF6EF;
-  --color-cr-cream-50: #FDFBF7;
+  /* Green / Verde Palmeira — Success, positive */
+  --color-cr-green-950: #0C2010;
+  --color-cr-green-900: #184020;
+  --color-cr-green-800: #245F30;
+  --color-cr-green-700: #2E7D32;
+  --color-cr-green-600: #43A047;
+  --color-cr-green-500: #66BB6A;
+  --color-cr-green-400: #81C784;
+  --color-cr-green-300: #A5D6A7;
+  --color-cr-green-200: #C8E6C9;
+  --color-cr-green-100: #E8F5E9;
+  --color-cr-green-50: #F1F8F2;
+
+  /* Dark / Preto Lousa — Backgrounds, text */
+  --color-cr-dark-950: #0A0A0A;
+  --color-cr-dark-900: #141414;
+  --color-cr-dark-800: #212121;
+  --color-cr-dark-700: #333333;
+  --color-cr-dark-600: #555555;
+  --color-cr-dark-500: #757575;
+  --color-cr-dark-400: #9E9E9E;
+  --color-cr-dark-300: #BDBDBD;
+  --color-cr-dark-200: #E0E0E0;
+  --color-cr-dark-100: #F0F0F0;
+  --color-cr-dark-50: #FAFAFA;
+
+  /* Cream / Off-White Creme — Warm backgrounds */
+  --color-cr-cream-400: #DDD5A0;
+  --color-cr-cream-300: #E8DFA0;
+  --color-cr-cream-200: #F2ECBA;
+  --color-cr-cream-100: #FFF9C4;
+  --color-cr-cream-50: #FFFCE6;
+
+  /* Brown / Marrom Tabaco — Admin text & borders */
+  --color-cr-brown-950: #1C1410;
+  --color-cr-brown-900: #2E2218;
+  --color-cr-brown-800: #44332A;
+  --color-cr-brown-700: #5C473C;
+  --color-cr-brown-600: #78614F;
+  --color-cr-brown-500: #8D7766;
+  --color-cr-brown-400: #A6927F;
+  --color-cr-brown-300: #C4B5A5;
+  --color-cr-brown-200: #DDD3C8;
+  --color-cr-brown-100: #EDE8E2;
+  --color-cr-brown-50: #F7F4F1;
+
+  /* Gold / Ouro Velho — Admin accent, highlights */
+  --color-cr-gold-900: #523B08;
+  --color-cr-gold-800: #7A5810;
+  --color-cr-gold-700: #A17418;
+  --color-cr-gold-600: #C8911F;
+  --color-cr-gold-500: #D4A433;
+  --color-cr-gold-400: #E0B84A;
+  --color-cr-gold-300: #ECCC73;
+  --color-cr-gold-200: #F5DFA0;
+  --color-cr-gold-100: #FBF0CD;
+  --color-cr-gold-50: #FDF8E8;
 
   /* Override Tailwind defaults */
-  --color-background: #FDFBF7;
-  --color-foreground: #2C1810;
+  --color-background: #FFFCE6;
+  --color-foreground: #212121;
 
   /* Fonts */
-  --font-sans: var(--font-dm-sans);
-  --font-display: var(--font-bitter);
+  --font-sans: var(--font-nunito);
+  --font-display: var(--font-bebas-neue);
 }
 
 body {
-  background: #FDFBF7;
-  color: #2C1810;
+  background: #FFFCE6;
+  color: #212121;
   font-family: var(--font-sans), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Subtle grain texture */
+/* Subtle grain texture — chalkboard dust feel */
 body::before {
   content: "";
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 9999;
-  opacity: 0.018;
+  opacity: 0.025;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 256px 256px;
@@ -74,8 +120,38 @@ body::before {
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #DCC5B8; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #C4A494; }
+::-webkit-scrollbar-thumb { background: #D9A31C; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #FBC02D; }
 
 /* Selection */
-::selection { background: #BFE5CB; color: #1A3C2E; }
+::selection { background: #FBC02D; color: #212121; }
+
+/* Bebas Neue letter spacing for readability */
+.font-display {
+  letter-spacing: 0.03em;
+}
+
+/* === Admin Dashboard Specific === */
+
+/* Admin select styling */
+.admin-select {
+  height: 2.75rem;
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-cr-brown-100);
+  background: white;
+  padding-left: 0.875rem;
+  padding-right: 2rem;
+  font-size: 0.875rem;
+  color: var(--color-cr-brown-800);
+  outline: none;
+  transition: all 150ms;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2378614F' viewBox='0 0 16 16'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+}
+.admin-select:focus {
+  border-color: var(--color-cr-gold-500);
+  box-shadow: 0 0 0 3px rgba(212, 164, 51, 0.15);
+}

@@ -6,7 +6,7 @@ export function Input({ className, ...props }: Props) {
   return (
     <input
       className={[
-        "h-10 w-full rounded-lg border border-cr-brown-100 bg-white px-3 text-sm outline-none transition-all placeholder:text-cr-brown-400 focus:ring-2 focus:ring-cr-green-600/20 focus:border-cr-green-600",
+        "h-11 w-full rounded-xl border border-cr-dark-200 bg-white px-4 text-sm font-medium outline-none transition-all placeholder:text-cr-dark-400 focus:ring-2 focus:ring-cr-yellow-600/30 focus:border-cr-yellow-600",
         className,
       ]
         .filter(Boolean)

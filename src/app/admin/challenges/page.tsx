@@ -111,66 +111,71 @@ export default function ChallengesPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div>
-        <div className="text-2xl font-bold tracking-tight text-cr-brown-900 font-display">Desafios</div>
-        <div className="mt-1 text-sm text-cr-brown-600">Cadastro de desafios semanais (mock)</div>
+        <h1 className="text-3xl font-bold tracking-tight text-cr-brown-900 font-display">Desafios</h1>
+        <p className="mt-1 text-sm text-cr-brown-500">Cadastro de desafios semanais (mock)</p>
       </div>
 
       <Card>
-        <form onSubmit={onSubmit} className="grid gap-3 lg:grid-cols-6">
+        <div className="mb-5 text-sm font-bold text-cr-brown-900 font-display">
+          {editingId ? "Editar desafio" : "Novo desafio"}
+        </div>
+        <form onSubmit={onSubmit} className="grid gap-4 lg:grid-cols-6">
           <div className="lg:col-span-2">
-            <div className="mb-1 text-xs font-medium text-cr-brown-600">Semana</div>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Semana</label>
             <Input value={week} onChange={(e) => setWeek(e.target.value)} placeholder="Ex.: 2026-W04" />
           </div>
           <div className="lg:col-span-4">
-            <div className="mb-1 text-xs font-medium text-cr-brown-600">Título</div>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Título</label>
             <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex.: Visite 3 bares diferentes essa semana" />
           </div>
 
           <div className="lg:col-span-6">
-            <div className="mb-1 text-xs font-medium text-cr-brown-600">Descrição</div>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Descrição</label>
             <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Detalhes do desafio..." />
           </div>
 
           <div className="lg:col-span-2">
-            <div className="mb-1 text-xs font-medium text-cr-brown-600">Recompensa (independente do ranking)</div>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Recompensa (independente do ranking)</label>
             <Input value={rewardName} onChange={(e) => setRewardName(e.target.value)} placeholder="Ex.: Vale petiscos" />
           </div>
 
           <div className="lg:col-span-2">
-            <div className="mb-1 text-xs font-medium text-cr-brown-600">Pontos para o ranking (opcional)</div>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Pontos para o ranking (opcional)</label>
             <Input value={rankingPoints} onChange={(e) => setRankingPoints(e.target.value)} placeholder="0" inputMode="numeric" />
           </div>
 
-          <div className="lg:col-span-2 flex items-end gap-3">
-            <label className="flex items-center gap-2 text-sm text-cr-brown-600">
-              <input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} />
+          <div className="lg:col-span-2 flex items-end gap-4">
+            <label className="flex items-center gap-2 text-sm text-cr-brown-600 cursor-pointer">
+              <input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} className="rounded" />
               Ativo
             </label>
-            <label className="flex items-center gap-2 text-sm text-cr-brown-600">
+            <label className="flex items-center gap-2 text-sm text-cr-brown-600 cursor-pointer">
               <input
                 type="checkbox"
                 checked={appliesToAllBars}
                 onChange={(e) => setAppliesToAllBars(e.target.checked)}
+                className="rounded"
               />
               Todos os bares
             </label>
           </div>
 
           <div className="lg:col-span-6">
-            <div className="mb-2 text-xs font-medium text-cr-brown-600">Bares participantes</div>
-            <div className={"rounded-lg border border-cr-brown-100 p-3 " + (appliesToAllBars ? "opacity-50" : "")}
+            <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Bares participantes</label>
+            <div className={"rounded-xl border border-cr-brown-100 bg-white p-4 " + (appliesToAllBars ? "opacity-50" : "")}
               aria-disabled={appliesToAllBars}
             >
               <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 {bars.map((b) => (
-                  <label key={b.id} className="flex items-center gap-2 text-sm text-cr-brown-600">
+                  <label key={b.id} className="flex items-center gap-2 text-sm text-cr-brown-600 cursor-pointer">
                     <input
                       type="checkbox"
                       disabled={appliesToAllBars}
                       checked={barIds.includes(b.id)}
                       onChange={() => toggleBar(b.id)}
+                      className="rounded"
                     />
                     {b.name}
                   </label>
@@ -179,7 +184,7 @@ export default function ChallengesPage() {
             </div>
           </div>
 
-          <div className="lg:col-span-6 flex items-center gap-2">
+          <div className="lg:col-span-6 flex items-center gap-2 pt-2">
             <Button type="submit">{editingId ? "Salvar alterações" : "Cadastrar desafio"}</Button>
             <Button type="button" variant="secondary" onClick={resetForm}>
               {editingId ? "Cancelar" : "Limpar"}
@@ -189,14 +194,14 @@ export default function ChallengesPage() {
       </Card>
 
       <Card>
-        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <div className="text-sm font-semibold text-cr-brown-900">Desafios cadastrados</div>
-            <div className="mt-1 text-xs text-cr-brown-400">Filtre por semana</div>
+            <div className="text-sm font-bold text-cr-brown-900 font-display">Desafios cadastrados</div>
+            <p className="mt-1 text-xs text-cr-brown-400">Filtre por semana</p>
           </div>
           <div className="w-full sm:max-w-[220px]">
             <select
-              className="h-10 w-full rounded-md border border-cr-brown-100 bg-white px-3 text-sm text-cr-brown-900"
+              className="admin-select"
               value={weekFilter}
               onChange={(e) => setWeekFilter(e.target.value)}
             >
@@ -225,16 +230,22 @@ export default function ChallengesPage() {
           <TBody>
             {filtered.map((c) => (
               <TR key={c.id}>
-                <TD className="whitespace-nowrap">{c.week}</TD>
+                <TD className="whitespace-nowrap font-medium text-cr-brown-900">{c.week}</TD>
                 <TD>
                   <div className="font-medium text-cr-brown-900">{c.title}</div>
-                  <div className="mt-1 text-xs text-cr-brown-600">{c.description || "—"}</div>
+                  <div className="mt-0.5 text-xs text-cr-brown-500">{c.description || "—"}</div>
                 </TD>
                 <TD className="text-sm text-cr-brown-600">
-                  {c.appliesToAllBars ? "Todos" : barLabels(c.barIds) || "—"}
+                  {c.appliesToAllBars ? <Badge variant="gold">Todos</Badge> : barLabels(c.barIds) || "—"}
                 </TD>
                 <TD className="text-sm text-cr-brown-600">{c.rewardName || "—"}</TD>
-                <TD className="whitespace-nowrap">{c.rankingPoints}</TD>
+                <TD className="whitespace-nowrap">
+                  {c.rankingPoints > 0 ? (
+                    <span className="font-semibold text-cr-gold-700">+{c.rankingPoints} pts</span>
+                  ) : (
+                    <span className="text-cr-brown-400">0</span>
+                  )}
+                </TD>
                 <TD>
                   {c.active ? <Badge variant="success">Ativo</Badge> : <Badge variant="neutral">Inativo</Badge>}
                 </TD>
@@ -253,6 +264,7 @@ export default function ChallengesPage() {
                         setRewardName(c.rewardName);
                         setRankingPoints(String(c.rankingPoints));
                         setActive(c.active);
+                        window.scrollTo({ top: 0, behavior: "smooth" });
                       }}
                     >
                       Editar

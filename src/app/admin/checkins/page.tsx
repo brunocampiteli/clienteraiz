@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/Table";
-import { checkins as initialCheckins, type CheckIn } from "@/lib/mockData";
+import { checkins as initialCheckins, type CheckIn, bars } from "@/lib/mockData";
+import { useRoutes } from "@/lib/context/RouteContext";
 
 function formatDate(iso: string) {
   try {
@@ -33,7 +34,16 @@ const statusVariants: Record<CheckIn["status"], "warning" | "success" | "danger"
   rejected: "danger",
 };
 
+// Map user names to IDs for mock route triggers
+const USER_NAME_TO_ID: Record<string, string> = {
+  "Ana Paula": "app_usr_1",
+  "Bruno Lima": "usr_2",
+  "Carla Souza": "usr_3",
+  "Diego Fernandes": "usr_4",
+};
+
 export default function AdminCheckinsPage() {
+  const { onBarVisitTriggered } = useRoutes();
   const [data, setData] = React.useState<CheckIn[]>(() => initialCheckins);
   const [search, setSearch] = React.useState("");
   const [statusFilter, setStatusFilter] = React.useState<string>("");
@@ -53,11 +63,20 @@ export default function AdminCheckinsPage() {
   }, [data, search, statusFilter]);
 
   function approve(id: string) {
+    const checkin = data.find((c) => c.id === id);
     setData((prev) =>
       prev.map((c) =>
         c.id === id ? { ...c, status: "approved" as const } : c,
       ),
     );
+    // Trigger route bar visit when checkin is approved
+    if (checkin) {
+      const userId = USER_NAME_TO_ID[checkin.userName];
+      const barId = checkin.barId;
+      if (userId && barId) {
+        onBarVisitTriggered(userId, barId);
+      }
+    }
     setSelected(null);
   }
 
@@ -78,35 +97,51 @@ export default function AdminCheckinsPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      {/* Header */}
       <div>
-        <div className="text-2xl font-bold tracking-tight text-cr-brown-900 font-display">
+        <h1 className="text-3xl font-bold tracking-tight text-cr-brown-900 font-display">
           Check-ins Instagram
-        </div>
-        <div className="mt-1 text-sm text-cr-brown-600">
+        </h1>
+        <p className="mt-1 text-sm text-cr-brown-500">
           Modere os check-ins enviados pelos usuários
-        </div>
+        </p>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-3">
-        <Card className="!p-4">
-          <div className="text-2xl font-bold text-cr-gold-600 font-display">
-            {data.filter((c) => c.status === "pending").length}
+      <div className="grid grid-cols-3 gap-4">
+        <Card className="!p-0 overflow-hidden">
+          <div className="p-5">
+            <div className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">
+              Pendentes
+            </div>
+            <div className="mt-1 text-3xl font-bold text-cr-gold-600 font-display">
+              {data.filter((c) => c.status === "pending").length}
+            </div>
           </div>
-          <div className="text-xs text-cr-brown-500">Pendentes</div>
+          <div className="h-1 bg-gradient-to-r from-cr-gold-400 via-cr-gold-500 to-cr-gold-300 opacity-60" />
         </Card>
-        <Card className="!p-4">
-          <div className="text-2xl font-bold text-cr-green-700 font-display">
-            {data.filter((c) => c.status === "approved").length}
+        <Card className="!p-0 overflow-hidden">
+          <div className="p-5">
+            <div className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">
+              Aprovados
+            </div>
+            <div className="mt-1 text-3xl font-bold text-cr-green-700 font-display">
+              {data.filter((c) => c.status === "approved").length}
+            </div>
           </div>
-          <div className="text-xs text-cr-brown-500">Aprovados</div>
+          <div className="h-1 bg-gradient-to-r from-cr-gold-400 via-cr-gold-500 to-cr-gold-300 opacity-60" />
         </Card>
-        <Card className="!p-4">
-          <div className="text-2xl font-bold text-cr-brown-500 font-display">
-            {data.length}
+        <Card className="!p-0 overflow-hidden">
+          <div className="p-5">
+            <div className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">
+              Total
+            </div>
+            <div className="mt-1 text-3xl font-bold text-cr-brown-700 font-display">
+              {data.length}
+            </div>
           </div>
-          <div className="text-xs text-cr-brown-500">Total</div>
+          <div className="h-1 bg-gradient-to-r from-cr-gold-400 via-cr-gold-500 to-cr-gold-300 opacity-60" />
         </Card>
       </div>
 
@@ -121,7 +156,7 @@ export default function AdminCheckinsPage() {
             />
           </div>
           <select
-            className="h-10 rounded-md border border-cr-brown-100 bg-white px-3 text-sm text-cr-brown-900"
+            className="admin-select"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
@@ -155,10 +190,10 @@ export default function AdminCheckinsPage() {
                 </TD>
                 <TD className="font-medium text-cr-brown-900">{c.userName}</TD>
                 <TD className="text-sm text-cr-brown-600">{c.barName}</TD>
-                <TD className="text-sm text-cr-brown-500 font-mono text-xs">
+                <TD className="font-mono text-xs text-cr-brown-500">
                   {c.instagramHandle || "—"}
                 </TD>
-                <TD className="whitespace-nowrap font-medium">+{c.points}</TD>
+                <TD className="whitespace-nowrap font-medium text-cr-green-700">+{c.points}</TD>
                 <TD>
                   <Badge variant={statusVariants[c.status]}>
                     {statusLabels[c.status]}
@@ -179,7 +214,7 @@ export default function AdminCheckinsPage() {
             ))}
             {filtered.length === 0 && (
               <TR>
-                <TD colSpan={7} className="py-8 text-center text-sm text-cr-brown-400">
+                <TD colSpan={7} className="py-10 text-center text-sm text-cr-brown-400">
                   Nenhum check-in encontrado
                 </TD>
               </TR>
@@ -190,60 +225,64 @@ export default function AdminCheckinsPage() {
 
       {/* Detail Modal */}
       {selected && (
-        <div className="fixed inset-0 z-50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            className="absolute inset-0 bg-cr-brown-950/60 backdrop-blur-sm"
             onClick={() => setSelected(null)}
           />
-          <div className="absolute inset-4 sm:inset-auto sm:left-1/2 sm:top-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:w-full sm:max-w-lg overflow-y-auto rounded-2xl bg-white p-5 shadow-2xl">
-            <div className="flex items-center justify-between mb-4">
-              <div className="text-base font-bold text-cr-brown-900 font-display">
+          <div className="relative w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto rounded-2xl border border-cr-brown-100 bg-white p-6 shadow-2xl">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-lg font-bold text-cr-brown-900 font-display">
                 Check-in #{selected.id}
-              </div>
+              </h2>
               <button
                 type="button"
-                className="text-cr-brown-400 hover:text-cr-brown-600 text-xl cursor-pointer"
+                className="rounded-lg p-1 text-cr-brown-400 transition-colors hover:bg-cr-brown-50 hover:text-cr-brown-600 cursor-pointer"
                 onClick={() => setSelected(null)}
               >
-                ✕
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
               </button>
             </div>
 
-            <div className="space-y-3">
-              <div className="grid grid-cols-2 gap-3 text-sm">
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <div className="text-xs text-cr-brown-400">Usuário</div>
-                  <div className="font-medium text-cr-brown-900">{selected.userName}</div>
+                  <div className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Usuário</div>
+                  <div className="mt-0.5 font-medium text-cr-brown-900">{selected.userName}</div>
                 </div>
                 <div>
-                  <div className="text-xs text-cr-brown-400">Bar</div>
-                  <div className="font-medium text-cr-brown-900">{selected.barName}</div>
+                  <div className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Bar</div>
+                  <div className="mt-0.5 font-medium text-cr-brown-900">{selected.barName}</div>
                 </div>
                 <div>
-                  <div className="text-xs text-cr-brown-400">Data</div>
-                  <div className="font-medium text-cr-brown-900">{formatDate(selected.date)}</div>
+                  <div className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Data</div>
+                  <div className="mt-0.5 font-medium text-cr-brown-900">{formatDate(selected.date)}</div>
                 </div>
                 <div>
-                  <div className="text-xs text-cr-brown-400">Instagram</div>
-                  <div className="font-medium text-cr-brown-900">
+                  <div className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Instagram</div>
+                  <div className="mt-0.5 font-medium text-cr-brown-900">
                     {selected.instagramHandle || "Não informado"}
                   </div>
                 </div>
                 <div>
-                  <div className="text-xs text-cr-brown-400">Pontos</div>
-                  <div className="font-bold text-cr-green-700">+{selected.points}</div>
+                  <div className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Pontos</div>
+                  <div className="mt-0.5 font-bold text-cr-green-700">+{selected.points}</div>
                 </div>
                 <div>
-                  <div className="text-xs text-cr-brown-400">Status</div>
-                  <Badge variant={statusVariants[selected.status]}>
-                    {statusLabels[selected.status]}
-                  </Badge>
+                  <div className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Status</div>
+                  <div className="mt-1">
+                    <Badge variant={statusVariants[selected.status]}>
+                      {statusLabels[selected.status]}
+                    </Badge>
+                  </div>
                 </div>
               </div>
 
               {selected.rejectionReason && (
-                <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-                  Motivo: {selected.rejectionReason}
+                <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                  <span className="font-medium">Motivo:</span> {selected.rejectionReason}
                 </div>
               )}
 
@@ -263,7 +302,7 @@ export default function AdminCheckinsPage() {
               {selected.status === "pending" && (
                 <div className="space-y-3 pt-2">
                   <div>
-                    <label className="mb-1 block text-xs font-medium text-cr-brown-600">
+                    <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">
                       Motivo da rejeição (se rejeitar)
                     </label>
                     <Input
@@ -272,7 +311,7 @@ export default function AdminCheckinsPage() {
                       onChange={(e) => setRejectReason(e.target.value)}
                     />
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-3">
                     <Button
                       className="flex-1"
                       onClick={() => approve(selected.id)}
@@ -280,8 +319,8 @@ export default function AdminCheckinsPage() {
                       Aprovar (+{selected.points} pts)
                     </Button>
                     <Button
-                      variant="ghost"
-                      className="flex-1 !text-red-600 hover:!bg-red-50"
+                      variant="danger"
+                      className="flex-1"
                       onClick={() => reject(selected.id)}
                     >
                       Rejeitar

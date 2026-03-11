@@ -51,7 +51,7 @@ type Item = {
 };
 
 const items: Item[] = [
-  { label: "Início", href: "/app", icon: IconHome },
+  { label: "Inicio", href: "/app", icon: IconHome },
   { label: "Bares", href: "/app/bars", icon: IconBeer },
   { label: "Rotas", href: "/app/routes", icon: IconMap, isCenter: true },
   { label: "Ranking", href: "/app/ranking", icon: IconTrophy },
@@ -67,13 +67,12 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 border-t border-cr-brown-100 bg-white/95 backdrop-blur-md">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-cr-dark-800 border-t border-cr-dark-700">
       <div className="mx-auto grid max-w-lg grid-cols-5 px-2 py-1.5">
         {items.map((it) => {
           const active = isActive(pathname, it.href);
           const Icon = it.icon;
 
-          /* Center CTA button (Rotas) */
           if (it.isCenter) {
             return (
               <Link
@@ -85,16 +84,16 @@ export function BottomNav() {
                   className={[
                     "flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-all duration-200",
                     active
-                      ? "bg-gradient-to-br from-cr-gold-500 to-cr-gold-700 ring-4 ring-cr-gold-200 scale-105"
-                      : "bg-gradient-to-br from-cr-gold-500 to-cr-gold-600 ring-4 ring-cr-cream-100 hover:scale-105",
+                      ? "bg-cr-yellow-600 ring-4 ring-cr-yellow-600/30 scale-105"
+                      : "bg-cr-yellow-600 ring-4 ring-cr-dark-700 hover:scale-105 hover:ring-cr-yellow-600/20",
                   ].join(" ")}
                 >
-                  <Icon className="h-6 w-6 text-white stroke-[2]" />
+                  <Icon className="h-6 w-6 text-cr-dark-800 stroke-[2]" />
                 </div>
                 <span
                   className={[
-                    "mt-0.5 text-[10px] font-bold transition-all",
-                    active ? "text-cr-gold-700" : "text-cr-brown-500",
+                    "mt-0.5 text-[10px] font-bold transition-all uppercase tracking-wider",
+                    active ? "text-cr-yellow-600" : "text-cr-dark-400",
                   ].join(" ")}
                 >
                   {it.label}
@@ -109,22 +108,23 @@ export function BottomNav() {
               href={it.href}
               className={[
                 "flex flex-col items-center justify-center gap-0.5 rounded-lg px-2 py-1.5 transition-all duration-200",
-                active ? "text-cr-green-800" : "text-cr-brown-400 hover:text-cr-green-700",
+                active ? "text-cr-yellow-600" : "text-cr-dark-500 hover:text-cr-yellow-500",
               ].join(" ")}
             >
               <div className="relative">
                 <Icon className={["h-5 w-5 transition-all", active ? "stroke-[2]" : ""].join(" ")} />
                 {active && (
-                  <div className="absolute -top-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-cr-gold-500" />
+                  <div className="absolute -top-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-cr-yellow-600" />
                 )}
               </div>
-              <span className={["text-[10px] transition-all", active ? "font-bold" : "font-medium"].join(" ")}>
+              <span className={["text-[10px] transition-all uppercase tracking-wider", active ? "font-bold" : "font-semibold"].join(" ")}>
                 {it.label}
               </span>
             </Link>
           );
         })}
       </div>
+      <div className="h-[env(safe-area-inset-bottom)]" />
     </nav>
   );
 }

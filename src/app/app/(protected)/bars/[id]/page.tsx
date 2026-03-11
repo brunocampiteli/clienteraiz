@@ -87,8 +87,8 @@ export default function AppBarDetailPage() {
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <div className="text-4xl mb-3">🍺</div>
-        <div className="text-base font-bold text-cr-brown-900 font-display">Bar não encontrado</div>
-        <div className="mt-1 text-sm text-cr-brown-500">Esse bar não existe ou foi removido.</div>
+        <div className="text-lg font-display text-cr-dark-800 tracking-wider">BAR NAO ENCONTRADO</div>
+        <div className="mt-1 text-sm text-cr-dark-500">Esse bar nao existe ou foi removido.</div>
         <Link href="/app/bars" className="mt-4">
           <Button variant="secondary">Voltar para bares</Button>
         </Link>
@@ -130,7 +130,7 @@ export default function AppBarDetailPage() {
     <div className="space-y-4">
       {/* Hero Image */}
       <div className="relative -mx-4 -mt-4 overflow-hidden">
-        <div className="relative h-52 w-full bg-cr-cream-200">
+        <div className="relative h-56 w-full bg-cr-cream-200">
           <Image
             src={bar.imageUrl}
             alt={bar.name}
@@ -138,26 +138,24 @@ export default function AppBarDetailPage() {
             fill
             unoptimized
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-cr-dark-800/70 via-transparent to-cr-dark-800/20" />
 
-          {/* Back Button */}
           <button
             type="button"
             onClick={() => router.back()}
-            className="absolute top-4 left-4 flex h-10 w-10 items-center justify-center rounded-full bg-black/30 text-white backdrop-blur-sm transition-colors hover:bg-black/50 cursor-pointer"
+            className="absolute top-4 left-4 flex h-10 w-10 items-center justify-center rounded-full bg-cr-dark-800/60 text-white backdrop-blur-sm transition-colors hover:bg-cr-dark-800/80 cursor-pointer"
           >
             <IconArrowLeft className="h-5 w-5" />
           </button>
 
-          {/* Bottom Info */}
           <div className="absolute bottom-4 left-4 right-4">
             <div className="flex items-end justify-between">
               <div>
-                <div className="text-xl font-bold text-white font-display drop-shadow-lg">{bar.name}</div>
+                <div className="text-2xl font-display text-white tracking-wider drop-shadow-lg">{bar.name.toUpperCase()}</div>
                 <div className="text-sm text-white/80">{bar.neighborhood} • {bar.city}</div>
               </div>
-              <div className="flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-xs font-bold text-cr-brown-900 shadow-sm backdrop-blur-sm">
-                <IconStar className="h-3.5 w-3.5 text-cr-gold-500" />
+              <div className="flex items-center gap-1 rounded-full bg-cr-dark-800/80 px-3 py-1.5 text-xs font-bold text-cr-yellow-600 backdrop-blur-sm">
+                <IconStar className="h-3.5 w-3.5" />
                 {bar.rating}
               </div>
             </div>
@@ -167,13 +165,13 @@ export default function AppBarDetailPage() {
 
       {/* Quick Info Chips */}
       <div className="flex flex-wrap gap-2">
-        <Badge variant="neutral" className="!rounded-lg !px-3 !py-1.5">
+        <Badge variant="neutral" className="!rounded-lg !px-3 !py-1.5 !bg-cr-dark-100">
           📍 {bar.distanceKm.toFixed(1)} km
         </Badge>
-        <Badge variant="neutral" className="!rounded-lg !px-3 !py-1.5">
+        <Badge variant="neutral" className="!rounded-lg !px-3 !py-1.5 !bg-cr-yellow-100 !text-cr-yellow-900 !ring-cr-yellow-300">
           🏷️ {bar.category}
         </Badge>
-        <Badge variant="neutral" className="!rounded-lg !px-3 !py-1.5">
+        <Badge variant="neutral" className="!rounded-lg !px-3 !py-1.5 !bg-cr-dark-100">
           <IconClock className="h-3 w-3 mr-1" />
           {bar.openingHours.split("•")[0].trim()}
         </Badge>
@@ -182,26 +180,26 @@ export default function AppBarDetailPage() {
       {/* Rules & Minimum */}
       <Card>
         <div className="flex items-center gap-2 mb-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cr-green-50 text-sm">📋</div>
-          <div className="text-sm font-bold text-cr-brown-900 font-display">Como pontuar</div>
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cr-yellow-100 text-sm">📋</div>
+          <div className="text-base font-display text-cr-dark-800 tracking-wider">COMO PONTUAR</div>
         </div>
-        <div className="text-sm text-cr-brown-600 leading-relaxed">{bar.rules}</div>
-        <div className="mt-3 rounded-xl bg-cr-green-50 px-4 py-3 flex items-center justify-between">
-          <div className="text-xs text-cr-green-700">Consumo mínimo</div>
-          <div className="text-base font-bold text-cr-green-800 font-display">{formatCurrency(bar.minimumSpend)}</div>
+        <div className="text-sm text-cr-dark-600 leading-relaxed">{bar.rules}</div>
+        <div className="mt-3 rounded-xl bg-cr-dark-800 px-4 py-3 flex items-center justify-between">
+          <div className="text-xs text-cr-dark-400 font-semibold uppercase tracking-wider">Consumo minimo</div>
+          <div className="text-lg font-display text-cr-yellow-600 tracking-wider">{formatCurrency(bar.minimumSpend)}</div>
         </div>
       </Card>
 
       {/* Prizes */}
       <Card>
         <div className="flex items-center gap-2 mb-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cr-gold-50 text-sm">🎁</div>
-          <div className="text-sm font-bold text-cr-brown-900 font-display">Prêmios disponíveis</div>
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cr-burgundy-100 text-sm">🎁</div>
+          <div className="text-base font-display text-cr-dark-800 tracking-wider">PREMIOS DISPONIVEIS</div>
         </div>
         <div className="space-y-2">
           {bar.prizes.map((p) => (
-            <div key={p.id} className="flex items-center justify-between rounded-xl bg-cr-cream-100 px-4 py-3">
-              <div className="text-sm font-medium text-cr-brown-800">{p.name}</div>
+            <div key={p.id} className="flex items-center justify-between rounded-xl bg-cr-cream-50 px-4 py-3 border border-cr-dark-100">
+              <div className="text-sm font-semibold text-cr-dark-700">{p.name}</div>
               <Badge variant="gold">{p.points} pts</Badge>
             </div>
           ))}
@@ -211,20 +209,20 @@ export default function AppBarDetailPage() {
       {/* Schedule */}
       <Card>
         <div className="flex items-center gap-2 mb-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cr-brown-50 text-sm">🕒</div>
-          <div className="text-sm font-bold text-cr-brown-900 font-display">Horário de funcionamento</div>
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cr-green-100 text-sm">🕒</div>
+          <div className="text-base font-display text-cr-dark-800 tracking-wider">HORARIO</div>
         </div>
-        <div className="text-sm text-cr-brown-600">{bar.openingHours}</div>
+        <div className="text-sm text-cr-dark-600">{bar.openingHours}</div>
       </Card>
 
       {/* Map */}
       <Card className="!p-0 overflow-hidden">
         <div className="px-5 pt-5 pb-3">
           <div className="flex items-center gap-2 mb-1">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cr-green-50 text-sm">📍</div>
-            <div className="text-sm font-bold text-cr-brown-900 font-display">Localização</div>
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-cr-yellow-100 text-sm">📍</div>
+            <div className="text-base font-display text-cr-dark-800 tracking-wider">LOCALIZACAO</div>
           </div>
-          <div className="text-xs text-cr-brown-500 ml-10">{barSafe.address}, {barSafe.neighborhood}</div>
+          <div className="text-xs text-cr-dark-500 ml-10">{barSafe.address}, {barSafe.neighborhood}</div>
         </div>
         <div className="h-48 w-full bg-cr-cream-200">
           <iframe
@@ -260,21 +258,21 @@ export default function AppBarDetailPage() {
       {open && (
         <div className="fixed inset-0 z-50">
           <div
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            className="absolute inset-0 bg-cr-dark-800/70 backdrop-blur-sm"
             onClick={() => { if (!submitting) setOpen(false); }}
           />
           <div className="absolute bottom-0 left-0 right-0 rounded-t-3xl bg-white p-5 shadow-2xl">
-            <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-cr-brown-200" />
+            <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-cr-dark-200" />
 
-            <div className="text-base font-bold text-cr-brown-900 font-display">Enviar nota fiscal</div>
-            <div className="mt-1 text-sm text-cr-brown-500">
+            <div className="text-lg font-display text-cr-dark-800 tracking-wider">ENVIAR NOTA FISCAL</div>
+            <div className="mt-1 text-sm text-cr-dark-500">
               {bar.name} • {bar.neighborhood}
             </div>
 
             <div className="mt-5 space-y-4">
               <div>
-                <label className="mb-2 block text-sm font-medium text-cr-brown-600">Foto da nota</label>
-                <div className="rounded-2xl border-2 border-dashed border-cr-brown-200 bg-cr-cream-50 p-6 text-center transition-colors hover:border-cr-green-300">
+                <label className="mb-2 block text-xs font-bold text-cr-dark-500 uppercase tracking-wider">Foto da nota</label>
+                <div className="rounded-2xl border-2 border-dashed border-cr-yellow-600/40 bg-cr-yellow-50 p-6 text-center transition-colors hover:border-cr-yellow-600/70">
                   <input
                     type="file"
                     accept="image/*"
@@ -284,18 +282,18 @@ export default function AppBarDetailPage() {
                     onChange={(e) => setFile(e.target.files?.[0] ?? null)}
                     disabled={submitting}
                   />
-                  <IconCamera className="mx-auto h-8 w-8 text-cr-brown-300" />
-                  <div className="mt-2 text-sm font-medium text-cr-brown-500">
+                  <IconCamera className="mx-auto h-8 w-8 text-cr-yellow-700" />
+                  <div className="mt-2 text-sm font-semibold text-cr-dark-600">
                     {file ? file.name : "Toque para tirar foto ou selecionar"}
                   </div>
-                  <div className="mt-1 text-[11px] text-cr-brown-400">
+                  <div className="mt-1 text-[11px] text-cr-dark-400">
                     A IA vai verificar a nota contra o sistema fiscal
                   </div>
                 </div>
               </div>
 
               {previewUrl && (
-                <div className="overflow-hidden rounded-2xl border border-cr-brown-100 bg-cr-cream-50">
+                <div className="overflow-hidden rounded-2xl border border-cr-dark-200 bg-cr-cream-50">
                   <Image
                     src={previewUrl}
                     alt="Preview da nota"
@@ -318,7 +316,7 @@ export default function AppBarDetailPage() {
 
               <button
                 type="button"
-                className="w-full py-2 text-sm font-medium text-cr-brown-400 hover:text-cr-brown-600 cursor-pointer"
+                className="w-full py-2 text-sm font-semibold text-cr-dark-400 hover:text-cr-dark-600 cursor-pointer"
                 onClick={() => { if (!submitting) setOpen(false); }}
               >
                 Cancelar
@@ -332,42 +330,42 @@ export default function AppBarDetailPage() {
       {checkinOpen && (
         <div className="fixed inset-0 z-50">
           <div
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            className="absolute inset-0 bg-cr-dark-800/70 backdrop-blur-sm"
             onClick={() => { if (!checkinSubmitting) setCheckinOpen(false); }}
           />
           <div className="absolute bottom-0 left-0 right-0 rounded-t-3xl bg-white p-5 shadow-2xl">
-            <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-cr-brown-200" />
+            <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-cr-dark-200" />
 
-            <div className="text-base font-bold text-cr-brown-900 font-display">📸 Check-in Instagram</div>
-            <div className="mt-1 text-sm text-cr-brown-500">
-              {bar.name} • +30 pontos bônus
+            <div className="text-lg font-display text-cr-dark-800 tracking-wider">📸 CHECK-IN INSTAGRAM</div>
+            <div className="mt-1 text-sm text-cr-dark-500">
+              {bar.name} • +30 pontos bonus
             </div>
 
-            <div className="mt-4 rounded-xl bg-cr-gold-50 border border-cr-gold-200 px-4 py-3">
-              <div className="text-xs font-semibold text-cr-gold-700">Como funciona:</div>
-              <div className="mt-1 text-xs text-cr-gold-600 leading-relaxed">
+            <div className="mt-4 rounded-xl bg-cr-burgundy-50 border border-cr-burgundy-200 px-4 py-3">
+              <div className="text-xs font-bold text-cr-burgundy-800 uppercase tracking-wider">Como funciona:</div>
+              <div className="mt-1 text-xs text-cr-burgundy-700 leading-relaxed">
                 1. Poste um story no Instagram marcando o bar<br />
                 2. Tire um print do story<br />
-                3. Envie o print aqui e ganhe 30 pontos bônus!
+                3. Envie o print aqui e ganhe 30 pontos bonus!
               </div>
             </div>
 
             <div className="mt-4 space-y-4">
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-cr-brown-600">Seu @ no Instagram (opcional)</label>
+                <label className="mb-1.5 block text-xs font-bold text-cr-dark-500 uppercase tracking-wider">Seu @ no Instagram (opcional)</label>
                 <input
                   type="text"
                   placeholder="@seuperfil"
                   value={instagramHandle}
                   onChange={(e) => setInstagramHandle(e.target.value)}
                   disabled={checkinSubmitting}
-                  className="h-10 w-full rounded-lg border border-cr-brown-100 bg-white px-3 text-sm text-cr-brown-900 placeholder:text-cr-brown-300 focus:border-cr-green-400 focus:outline-none focus:ring-1 focus:ring-cr-green-400"
+                  className="h-11 w-full rounded-xl border border-cr-dark-200 bg-white px-4 text-sm text-cr-dark-800 placeholder:text-cr-dark-400 focus:border-cr-yellow-600 focus:outline-none focus:ring-2 focus:ring-cr-yellow-600/30"
                 />
               </div>
 
               <div>
-                <label className="mb-2 block text-sm font-medium text-cr-brown-600">Print do story</label>
-                <div className="rounded-2xl border-2 border-dashed border-cr-gold-300 bg-cr-gold-50/50 p-6 text-center transition-colors hover:border-cr-gold-400">
+                <label className="mb-2 block text-xs font-bold text-cr-dark-500 uppercase tracking-wider">Print do story</label>
+                <div className="rounded-2xl border-2 border-dashed border-cr-burgundy-800/30 bg-cr-burgundy-50 p-6 text-center transition-colors hover:border-cr-burgundy-800/50">
                   <input
                     type="file"
                     accept="image/*"
@@ -378,14 +376,14 @@ export default function AppBarDetailPage() {
                     disabled={checkinSubmitting}
                   />
                   <div className="text-2xl">📱</div>
-                  <div className="mt-2 text-sm font-medium text-cr-brown-500">
+                  <div className="mt-2 text-sm font-semibold text-cr-dark-600">
                     {checkinFile ? checkinFile.name : "Toque para enviar o print do story"}
                   </div>
                 </div>
               </div>
 
               {checkinPreview && (
-                <div className="overflow-hidden rounded-2xl border border-cr-brown-100 bg-cr-cream-50">
+                <div className="overflow-hidden rounded-2xl border border-cr-dark-200 bg-cr-cream-50">
                   <Image
                     src={checkinPreview}
                     alt="Preview do check-in"
@@ -409,7 +407,7 @@ export default function AppBarDetailPage() {
 
               <button
                 type="button"
-                className="w-full py-2 text-sm font-medium text-cr-brown-400 hover:text-cr-brown-600 cursor-pointer"
+                className="w-full py-2 text-sm font-semibold text-cr-dark-400 hover:text-cr-dark-600 cursor-pointer"
                 onClick={() => { if (!checkinSubmitting) setCheckinOpen(false); }}
               >
                 Cancelar

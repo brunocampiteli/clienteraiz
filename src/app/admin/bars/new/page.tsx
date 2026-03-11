@@ -55,57 +55,57 @@ export default function NewBarPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div>
-        <div className="text-2xl font-bold tracking-tight text-cr-brown-900 font-display">Cadastrar bar</div>
-        <div className="mt-1 text-sm text-cr-brown-600">Cadastro mock (sem API)</div>
+        <h1 className="text-3xl font-bold tracking-tight text-cr-brown-900 font-display">Cadastrar Bar</h1>
+        <p className="mt-1 text-sm text-cr-brown-500">Preencha os dados para cadastrar um novo bar</p>
       </div>
 
       <Card>
-        <form className="space-y-4" onSubmit={onSubmit}>
+        <form className="space-y-5" onSubmit={onSubmit}>
           <div>
-            <label className="mb-1 block text-sm font-medium text-cr-brown-600">Nome fantasia</label>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Nome fantasia</label>
             <Input value={fantasyName} onChange={(e) => setFantasyName(e.target.value)} required />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-cr-brown-600">Razão social</label>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Razão social</label>
             <Input value={legalName} onChange={(e) => setLegalName(e.target.value)} required />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-cr-brown-600">CNPJ</label>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">CNPJ</label>
             <Input value={cnpj} onChange={(e) => setCnpj(e.target.value)} required placeholder="00.000.000/0000-00" />
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-5 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-sm font-medium text-cr-brown-600">Cidade</label>
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Cidade</label>
               <Input value={city} onChange={(e) => setCity(e.target.value)} required />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-cr-brown-600">UF</label>
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">UF</label>
               <Input value={state} onChange={(e) => setState(e.target.value)} required maxLength={2} />
             </div>
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-cr-brown-600">Bairro</label>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Bairro</label>
             <Input value={neighborhood} onChange={(e) => setNeighborhood(e.target.value)} required />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-cr-brown-600">Endereço</label>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Endereço</label>
             <Input value={address} onChange={(e) => setAddress(e.target.value)} required placeholder="Rua, número" />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-cr-brown-600">CEP</label>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">CEP</label>
             <Input value={cep} onChange={(e) => setCep(e.target.value)} required placeholder="00000-000" />
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-cr-brown-600">Consumo mínimo</label>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Consumo mínimo (R$)</label>
             <Input
               value={minimumSpend}
               onChange={(e) => setMinimumSpend(e.target.value)}
@@ -115,9 +115,9 @@ export default function NewBarPage() {
             />
           </div>
 
-          <div className="flex items-center gap-2">
-            <Button type="submit">Salvar</Button>
-            <Button type="button" variant="secondary" onClick={() => router.back()}>
+          <div className="flex items-center gap-3 pt-2">
+            <Button type="submit" variant="primary">Salvar</Button>
+            <Button type="button" variant="ghost" onClick={() => router.back()}>
               Cancelar
             </Button>
           </div>

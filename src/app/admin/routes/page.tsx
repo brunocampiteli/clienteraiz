@@ -6,8 +6,10 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/Table";
 import { Badge } from "@/components/ui/Badge";
-import { bars, adminRoutes as initialRoutes, type AdminRoute } from "@/lib/mockData";
+import { bars } from "@/lib/mockData";
 import { addNotification } from "@/lib/notifications";
+import { useRoutes } from "@/lib/context/RouteContext";
+import type { RouteDifficulty, RouteInput } from "@/lib/types";
 
 const DURATION_OPTIONS = [
   { value: 3, label: "3 dias" },
@@ -19,7 +21,7 @@ const DURATION_OPTIONS = [
   { value: 30, label: "30 dias" },
 ];
 
-const DIFFICULTY_OPTIONS: AdminRoute["difficulty"][] = ["fácil", "médio", "difícil"];
+const DIFFICULTY_OPTIONS: RouteDifficulty[] = ["fácil", "médio", "difícil"];
 
 function daysRemaining(startDate: string, durationDays: number) {
   const end = new Date(startDate);
@@ -39,7 +41,13 @@ function calcEndDate(startDate: string, durationDays: number) {
 }
 
 export default function AdminRoutesPage() {
-  const [data, setData] = React.useState<AdminRoute[]>(() => initialRoutes);
+  const {
+    routes: data,
+    getRouteBarIds,
+    createRoute,
+    editRoute,
+    deleteRoute,
+  } = useRoutes();
 
   const [editingId, setEditingId] = React.useState<string | null>(null);
   const [name, setName] = React.useState("");
@@ -49,7 +57,7 @@ export default function AdminRoutesPage() {
   const [startDate, setStartDate] = React.useState(() => new Date().toISOString().split("T")[0]);
   const [prize, setPrize] = React.useState("");
   const [bonusPoints, setBonusPoints] = React.useState("200");
-  const [difficulty, setDifficulty] = React.useState<AdminRoute["difficulty"]>("fácil");
+  const [difficulty, setDifficulty] = React.useState<RouteDifficulty>("fácil");
   const [active, setActive] = React.useState(true);
 
   const [filter, setFilter] = React.useState<"all" | "active" | "inactive">("all");
@@ -80,31 +88,32 @@ export default function AdminRoutesPage() {
     if (barIds.length === 0) return;
 
     const parsedPoints = Number(bonusPoints);
-    const next: AdminRoute = {
-      id: editingId ?? `ar_${Date.now()}`,
+
+    const input: RouteInput = {
       name: trimmedName,
       description: description.trim(),
-      barIds,
+      emoji: "🍺",
+      difficulty,
       durationDays,
       startDate,
       prize: prize.trim(),
+      prizeEmoji: "🏆",
       bonusPoints: Number.isFinite(parsedPoints) ? Math.max(0, parsedPoints) : 0,
-      difficulty,
       active,
-      participantsCount: editingId ? (data.find((r) => r.id === editingId)?.participantsCount ?? 0) : 0,
-      completedCount: editingId ? (data.find((r) => r.id === editingId)?.completedCount ?? 0) : 0,
+      barIds,
+      barPoints: {},
     };
 
-    setData((prev) => {
-      const exists = prev.some((r) => r.id === next.id);
-      if (!exists) return [next, ...prev];
-      return prev.map((r) => (r.id === next.id ? next : r));
-    });
+    if (editingId) {
+      editRoute(editingId, input);
+    } else {
+      createRoute(input);
+    }
 
     addNotification({
       type: "new_challenge",
-      title: "Nova rota",
-      body: next.name,
+      title: editingId ? "Rota atualizada" : "Nova rota",
+      body: trimmedName,
       href: "/app/routes",
     });
 
@@ -137,30 +146,53 @@ export default function AdminRoutesPage() {
     return bars.find((b) => b.id === id)?.name ?? id;
   }
 
+  function handleEdit(routeId: string) {
+    const route = data.find((r) => r.id === routeId);
+    if (!route) return;
+    const routeBarIds = getRouteBarIds(routeId);
+
+    setEditingId(route.id);
+    setName(route.name);
+    setDescription(route.description);
+    setBarIds(routeBarIds);
+    setDurationDays(route.durationDays);
+    setStartDate(route.startDate);
+    setPrize(route.prize);
+    setBonusPoints(String(route.bonusPoints));
+    setDifficulty(route.difficulty);
+    setActive(route.active);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function handleDelete(routeId: string) {
+    deleteRoute(routeId);
+    if (editingId === routeId) resetForm();
+  }
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div>
-        <div className="text-2xl font-bold tracking-tight text-cr-brown-900 font-display">Rotas</div>
-        <div className="mt-1 text-sm text-cr-brown-600">Cadastre rotas de gamificação com prazo em dias para os usuários completarem</div>
+        <h1 className="text-3xl font-bold tracking-tight text-cr-brown-900 font-display">Rotas</h1>
+        <p className="mt-1 text-sm text-cr-brown-500">Cadastre rotas de gamificação com prazo em dias para os usuários completarem</p>
       </div>
 
       {/* Form */}
       <Card>
-        <div className="mb-4 text-sm font-bold text-cr-brown-900 font-display">
+        <div className="mb-5 text-sm font-bold text-cr-brown-900 font-display">
           {editingId ? "Editar rota" : "Nova rota"}
         </div>
         <form onSubmit={onSubmit} className="grid gap-4 lg:grid-cols-6">
           <div className="lg:col-span-3">
-            <div className="mb-1 text-xs font-medium text-cr-brown-600">Nome da rota *</div>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Nome da rota *</label>
             <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex.: Rota do Happy Hour" />
           </div>
 
           <div className="lg:col-span-1">
-            <div className="mb-1 text-xs font-medium text-cr-brown-600">Dificuldade</div>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Dificuldade</label>
             <select
-              className="h-10 w-full rounded-lg border border-cr-brown-100 bg-white px-3 text-sm text-cr-brown-900 outline-none focus:ring-2 focus:ring-cr-green-600/20 focus:border-cr-green-600"
+              className="admin-select"
               value={difficulty}
-              onChange={(e) => setDifficulty(e.target.value as AdminRoute["difficulty"])}
+              onChange={(e) => setDifficulty(e.target.value as RouteDifficulty)}
             >
               {DIFFICULTY_OPTIONS.map((d) => (
                 <option key={d} value={d}>{d.charAt(0).toUpperCase() + d.slice(1)}</option>
@@ -169,9 +201,9 @@ export default function AdminRoutesPage() {
           </div>
 
           <div className="lg:col-span-1">
-            <div className="mb-1 text-xs font-medium text-cr-brown-600">Prazo (dias) *</div>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Prazo (dias) *</label>
             <select
-              className="h-10 w-full rounded-lg border border-cr-brown-100 bg-white px-3 text-sm font-semibold text-cr-brown-900 outline-none focus:ring-2 focus:ring-cr-green-600/20 focus:border-cr-green-600"
+              className="admin-select"
               value={durationDays}
               onChange={(e) => setDurationDays(Number(e.target.value))}
             >
@@ -182,22 +214,22 @@ export default function AdminRoutesPage() {
           </div>
 
           <div className="lg:col-span-1">
-            <div className="mb-1 text-xs font-medium text-cr-brown-600">Data início</div>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Data início</label>
             <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
           </div>
 
           <div className="lg:col-span-6">
-            <div className="mb-1 text-xs font-medium text-cr-brown-600">Descrição</div>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Descrição</label>
             <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Descreva a rota para os usuários..." />
           </div>
 
           <div className="lg:col-span-3">
-            <div className="mb-1 text-xs font-medium text-cr-brown-600">Prêmio</div>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Prêmio</label>
             <Input value={prize} onChange={(e) => setPrize(e.target.value)} placeholder="Ex.: 1 Balde Eisenbahn" />
           </div>
 
           <div className="lg:col-span-1">
-            <div className="mb-1 text-xs font-medium text-cr-brown-600">Pontos bônus</div>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Pontos bônus</label>
             <Input value={bonusPoints} onChange={(e) => setBonusPoints(e.target.value)} placeholder="200" inputMode="numeric" />
           </div>
 
@@ -210,26 +242,26 @@ export default function AdminRoutesPage() {
 
           {/* Date preview */}
           <div className="lg:col-span-6">
-            <div className="rounded-xl bg-cr-green-50 border border-cr-green-200 p-3 flex flex-wrap items-center gap-4 text-sm">
+            <div className="rounded-xl bg-cr-gold-50 border border-cr-gold-200 p-3.5 flex flex-wrap items-center gap-4 text-sm">
               <div className="flex items-center gap-2">
                 <span className="text-lg">📅</span>
                 <div>
                   <span className="text-cr-brown-500">Período: </span>
-                  <span className="font-bold text-cr-green-800">{formatDate(startDate)}</span>
+                  <span className="font-bold text-cr-brown-900">{formatDate(startDate)}</span>
                   <span className="text-cr-brown-400"> → </span>
-                  <span className="font-bold text-cr-green-800">{formatDate(calcEndDate(startDate, durationDays))}</span>
+                  <span className="font-bold text-cr-brown-900">{formatDate(calcEndDate(startDate, durationDays))}</span>
                 </div>
               </div>
-              <Badge variant="success">{durationDays} dias para completar</Badge>
+              <Badge variant="gold">{durationDays} dias para completar</Badge>
             </div>
           </div>
 
           {/* Bars Selection */}
           <div className="lg:col-span-6">
-            <div className="mb-2 text-xs font-medium text-cr-brown-600">Bares da rota (selecione e ordene) *</div>
+            <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Bares da rota (selecione e ordene) *</label>
             <div className="grid gap-3 lg:grid-cols-2">
-              <div className="rounded-xl border border-cr-brown-100 p-3">
-                <div className="mb-2 text-xs font-semibold text-cr-brown-500">Bares disponíveis</div>
+              <div className="rounded-xl border border-cr-brown-100 bg-white p-4">
+                <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Bares disponíveis</div>
                 <div className="space-y-1.5">
                   {bars.map((b) => {
                     const selected = barIds.includes(b.id);
@@ -238,7 +270,7 @@ export default function AdminRoutesPage() {
                         key={b.id}
                         className={[
                           "flex items-center gap-2 rounded-lg px-3 py-2 text-sm cursor-pointer transition-colors",
-                          selected ? "bg-cr-green-50 text-cr-green-800" : "text-cr-brown-600 hover:bg-cr-cream-100",
+                          selected ? "bg-cr-gold-50 text-cr-brown-900" : "text-cr-brown-600 hover:bg-cr-brown-50",
                         ].join(" ")}
                       >
                         <input type="checkbox" checked={selected} onChange={() => toggleBar(b.id)} className="rounded" />
@@ -251,8 +283,8 @@ export default function AdminRoutesPage() {
                 </div>
               </div>
 
-              <div className="rounded-xl border border-cr-brown-100 p-3">
-                <div className="mb-2 text-xs font-semibold text-cr-brown-500">
+              <div className="rounded-xl border border-cr-brown-100 bg-white p-4">
+                <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-cr-brown-500">
                   Ordem da rota ({barIds.length} bar{barIds.length !== 1 ? "es" : ""})
                 </div>
                 {barIds.length === 0 && (
@@ -262,14 +294,14 @@ export default function AdminRoutesPage() {
                 )}
                 <div className="space-y-1.5">
                   {barIds.map((id, idx) => (
-                    <div key={`${id}-${idx}`} className="flex items-center gap-2 rounded-lg bg-cr-cream-100 px-3 py-2">
-                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-cr-green-800 text-[10px] font-bold text-white">
+                    <div key={`${id}-${idx}`} className="flex items-center gap-2 rounded-lg bg-cr-brown-50 px-3 py-2">
+                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-cr-brown-900 text-[10px] font-bold text-white">
                         {idx + 1}
                       </div>
                       <span className="flex-1 text-sm font-medium text-cr-brown-800">{barName(id)}</span>
                       <div className="flex gap-1">
-                        <button type="button" onClick={() => moveBarUp(idx)} className="rounded px-1.5 py-0.5 text-xs text-cr-brown-400 hover:bg-cr-cream-200 hover:text-cr-brown-700 cursor-pointer disabled:opacity-30" disabled={idx === 0}>▲</button>
-                        <button type="button" onClick={() => moveBarDown(idx)} className="rounded px-1.5 py-0.5 text-xs text-cr-brown-400 hover:bg-cr-cream-200 hover:text-cr-brown-700 cursor-pointer disabled:opacity-30" disabled={idx === barIds.length - 1}>▼</button>
+                        <button type="button" onClick={() => moveBarUp(idx)} className="rounded px-1.5 py-0.5 text-xs text-cr-brown-400 hover:bg-cr-brown-100 hover:text-cr-brown-700 cursor-pointer disabled:opacity-30" disabled={idx === 0}>▲</button>
+                        <button type="button" onClick={() => moveBarDown(idx)} className="rounded px-1.5 py-0.5 text-xs text-cr-brown-400 hover:bg-cr-brown-100 hover:text-cr-brown-700 cursor-pointer disabled:opacity-30" disabled={idx === barIds.length - 1}>▼</button>
                       </div>
                     </div>
                   ))}
@@ -278,7 +310,7 @@ export default function AdminRoutesPage() {
             </div>
           </div>
 
-          <div className="lg:col-span-6 flex items-center gap-2">
+          <div className="lg:col-span-6 flex items-center gap-2 pt-2">
             <Button type="submit">{editingId ? "Salvar alterações" : "Cadastrar rota"}</Button>
             <Button type="button" variant="secondary" onClick={resetForm}>
               {editingId ? "Cancelar" : "Limpar"}
@@ -289,20 +321,20 @@ export default function AdminRoutesPage() {
 
       {/* Routes Table */}
       <Card>
-        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <div className="text-sm font-semibold text-cr-brown-900">Rotas cadastradas</div>
-            <div className="mt-1 text-xs text-cr-brown-400">{data.length} rota{data.length !== 1 ? "s" : ""}</div>
+            <div className="text-sm font-bold text-cr-brown-900 font-display">Rotas cadastradas</div>
+            <p className="mt-1 text-xs text-cr-brown-400">{data.length} rota{data.length !== 1 ? "s" : ""}</p>
           </div>
-          <div className="flex gap-1">
+          <div className="flex gap-1.5">
             {(["all", "active", "inactive"] as const).map((f) => (
               <button
                 key={f}
                 type="button"
                 onClick={() => setFilter(f)}
                 className={[
-                  "rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer",
-                  filter === f ? "bg-cr-green-800 text-white" : "bg-cr-cream-200 text-cr-brown-600 hover:bg-cr-cream-300",
+                  "rounded-xl px-3.5 py-2 text-xs font-bold transition-colors cursor-pointer",
+                  filter === f ? "bg-cr-brown-900 text-white" : "bg-white text-cr-brown-500 border border-cr-brown-100 hover:bg-cr-brown-50",
                 ].join(" ")}
               >
                 {f === "all" ? "Todas" : f === "active" ? "Ativas" : "Inativas"}
@@ -326,6 +358,7 @@ export default function AdminRoutesPage() {
           </THead>
           <TBody>
             {filtered.map((r) => {
+              const routeBarIds = getRouteBarIds(r.id);
               const days = daysRemaining(r.startDate, r.durationDays);
               return (
                 <TR key={r.id}>
@@ -340,9 +373,9 @@ export default function AdminRoutesPage() {
                   </TD>
                   <TD>
                     <div className="space-y-0.5">
-                      {r.barIds.map((id, i) => (
+                      {routeBarIds.map((id, i) => (
                         <div key={`${id}-${i}`} className="text-xs text-cr-brown-600">
-                          <span className="font-semibold text-cr-green-700">{i + 1}.</span> {barName(id)}
+                          <span className="font-semibold text-cr-gold-700">{i + 1}.</span> {barName(id)}
                         </div>
                       ))}
                     </div>
@@ -375,23 +408,8 @@ export default function AdminRoutesPage() {
                   </TD>
                   <TD>
                     <div className="flex flex-wrap items-center gap-2">
-                      <Button type="button" variant="secondary" onClick={() => {
-                        setEditingId(r.id);
-                        setName(r.name);
-                        setDescription(r.description);
-                        setBarIds(r.barIds);
-                        setDurationDays(r.durationDays);
-                        setStartDate(r.startDate);
-                        setPrize(r.prize);
-                        setBonusPoints(String(r.bonusPoints));
-                        setDifficulty(r.difficulty);
-                        setActive(r.active);
-                        window.scrollTo({ top: 0, behavior: "smooth" });
-                      }}>Editar</Button>
-                      <Button type="button" variant="ghost" onClick={() => {
-                        setData((prev) => prev.filter((x) => x.id !== r.id));
-                        if (editingId === r.id) resetForm();
-                      }}>Remover</Button>
+                      <Button type="button" variant="secondary" onClick={() => handleEdit(r.id)}>Editar</Button>
+                      <Button type="button" variant="ghost" onClick={() => handleDelete(r.id)}>Remover</Button>
                     </div>
                   </TD>
                 </TR>

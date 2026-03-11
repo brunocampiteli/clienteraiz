@@ -74,18 +74,71 @@ export default function PrizesPage() {
   }, [data, period]);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      {/* Header */}
       <div>
-        <div className="text-2xl font-bold tracking-tight text-cr-brown-900 font-display">Prêmios</div>
-        <div className="mt-1 text-sm text-cr-brown-600">Cadastro e catálogo (mock)</div>
+        <h1 className="text-3xl font-bold tracking-tight text-cr-brown-900 font-display">
+          Prêmios
+        </h1>
+        <p className="mt-1 text-sm text-cr-brown-500">
+          Cadastro e catálogo de prêmios por período
+        </p>
       </div>
 
+      {/* Stats */}
+      <div className="grid grid-cols-3 gap-4">
+        <Card className="!p-0 overflow-hidden">
+          <div className="p-5">
+            <div className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">
+              Total cadastrados
+            </div>
+            <div className="mt-1 text-3xl font-bold text-cr-gold-600 font-display">
+              {data.length}
+            </div>
+          </div>
+          <div className="h-1 bg-gradient-to-r from-cr-gold-400 via-cr-gold-500 to-cr-gold-300 opacity-60" />
+        </Card>
+        <Card className="!p-0 overflow-hidden">
+          <div className="p-5">
+            <div className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">
+              Período atual
+            </div>
+            <div className="mt-1 text-3xl font-bold text-cr-brown-700 font-display">
+              {filtered.length}
+            </div>
+          </div>
+          <div className="h-1 bg-gradient-to-r from-cr-gold-400 via-cr-gold-500 to-cr-gold-300 opacity-60" />
+        </Card>
+        <Card className="!p-0 overflow-hidden">
+          <div className="p-5">
+            <div className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">
+              Com ranking
+            </div>
+            <div className="mt-1 text-3xl font-bold text-cr-green-700 font-display">
+              {filtered.filter((p) => p.topRank).length}
+            </div>
+          </div>
+          <div className="h-1 bg-gradient-to-r from-cr-gold-400 via-cr-gold-500 to-cr-gold-300 opacity-60" />
+        </Card>
+      </div>
+
+      {/* Form */}
       <Card>
-        <form onSubmit={onSubmit} className="grid gap-3 lg:grid-cols-4">
+        <div className="mb-4">
+          <h2 className="text-sm font-semibold text-cr-brown-900">
+            {editingId ? "Editar prêmio" : "Novo prêmio"}
+          </h2>
+          <p className="mt-0.5 text-xs text-cr-brown-400">
+            {editingId ? "Altere os campos e salve" : "Preencha os campos para cadastrar"}
+          </p>
+        </div>
+        <form onSubmit={onSubmit} className="grid gap-4 lg:grid-cols-4">
           <div>
-            <div className="mb-1 text-xs font-medium text-cr-brown-600">Mês/ano</div>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">
+              Mês/ano
+            </label>
             <select
-              className="h-10 w-full rounded-md border border-cr-brown-100 bg-white px-3 text-sm text-cr-brown-900"
+              className="admin-select"
               value={period}
               onChange={(e) => setPeriod(e.target.value)}
             >
@@ -97,13 +150,17 @@ export default function PrizesPage() {
             </select>
           </div>
           <div className="lg:col-span-2">
-            <div className="mb-1 text-xs font-medium text-cr-brown-600">Nome do prêmio</div>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">
+              Nome do prêmio
+            </label>
             <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex.: Vale chopp" />
           </div>
           <div>
-            <div className="mb-1 text-xs font-medium text-cr-brown-600">Top (opcional)</div>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">
+              Top (opcional)
+            </label>
             <select
-              className="h-10 w-full rounded-md border border-cr-brown-100 bg-white px-3 text-sm text-cr-brown-900"
+              className="admin-select"
               value={topRank}
               onChange={(e) => setTopRank(e.target.value)}
             >
@@ -113,7 +170,7 @@ export default function PrizesPage() {
               <option value="3">Top 3</option>
             </select>
           </div>
-          <div className="lg:col-span-4 flex items-center gap-2">
+          <div className="lg:col-span-4 flex items-center gap-3">
             <Button type="submit">{editingId ? "Salvar alterações" : "Cadastrar prêmio"}</Button>
             <Button
               type="button"
@@ -130,7 +187,16 @@ export default function PrizesPage() {
         </form>
       </Card>
 
+      {/* Table */}
       <Card>
+        <div className="mb-4">
+          <h2 className="text-sm font-semibold text-cr-brown-900">
+            Prêmios do período
+          </h2>
+          <p className="mt-0.5 text-xs text-cr-brown-400">
+            {period} — {filtered.length} prêmio(s)
+          </p>
+        </div>
         <Table>
           <THead>
             <TR>
@@ -145,7 +211,7 @@ export default function PrizesPage() {
                 <TD className="font-medium text-cr-brown-900">{p.name}</TD>
                 <TD>
                   {p.topRank ? (
-                    <Badge variant={p.topRank === 1 ? "success" : p.topRank === 2 ? "neutral" : "warning"}>
+                    <Badge variant={p.topRank === 1 ? "gold" : p.topRank === 2 ? "neutral" : "warning"}>
                       Top {p.topRank}
                     </Badge>
                   ) : (
@@ -168,7 +234,7 @@ export default function PrizesPage() {
                     </Button>
                     <Button
                       type="button"
-                      variant="ghost"
+                      variant="danger"
                       onClick={() => {
                         setData((prev) => prev.filter((x) => x.id !== p.id));
                         if (editingId === p.id) {
@@ -184,6 +250,13 @@ export default function PrizesPage() {
                 </TD>
               </TR>
             ))}
+            {filtered.length === 0 && (
+              <TR>
+                <TD colSpan={3} className="py-10 text-center text-sm text-cr-brown-400">
+                  Nenhum prêmio cadastrado neste período
+                </TD>
+              </TR>
+            )}
           </TBody>
         </Table>
       </Card>

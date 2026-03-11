@@ -26,23 +26,23 @@ export default function UsersListPage() {
   }, [q]);
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <div className="text-2xl font-bold tracking-tight text-cr-brown-900 font-display">Usuários</div>
-          <div className="mt-1 text-sm text-cr-brown-600">Lista de usuários cadastrados</div>
+          <h1 className="text-3xl font-bold tracking-tight text-cr-brown-900 font-display">Usuários</h1>
+          <p className="mt-1 text-sm text-cr-brown-500">Gerencie os usuários cadastrados na plataforma</p>
         </div>
         <Link href="/admin/users/new">
-          <Button>Novo</Button>
+          <Button variant="primary">+ Novo Usuário</Button>
         </Link>
       </div>
 
       <Card>
-        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="w-full sm:max-w-sm">
             <Input placeholder="Buscar por nome, CPF, e-mail ou WhatsApp..." value={q} onChange={(e) => setQ(e.target.value)} />
           </div>
-          <div className="text-sm text-cr-brown-600">{filtered.length} resultado(s)</div>
+          <span className="text-xs font-medium text-cr-brown-400">{filtered.length} resultado(s)</span>
         </div>
 
         <Table>

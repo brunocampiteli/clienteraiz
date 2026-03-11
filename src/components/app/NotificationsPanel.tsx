@@ -53,7 +53,7 @@ export function NotificationsPanel({ open, onClose }: { open: boolean; onClose: 
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[100] flex items-end justify-center bg-black/40 p-4 sm:items-center"
+      className="fixed inset-0 z-[100] flex items-end justify-center bg-cr-dark-800/60 backdrop-blur-sm p-4 sm:items-center"
       role="dialog"
       aria-modal="true"
       onMouseDown={(e) => {
@@ -64,8 +64,8 @@ export function NotificationsPanel({ open, onClose }: { open: boolean; onClose: 
         <div className="flex max-h-[80vh] flex-col">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <div className="text-lg font-bold text-cr-brown-900 font-display">Notificações</div>
-              <div className="mt-1 text-sm text-cr-brown-600">Atualizações do sistema</div>
+              <div className="text-xl font-display text-cr-dark-800 tracking-wider">NOTIFICACOES</div>
+              <div className="mt-1 text-sm text-cr-dark-500">Atualizacoes do sistema</div>
             </div>
             <Button type="button" variant="ghost" onClick={onClose}>
               Fechar
@@ -83,15 +83,15 @@ export function NotificationsPanel({ open, onClose }: { open: boolean; onClose: 
 
           <div className="mt-4 flex-1 space-y-2 overflow-auto">
             {items.length === 0 ? (
-              <div className="rounded-lg border border-cr-brown-100 bg-cr-cream-100 p-3 text-sm text-cr-brown-600">Sem notificações</div>
+              <div className="rounded-xl border border-cr-dark-200 bg-cr-dark-50 p-3 text-sm text-cr-dark-500">Sem notificacoes</div>
             ) : (
               items.map((n) => (
                 <button
                   key={n.id}
                   type="button"
                   className={[
-                    "w-full rounded-lg border border-cr-brown-100 p-3 text-left transition-colors",
-                    n.readAt ? "bg-white" : "bg-cr-cream-100",
+                    "w-full rounded-xl border p-3 text-left transition-colors",
+                    n.readAt ? "bg-white border-cr-dark-200" : "bg-cr-yellow-50 border-cr-yellow-300",
                   ].join(" ")}
                   onClick={() => {
                     markNotificationRead(n.id);
@@ -103,11 +103,14 @@ export function NotificationsPanel({ open, onClose }: { open: boolean; onClose: 
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <div className="text-sm font-semibold text-cr-brown-900">{n.title}</div>
-                      {n.body ? <div className="mt-1 text-xs text-cr-brown-600">{n.body}</div> : null}
-                      <div className="mt-2 text-xs text-cr-brown-400">{formatDate(n.createdAt)}</div>
+                      <div className="text-sm font-bold text-cr-dark-800">{n.title}</div>
+                      {n.body ? <div className="mt-1 text-xs text-cr-dark-500">{n.body}</div> : null}
+                      <div className="mt-2 text-xs text-cr-dark-400">{formatDate(n.createdAt)}</div>
                     </div>
-                    <div className="text-xs text-cr-brown-400">{n.readAt ? "Lida" : "Nova"}</div>
+                    <div className={[
+                      "text-xs font-bold uppercase tracking-wider",
+                      n.readAt ? "text-cr-dark-400" : "text-cr-yellow-800",
+                    ].join(" ")}>{n.readAt ? "Lida" : "Nova"}</div>
                   </div>
                 </button>
               ))

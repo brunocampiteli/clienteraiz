@@ -96,23 +96,54 @@ export default function AdminNotificationsPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      {/* Header */}
       <div>
-        <div className="text-2xl font-bold tracking-tight text-cr-brown-900 font-display">
+        <h1 className="text-3xl font-bold tracking-tight text-cr-brown-900 font-display">
           Notificações Push
-        </div>
-        <div className="mt-1 text-sm text-cr-brown-600">
+        </h1>
+        <p className="mt-1 text-sm text-cr-brown-500">
           Envie notificações push para os celulares dos usuários
-        </div>
+        </p>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-2 gap-4">
+        <Card className="!p-0 overflow-hidden">
+          <div className="p-5">
+            <div className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">
+              Enviadas (sessão)
+            </div>
+            <div className="mt-1 text-3xl font-bold text-cr-gold-600 font-display">
+              {history.length}
+            </div>
+          </div>
+          <div className="h-1 bg-gradient-to-r from-cr-gold-400 via-cr-gold-500 to-cr-gold-300 opacity-60" />
+        </Card>
+        <Card className="!p-0 overflow-hidden">
+          <div className="p-5">
+            <div className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">
+              Total destinatários
+            </div>
+            <div className="mt-1 text-3xl font-bold text-cr-green-700 font-display">
+              {history.reduce((sum, n) => sum + n.recipientCount, 0)}
+            </div>
+          </div>
+          <div className="h-1 bg-gradient-to-r from-cr-gold-400 via-cr-gold-500 to-cr-gold-300 opacity-60" />
+        </Card>
       </div>
 
       {/* Compose form */}
       <Card>
-        <form onSubmit={onSubmit} className="grid gap-3 lg:grid-cols-6">
+        <div className="mb-4">
+          <h2 className="text-sm font-semibold text-cr-brown-900">Nova notificação</h2>
+          <p className="mt-0.5 text-xs text-cr-brown-400">Preencha os campos e envie</p>
+        </div>
+        <form onSubmit={onSubmit} className="grid gap-4 lg:grid-cols-6">
           <div className="lg:col-span-3">
-            <div className="mb-1 text-xs font-medium text-cr-brown-600">
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">
               Título *
-            </div>
+            </label>
             <Input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -122,9 +153,9 @@ export default function AdminNotificationsPage() {
           </div>
 
           <div className="lg:col-span-3">
-            <div className="mb-1 text-xs font-medium text-cr-brown-600">
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">
               URL de destino
-            </div>
+            </label>
             <Input
               value={url}
               onChange={(e) => setUrl(e.target.value)}
@@ -133,9 +164,9 @@ export default function AdminNotificationsPage() {
           </div>
 
           <div className="lg:col-span-6">
-            <div className="mb-1 text-xs font-medium text-cr-brown-600">
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">
               Mensagem
-            </div>
+            </label>
             <Input
               value={body}
               onChange={(e) => setBody(e.target.value)}
@@ -164,12 +195,11 @@ export default function AdminNotificationsPage() {
           {feedback && (
             <div className="lg:col-span-6">
               <div
-                className={[
-                  "rounded-lg border px-3 py-2.5 text-sm",
+                className={
                   feedback.type === "success"
-                    ? "border-green-200 bg-green-50 text-green-700"
-                    : "border-red-200 bg-red-50 text-red-700",
-                ].join(" ")}
+                    ? "rounded-xl border border-cr-green-200 bg-cr-green-50 px-4 py-3 text-sm text-cr-green-800"
+                    : "rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+                }
               >
                 {feedback.message}
               </div>
@@ -181,17 +211,20 @@ export default function AdminNotificationsPage() {
       {/* Sent history */}
       <Card>
         <div className="mb-4">
-          <div className="text-sm font-semibold text-cr-brown-900">
+          <h2 className="text-sm font-semibold text-cr-brown-900">
             Histórico de envios
-          </div>
-          <div className="mt-1 text-xs text-cr-brown-400">
+          </h2>
+          <p className="mt-0.5 text-xs text-cr-brown-400">
             Notificações enviadas nesta sessão
-          </div>
+          </p>
         </div>
 
         {history.length === 0 ? (
-          <div className="py-8 text-center text-sm text-cr-brown-400">
-            Nenhuma notificação enviada ainda
+          <div className="py-10 text-center">
+            <svg xmlns="http://www.w3.org/2000/svg" className="mx-auto h-10 w-10 text-cr-brown-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+            <p className="mt-2 text-sm text-cr-brown-400">Nenhuma notificação enviada ainda</p>
           </div>
         ) : (
           <Table>
@@ -219,10 +252,10 @@ export default function AdminNotificationsPage() {
                   <TD className="text-sm text-cr-brown-600">
                     {n.body || "—"}
                   </TD>
-                  <TD className="text-sm text-cr-brown-600 font-mono text-xs">
+                  <TD className="font-mono text-xs text-cr-brown-500">
                     {n.url}
                   </TD>
-                  <TD className="whitespace-nowrap">{n.recipientCount}</TD>
+                  <TD className="whitespace-nowrap font-medium text-cr-brown-900">{n.recipientCount}</TD>
                   <TD>
                     {n.status === "sent" ? (
                       <Badge variant="success">Enviado</Badge>

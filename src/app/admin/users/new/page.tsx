@@ -25,34 +25,34 @@ export default function NewUserPage() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div>
-        <div className="text-2xl font-bold tracking-tight text-cr-brown-900 font-display">Cadastrar usuário</div>
-        <div className="mt-1 text-sm text-cr-brown-600">Cadastro mock (sem API)</div>
+        <h1 className="text-3xl font-bold tracking-tight text-cr-brown-900 font-display">Cadastrar Usuário</h1>
+        <p className="mt-1 text-sm text-cr-brown-500">Preencha os dados para cadastrar um novo usuário</p>
       </div>
 
       <Card>
-        <form className="space-y-4" onSubmit={onSubmit}>
+        <form className="space-y-5" onSubmit={onSubmit}>
           <div>
-            <label className="mb-1 block text-sm font-medium text-cr-brown-600">Nome</label>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Nome</label>
             <Input value={name} onChange={(e) => setName(e.target.value)} required />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-cr-brown-600">CPF</label>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">CPF</label>
             <Input value={cpf} onChange={(e) => setCpf(e.target.value)} required placeholder="000.000.000-00" />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-cr-brown-600">E-mail</label>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">E-mail</label>
             <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-cr-brown-600">WhatsApp</label>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">WhatsApp</label>
             <Input value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} required placeholder="+55 11 9XXXX-XXXX" />
           </div>
 
-          <div className="flex items-center gap-2">
-            <Button type="submit">Salvar</Button>
-            <Button type="button" variant="secondary" onClick={() => router.back()}>
+          <div className="flex items-center gap-3 pt-2">
+            <Button type="submit" variant="primary">Salvar</Button>
+            <Button type="button" variant="ghost" onClick={() => router.back()}>
               Cancelar
             </Button>
           </div>
