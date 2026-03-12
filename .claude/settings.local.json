@@ -19,7 +19,13 @@
       "Bash(npx next build:*)",
       "Bash(npm run:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(PGPASSWORD=\"A091i993d4gLJB4g\" psql \"postgres://postgres.wzaaivrmmvardagxipiu:A091i993d4gLJB4g@aws-1-us-east-1.pooler.supabase.com:5432/postgres?sslmode=require\" -f /c/dasclienteraiz/supabase/schema.sql)",
+      "Bash(PGPASSWORD=\"A091i993d4gLJB4g\" psql \"postgres://postgres.wzaaivrmmvardagxipiu:A091i993d4gLJB4g@aws-1-us-east-1.pooler.supabase.com:5432/postgres?sslmode=require\" -c \"\\\\dt public.*\")",
+      "Bash(ls -la \"C:\\\\dasclienteraiz\\\\src\\\\app\\\\app\\\\\\(protected\\)\\\\layout.tsx\")",
+      "Bash(npm list:*)",
+      "Bash(npx -y pg-connection-string)",
+      "Bash(git status:*)"
     ]
   }
 }
