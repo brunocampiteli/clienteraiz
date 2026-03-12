@@ -106,6 +106,11 @@ export default function RouteDetailsPage() {
                 <span className={["text-[10px] font-bold uppercase px-2 py-0.5 rounded-full", diff.color].join(" ")}>
                   {diff.label}
                 </span>
+                {route.totalChallenges > 0 && (
+                  <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full text-cr-yellow-900 bg-cr-yellow-100">
+                    🎯 {route.totalChallenges} desafio{route.totalChallenges > 1 ? "s" : ""}
+                  </span>
+                )}
                 {isCompleted && (
                   <Badge variant="success">Concluida</Badge>
                 )}
@@ -168,8 +173,11 @@ export default function RouteDetailsPage() {
               style={{ width: `${pct}%` }}
             />
           </div>
-          <div className="mt-1.5 text-xs text-cr-dark-400">
-            {visited} de {total} bares visitados
+          <div className="mt-1.5 flex items-center justify-between text-xs text-cr-dark-400">
+            <span>{visited} de {total} bares visitados</span>
+            {route.totalChallenges > 0 && (
+              <span>🎯 {route.challengesCompleted}/{route.totalChallenges} desafios</span>
+            )}
           </div>
         </div>
       )}
@@ -269,10 +277,84 @@ export default function RouteDetailsPage() {
                   </div>
                 </div>
 
-                {!bar.visited && hasJoined && !isCompleted && (
+                {/* Minimum Spend info */}
+                {bar.minimumSpend > 0 && (
+                  <div className={[
+                    "mt-2 flex items-center gap-1.5 text-xs",
+                    bar.visited ? "text-cr-green-600" : "text-cr-dark-500",
+                  ].join(" ")}>
+                    <span className="text-sm">💰</span>
+                    <span>
+                      Consumo mínimo: <span className="font-bold">R$ {bar.minimumSpend.toFixed(2)}</span>
+                    </span>
+                    {bar.visited && <span className="text-cr-green-600">✓</span>}
+                  </div>
+                )}
+
+                {/* Challenge card */}
+                {bar.challengeTitle && (
+                  <div className={[
+                    "mt-2 rounded-xl border p-3",
+                    bar.challengeCompleted
+                      ? "border-cr-green-200 bg-cr-green-50"
+                      : bar.visited
+                        ? "border-cr-yellow-200 bg-cr-yellow-50"
+                        : "border-cr-dark-100 bg-cr-dark-50",
+                  ].join(" ")}>
+                    <div className="flex items-start gap-2">
+                      <span className="text-xl">{bar.challengeEmoji}</span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className={[
+                            "text-xs font-bold",
+                            bar.challengeCompleted ? "text-cr-green-700" : "text-cr-dark-700",
+                          ].join(" ")}>
+                            {bar.challengeTitle}
+                          </span>
+                          <span className={[
+                            "text-[10px] font-bold",
+                            bar.challengeCompleted ? "text-cr-green-600" : "text-cr-yellow-700",
+                          ].join(" ")}>
+                            +{bar.challengePoints} pts
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-cr-dark-400 mt-0.5 leading-relaxed">
+                          {bar.challengeDescription}
+                        </p>
+                        {bar.challengeCompleted && (
+                          <div className="mt-1 flex items-center gap-1 text-[10px] font-bold text-cr-green-600">
+                            <IconCheck className="h-3 w-3" /> Desafio concluído!
+                          </div>
+                        )}
+                        {!bar.challengeCompleted && bar.visited && hasJoined && !isCompleted && (
+                          <div className="mt-1.5 text-[10px] text-cr-yellow-700 font-semibold">
+                            ⏳ Complete o desafio para ganhar pontos extras!
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Unvisited bar instructions */}
+                {!bar.visited && hasJoined && !isCompleted && !bar.challengeTitle && (
                   <div className="mt-2 rounded-lg bg-cr-dark-50 border border-cr-dark-100 px-3 py-2">
                     <div className="text-[11px] text-cr-dark-500">
                       Visite este bar e envie uma <span className="font-bold">nota fiscal</span> ou faça <span className="font-bold">check-in no Instagram</span> para validar
+                      {bar.minimumSpend > 0 && (
+                        <span className="font-bold"> (mín. R$ {bar.minimumSpend.toFixed(2)})</span>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {!bar.visited && hasJoined && !isCompleted && bar.challengeTitle && !bar.challengeCompleted && (
+                  <div className="mt-1 rounded-lg bg-cr-dark-50 border border-cr-dark-100 px-3 py-2">
+                    <div className="text-[11px] text-cr-dark-500">
+                      Visite o bar, complete o desafio e envie <span className="font-bold">nota fiscal</span> ou <span className="font-bold">check-in</span>
+                      {bar.minimumSpend > 0 && (
+                        <span className="font-bold"> (mín. R$ {bar.minimumSpend.toFixed(2)})</span>
+                      )}
                     </div>
                   </div>
                 )}

@@ -1,9 +1,23 @@
 {
   "permissions": {
     "allow": [
-      "mcp__Claude_Preview__preview_start",
-      "Bash(where npm:*)",
       "Bash(ls:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(git -C /c/dasclienteraiz log --oneline -10 --all)",
+      "Bash(git -C /c/dasclienteraiz branch:*)",
+      "Bash(git -C /c/dasclienteraiz status)",
+      "Bash(git -C /c/dasclienteraiz show 3059ec5 --stat)",
+      "Bash(git -C /c/dasclienteraiz rebase --abort)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(git -C /c/dasclienteraiz diff)",
+      "Bash(git -C /c/dasclienteraiz log --oneline -5)",
+      "Bash(git -C /c/dasclienteraiz add src/app/page.tsx)",
+      "Bash(git -C:*)",
+      "Bash(npm install:*)",
+      "Bash(npx web-push:*)",
+      "Bash(node:*)",
+      "Bash(npx next build:*)",
+      "Bash(npm run:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)"
     ]

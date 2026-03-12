@@ -23,6 +23,15 @@ const DURATION_OPTIONS = [
 
 const DIFFICULTY_OPTIONS: RouteDifficulty[] = ["fácil", "médio", "difícil"];
 
+const CHALLENGE_PRESETS = [
+  { emoji: "🐕", title: "Caça ao Mascote", description: "Encontre o mascote escondido no bar e tire uma foto" },
+  { emoji: "🤳", title: "Selfie no Balcão", description: "Tire uma selfie com o bartender e poste nas redes sociais" },
+  { emoji: "🍺", title: "Adivinhe a Cerveja", description: "Peça uma cerveja às cegas e tente adivinhar a marca" },
+  { emoji: "🎯", title: "Desafio do Dardo", description: "Acerte o alvo no jogo de dardos do bar" },
+  { emoji: "📸", title: "Foto Criativa", description: "Tire a foto mais criativa possível com a decoração do bar" },
+  { emoji: "🎵", title: "Karaokê", description: "Cante uma música no karaokê do bar" },
+];
+
 function daysRemaining(startDate: string, durationDays: number) {
   const end = new Date(startDate);
   end.setDate(end.getDate() + durationDays);
@@ -40,10 +49,18 @@ function calcEndDate(startDate: string, durationDays: number) {
   return d.toISOString().split("T")[0];
 }
 
+type BarChallenge = {
+  title: string;
+  description: string;
+  emoji: string;
+  points: number;
+};
+
 export default function AdminRoutesPage() {
   const {
     routes: data,
     getRouteBarIds,
+    getRouteBarEntries,
     createRoute,
     editRoute,
     deleteRoute,
@@ -59,6 +76,11 @@ export default function AdminRoutesPage() {
   const [bonusPoints, setBonusPoints] = React.useState("200");
   const [difficulty, setDifficulty] = React.useState<RouteDifficulty>("fácil");
   const [active, setActive] = React.useState(true);
+
+  // Per-bar settings
+  const [barMinSpend, setBarMinSpend] = React.useState<Record<string, string>>({});
+  const [barChallenges, setBarChallenges] = React.useState<Record<string, BarChallenge | null>>({});
+  const [expandedBar, setExpandedBar] = React.useState<string | null>(null);
 
   const [filter, setFilter] = React.useState<"all" | "active" | "inactive">("all");
 
@@ -79,6 +101,9 @@ export default function AdminRoutesPage() {
     setBonusPoints("200");
     setDifficulty("fácil");
     setActive(true);
+    setBarMinSpend({});
+    setBarChallenges({});
+    setExpandedBar(null);
   }
 
   function onSubmit(e: React.FormEvent) {
@@ -88,6 +113,14 @@ export default function AdminRoutesPage() {
     if (barIds.length === 0) return;
 
     const parsedPoints = Number(bonusPoints);
+
+    const barMinimumSpend: Record<string, number> = {};
+    const barChallengesInput: Record<string, BarChallenge | null> = {};
+
+    for (const barId of barIds) {
+      barMinimumSpend[barId] = parseFloat(barMinSpend[barId] || "0") || 0;
+      barChallengesInput[barId] = barChallenges[barId] ?? null;
+    }
 
     const input: RouteInput = {
       name: trimmedName,
@@ -102,6 +135,8 @@ export default function AdminRoutesPage() {
       active,
       barIds,
       barPoints: {},
+      barMinimumSpend,
+      barChallenges: barChallengesInput,
     };
 
     if (editingId) {
@@ -146,10 +181,22 @@ export default function AdminRoutesPage() {
     return bars.find((b) => b.id === id)?.name ?? id;
   }
 
+  function setBarChallenge(barId: string, challenge: BarChallenge | null) {
+    setBarChallenges((prev) => ({ ...prev, [barId]: challenge }));
+  }
+
+  function applyPreset(barId: string, preset: typeof CHALLENGE_PRESETS[0]) {
+    setBarChallenges((prev) => ({
+      ...prev,
+      [barId]: { ...preset, points: 25 },
+    }));
+  }
+
   function handleEdit(routeId: string) {
     const route = data.find((r) => r.id === routeId);
     if (!route) return;
-    const routeBarIds = getRouteBarIds(routeId);
+    const routeBarEntries = getRouteBarEntries(routeId);
+    const routeBarIds = routeBarEntries.map((rb) => rb.barId);
 
     setEditingId(route.id);
     setName(route.name);
@@ -161,6 +208,25 @@ export default function AdminRoutesPage() {
     setBonusPoints(String(route.bonusPoints));
     setDifficulty(route.difficulty);
     setActive(route.active);
+
+    // Load per-bar settings
+    const minSpend: Record<string, string> = {};
+    const challenges: Record<string, BarChallenge | null> = {};
+    for (const rb of routeBarEntries) {
+      minSpend[rb.barId] = rb.minimumSpend > 0 ? String(rb.minimumSpend) : "";
+      challenges[rb.barId] = rb.challengeTitle
+        ? {
+            title: rb.challengeTitle,
+            description: rb.challengeDescription ?? "",
+            emoji: rb.challengeEmoji ?? "🎯",
+            points: rb.challengePoints,
+          }
+        : null;
+    }
+    setBarMinSpend(minSpend);
+    setBarChallenges(challenges);
+    setExpandedBar(null);
+
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -173,7 +239,7 @@ export default function AdminRoutesPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-cr-brown-900 font-display">Rotas</h1>
-        <p className="mt-1 text-sm text-cr-brown-500">Cadastre rotas de gamificação com prazo em dias para os usuários completarem</p>
+        <p className="mt-1 text-sm text-cr-brown-500">Cadastre rotas com desafios em cada bar e consumo mínimo</p>
       </div>
 
       {/* Form */}
@@ -256,10 +322,11 @@ export default function AdminRoutesPage() {
             </div>
           </div>
 
-          {/* Bars Selection */}
+          {/* Bars Selection + Challenges + Min Spend */}
           <div className="lg:col-span-6">
             <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Bares da rota (selecione e ordene) *</label>
             <div className="grid gap-3 lg:grid-cols-2">
+              {/* Available bars */}
               <div className="rounded-xl border border-cr-brown-100 bg-white p-4">
                 <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Bares disponíveis</div>
                 <div className="space-y-1.5">
@@ -283,6 +350,7 @@ export default function AdminRoutesPage() {
                 </div>
               </div>
 
+              {/* Route order + per-bar config */}
               <div className="rounded-xl border border-cr-brown-100 bg-white p-4">
                 <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-cr-brown-500">
                   Ordem da rota ({barIds.length} bar{barIds.length !== 1 ? "es" : ""})
@@ -292,19 +360,151 @@ export default function AdminRoutesPage() {
                     Selecione bares ao lado para montar a rota
                   </div>
                 )}
-                <div className="space-y-1.5">
-                  {barIds.map((id, idx) => (
-                    <div key={`${id}-${idx}`} className="flex items-center gap-2 rounded-lg bg-cr-brown-50 px-3 py-2">
-                      <div className="flex h-6 w-6 items-center justify-center rounded-full bg-cr-brown-900 text-[10px] font-bold text-white">
-                        {idx + 1}
+                <div className="space-y-2">
+                  {barIds.map((id, idx) => {
+                    const isExpanded = expandedBar === id;
+                    const challenge = barChallenges[id];
+                    const minSpend = barMinSpend[id] || "";
+
+                    return (
+                      <div key={`${id}-${idx}`} className="rounded-xl border border-cr-brown-100 overflow-hidden">
+                        {/* Bar header */}
+                        <div className="flex items-center gap-2 bg-cr-brown-50 px-3 py-2">
+                          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-cr-brown-900 text-[10px] font-bold text-white">
+                            {idx + 1}
+                          </div>
+                          <span className="flex-1 text-sm font-medium text-cr-brown-800">{barName(id)}</span>
+
+                          {/* Indicators */}
+                          {challenge && <span className="text-xs" title="Tem desafio">{challenge.emoji}</span>}
+                          {parseFloat(minSpend) > 0 && <span className="text-[10px] font-bold text-cr-green-700" title="Consumo mínimo">R${minSpend}</span>}
+
+                          <button
+                            type="button"
+                            onClick={() => setExpandedBar(isExpanded ? null : id)}
+                            className="rounded px-1.5 py-0.5 text-[10px] font-bold text-cr-gold-700 hover:bg-cr-gold-50 cursor-pointer"
+                          >
+                            {isExpanded ? "▲ Fechar" : "⚙ Config"}
+                          </button>
+                          <div className="flex gap-0.5">
+                            <button type="button" onClick={() => moveBarUp(idx)} className="rounded px-1 py-0.5 text-xs text-cr-brown-400 hover:bg-cr-brown-100 cursor-pointer disabled:opacity-30" disabled={idx === 0}>▲</button>
+                            <button type="button" onClick={() => moveBarDown(idx)} className="rounded px-1 py-0.5 text-xs text-cr-brown-400 hover:bg-cr-brown-100 cursor-pointer disabled:idx === barIds.length - 1" disabled={idx === barIds.length - 1}>▼</button>
+                          </div>
+                        </div>
+
+                        {/* Expanded config */}
+                        {isExpanded && (
+                          <div className="border-t border-cr-brown-100 bg-white p-3 space-y-3">
+                            {/* Minimum Spend */}
+                            <div>
+                              <label className="mb-1 block text-[10px] font-bold uppercase tracking-wider text-cr-brown-500">
+                                💰 Consumo mínimo (R$)
+                              </label>
+                              <input
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                value={minSpend}
+                                onChange={(e) => setBarMinSpend((prev) => ({ ...prev, [id]: e.target.value }))}
+                                placeholder="0.00 (sem mínimo)"
+                                className="h-9 w-full rounded-lg border border-cr-brown-200 bg-cr-brown-50 px-3 text-sm text-cr-brown-800 outline-none focus:ring-2 focus:ring-cr-gold-400/40"
+                              />
+                              <p className="mt-0.5 text-[10px] text-cr-brown-400">Valor mínimo da nota fiscal para validar visita</p>
+                            </div>
+
+                            {/* Challenge */}
+                            <div>
+                              <div className="mb-1 flex items-center justify-between">
+                                <label className="text-[10px] font-bold uppercase tracking-wider text-cr-brown-500">
+                                  🎯 Desafio neste bar
+                                </label>
+                                {challenge ? (
+                                  <button
+                                    type="button"
+                                    onClick={() => setBarChallenge(id, null)}
+                                    className="text-[10px] font-bold text-red-500 hover:text-red-700 cursor-pointer"
+                                  >
+                                    Remover desafio
+                                  </button>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    onClick={() => setBarChallenge(id, { title: "", description: "", emoji: "🎯", points: 25 })}
+                                    className="text-[10px] font-bold text-cr-gold-700 hover:text-cr-gold-900 cursor-pointer"
+                                  >
+                                    + Adicionar desafio
+                                  </button>
+                                )}
+                              </div>
+
+                              {challenge && (
+                                <div className="space-y-2 rounded-lg border border-cr-gold-200 bg-cr-gold-50/50 p-2.5">
+                                  {/* Presets */}
+                                  <div>
+                                    <div className="mb-1 text-[10px] text-cr-brown-400">Modelos rápidos:</div>
+                                    <div className="flex flex-wrap gap-1">
+                                      {CHALLENGE_PRESETS.map((preset) => (
+                                        <button
+                                          key={preset.title}
+                                          type="button"
+                                          onClick={() => applyPreset(id, preset)}
+                                          className="rounded-lg bg-white border border-cr-brown-100 px-2 py-1 text-[10px] font-medium text-cr-brown-600 hover:bg-cr-gold-50 hover:border-cr-gold-300 cursor-pointer transition-colors"
+                                        >
+                                          {preset.emoji} {preset.title}
+                                        </button>
+                                      ))}
+                                    </div>
+                                  </div>
+
+                                  <div className="grid grid-cols-[auto_1fr] gap-2">
+                                    <div>
+                                      <label className="mb-0.5 block text-[10px] text-cr-brown-400">Emoji</label>
+                                      <input
+                                        type="text"
+                                        value={challenge.emoji}
+                                        onChange={(e) => setBarChallenge(id, { ...challenge, emoji: e.target.value })}
+                                        className="h-9 w-12 rounded-lg border border-cr-brown-200 bg-white px-2 text-center text-lg outline-none focus:ring-2 focus:ring-cr-gold-400/40"
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className="mb-0.5 block text-[10px] text-cr-brown-400">Título do desafio</label>
+                                      <input
+                                        type="text"
+                                        value={challenge.title}
+                                        onChange={(e) => setBarChallenge(id, { ...challenge, title: e.target.value })}
+                                        placeholder="Ex.: Encontre o mascote"
+                                        className="h-9 w-full rounded-lg border border-cr-brown-200 bg-white px-3 text-sm text-cr-brown-800 outline-none focus:ring-2 focus:ring-cr-gold-400/40"
+                                      />
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <label className="mb-0.5 block text-[10px] text-cr-brown-400">Descrição</label>
+                                    <input
+                                      type="text"
+                                      value={challenge.description}
+                                      onChange={(e) => setBarChallenge(id, { ...challenge, description: e.target.value })}
+                                      placeholder="Descreva o que o usuário deve fazer..."
+                                      className="h-9 w-full rounded-lg border border-cr-brown-200 bg-white px-3 text-sm text-cr-brown-800 outline-none focus:ring-2 focus:ring-cr-gold-400/40"
+                                    />
+                                  </div>
+                                  <div>
+                                    <label className="mb-0.5 block text-[10px] text-cr-brown-400">Pontos extras pelo desafio</label>
+                                    <input
+                                      type="number"
+                                      min="0"
+                                      value={challenge.points}
+                                      onChange={(e) => setBarChallenge(id, { ...challenge, points: parseInt(e.target.value) || 0 })}
+                                      className="h-9 w-24 rounded-lg border border-cr-brown-200 bg-white px-3 text-sm text-cr-brown-800 outline-none focus:ring-2 focus:ring-cr-gold-400/40"
+                                    />
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        )}
                       </div>
-                      <span className="flex-1 text-sm font-medium text-cr-brown-800">{barName(id)}</span>
-                      <div className="flex gap-1">
-                        <button type="button" onClick={() => moveBarUp(idx)} className="rounded px-1.5 py-0.5 text-xs text-cr-brown-400 hover:bg-cr-brown-100 hover:text-cr-brown-700 cursor-pointer disabled:opacity-30" disabled={idx === 0}>▲</button>
-                        <button type="button" onClick={() => moveBarDown(idx)} className="rounded px-1.5 py-0.5 text-xs text-cr-brown-400 hover:bg-cr-brown-100 hover:text-cr-brown-700 cursor-pointer disabled:opacity-30" disabled={idx === barIds.length - 1}>▼</button>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             </div>
@@ -347,9 +547,8 @@ export default function AdminRoutesPage() {
           <THead>
             <TR>
               <TH>Rota</TH>
-              <TH>Bares</TH>
+              <TH>Bares & Desafios</TH>
               <TH>Prazo</TH>
-              <TH>Período</TH>
               <TH>Prêmio</TH>
               <TH>Participantes</TH>
               <TH>Status</TH>
@@ -358,30 +557,46 @@ export default function AdminRoutesPage() {
           </THead>
           <TBody>
             {filtered.map((r) => {
-              const routeBarIds = getRouteBarIds(r.id);
+              const routeBarEntries = getRouteBarEntries(r.id);
               const days = daysRemaining(r.startDate, r.durationDays);
+              const challengeCount = routeBarEntries.filter((rb) => rb.challengeTitle).length;
               return (
                 <TR key={r.id}>
                   <TD>
                     <div className="font-medium text-cr-brown-900">{r.name}</div>
                     <div className="mt-0.5 text-xs text-cr-brown-500 max-w-[200px] truncate">{r.description}</div>
-                    <div className="mt-1">
+                    <div className="mt-1 flex gap-1">
                       <Badge variant={r.difficulty === "fácil" ? "success" : r.difficulty === "médio" ? "warning" : "danger"}>
                         {r.difficulty}
                       </Badge>
+                      {challengeCount > 0 && (
+                        <Badge variant="gold">🎯 {challengeCount} desafio{challengeCount > 1 ? "s" : ""}</Badge>
+                      )}
                     </div>
                   </TD>
                   <TD>
-                    <div className="space-y-0.5">
-                      {routeBarIds.map((id, i) => (
-                        <div key={`${id}-${i}`} className="text-xs text-cr-brown-600">
-                          <span className="font-semibold text-cr-gold-700">{i + 1}.</span> {barName(id)}
+                    <div className="space-y-1">
+                      {routeBarEntries.map((rb, i) => (
+                        <div key={`${rb.barId}-${i}`} className="text-xs">
+                          <div className="flex items-center gap-1">
+                            <span className="font-semibold text-cr-gold-700">{i + 1}.</span>
+                            <span className="text-cr-brown-600">{barName(rb.barId)}</span>
+                            {rb.minimumSpend > 0 && (
+                              <span className="text-[10px] font-bold text-cr-green-700">R${rb.minimumSpend}</span>
+                            )}
+                          </div>
+                          {rb.challengeTitle && (
+                            <div className="ml-4 text-[10px] text-cr-brown-400">
+                              {rb.challengeEmoji} {rb.challengeTitle} (+{rb.challengePoints}pts)
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>
                   </TD>
                   <TD>
                     <div className="text-sm font-bold text-cr-brown-900">{r.durationDays} dias</div>
+                    <div className="text-xs text-cr-brown-400">{formatDate(r.startDate)} → {formatDate(calcEndDate(r.startDate, r.durationDays))}</div>
                     {r.active && days > 0 && (
                       <div className={["mt-0.5 text-xs font-semibold", days <= 2 ? "text-red-600" : "text-cr-gold-700"].join(" ")}>
                         {days}d restante{days > 1 ? "s" : ""}
@@ -390,10 +605,6 @@ export default function AdminRoutesPage() {
                     {r.active && days === 0 && (
                       <div className="mt-0.5 text-xs text-red-600 font-bold">Expirou!</div>
                     )}
-                  </TD>
-                  <TD className="whitespace-nowrap text-sm text-cr-brown-600">
-                    <div>{formatDate(r.startDate)}</div>
-                    <div className="text-xs text-cr-brown-400">até {formatDate(calcEndDate(r.startDate, r.durationDays))}</div>
                   </TD>
                   <TD>
                     <div className="text-sm text-cr-brown-800">{r.prize || "—"}</div>

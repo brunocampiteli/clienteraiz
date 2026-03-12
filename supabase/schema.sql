@@ -259,10 +259,16 @@ create table public.route_bars (
   route_id   uuid not null references public.routes(id) on delete cascade,
   bar_id     uuid not null references public.bars(id) on delete cascade,
   position   smallint not null default 0,
-  points     integer not null default 0
+  points     integer not null default 0,
+  minimum_spend  numeric(10,2) not null default 0, -- consumo mínimo em R$
+  -- Desafio opcional neste bar (dentro da rota)
+  challenge_title       text,
+  challenge_description text,
+  challenge_emoji       text default '🎯',
+  challenge_points      integer not null default 0
 );
 
-comment on table public.route_bars is 'Bares de cada rota, com posição e pontos individuais';
+comment on table public.route_bars is 'Bares de cada rota, com posição, pontos, consumo mínimo e desafio opcional';
 create index idx_route_bars_route on public.route_bars(route_id);
 
 -- ────────────────────────────────────────────────
@@ -288,8 +294,23 @@ create table public.route_bar_visits (
   route_participation_id uuid not null references public.route_participations(id) on delete cascade,
   route_bar_id          uuid not null references public.route_bars(id) on delete cascade,
   visited_at            timestamptz not null default now(),
+  receipt_amount        numeric(10,2), -- valor da nota fiscal (para validar consumo mínimo)
   unique (route_participation_id, route_bar_id)
 );
+
+-- ────────────────────────────────────────────────
+-- 3.12b  route_bar_challenge_completions (conclusão de desafios de bar)
+-- ────────────────────────────────────────────────
+create table public.route_bar_challenge_completions (
+  id                    uuid primary key default extensions.uuid_generate_v4(),
+  route_participation_id uuid not null references public.route_participations(id) on delete cascade,
+  route_bar_id          uuid not null references public.route_bars(id) on delete cascade,
+  completed_at          timestamptz not null default now(),
+  proof_url             text, -- foto ou evidência do desafio
+  unique (route_participation_id, route_bar_id)
+);
+
+comment on table public.route_bar_challenge_completions is 'Registro de conclusão de desafios em bars da rota';
 
 -- ────────────────────────────────────────────────
 -- 3.13  prizes (prêmios mensais do ranking)
@@ -490,11 +511,13 @@ create trigger handle_user_missions_updated_at
 create or replace function public.handle_new_user()
 returns trigger as $$
 begin
-  insert into public.profiles (id, name, email)
+  insert into public.profiles (id, name, email, cpf, phone)
   values (
     new.id,
     coalesce(new.raw_user_meta_data->>'name', split_part(new.email, '@', 1)),
-    new.email
+    new.email,
+    new.raw_user_meta_data->>'cpf',
+    new.raw_user_meta_data->>'phone'
   );
   return new;
 end;

@@ -35,10 +35,8 @@ const items: Item[] = [
   { label: "Ranking", href: "/admin/ranking", icon: "trophy" },
   { label: "Notas enviadas", href: "/admin/receipts", icon: "receipt" },
   { label: "Check-ins", href: "/admin/checkins", icon: "camera" },
-  { label: "Rotas", href: "/admin/routes", icon: "map" },
-  { label: "Desafios", href: "/admin/challenges", icon: "target" },
+  { label: "Rotas & Desafios", href: "/admin/routes", icon: "map" },
   { label: "Prêmios", href: "/admin/prizes", icon: "gift" },
-  { label: "Consumo mínimo", href: "/admin/minimum-spend", icon: "dollar" },
   { label: "Redes sociais", href: "/admin/social", icon: "share" },
   { label: "Notificações push", href: "/admin/notifications", icon: "bell" },
 ];

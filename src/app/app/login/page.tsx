@@ -1,18 +1,19 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { setUserToken } from "@/lib/auth";
+import { supabase } from "@/lib/supabase";
 
 export default function UserLoginPage() {
   const router = useRouter();
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState<string | null>(null);
+  const [loading, setLoading] = React.useState(false);
 
-  function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
 
@@ -21,8 +22,31 @@ export default function UserLoginPage() {
       return;
     }
 
-    setUserToken("mock-user-token");
-    router.replace("/app");
+    setLoading(true);
+
+    try {
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: email.trim().toLowerCase(),
+        password,
+      });
+
+      if (signInError) {
+        if (signInError.message === "Invalid login credentials") {
+          setError("E-mail ou senha incorretos.");
+        } else if (signInError.message.includes("Email not confirmed")) {
+          setError("Confirme seu e-mail antes de fazer login.");
+        } else {
+          setError(signInError.message);
+        }
+        setLoading(false);
+        return;
+      }
+
+      router.replace("/app");
+    } catch {
+      setError("Erro inesperado. Tente novamente.");
+      setLoading(false);
+    }
   }
 
   return (
@@ -86,20 +110,37 @@ export default function UserLoginPage() {
                 />
               </div>
 
-              {error ? (
+              {error && (
                 <div className="rounded-xl border border-cr-burgundy-800/50 bg-cr-burgundy-950/50 px-4 py-3 text-sm font-semibold text-cr-burgundy-400">
                   {error}
                 </div>
-              ) : null}
+              )}
 
-              <Button className="w-full !py-3.5 !text-base" type="submit">
-                Entrar
+              <Button
+                className="w-full !py-3.5 !text-base"
+                type="submit"
+                disabled={loading}
+              >
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    Entrando...
+                  </span>
+                ) : (
+                  "Entrar"
+                )}
               </Button>
             </form>
-          </div>
 
-          <div className="mt-6 text-center text-xs text-cr-dark-500">
-            Login mock: salva <code className="font-mono text-cr-yellow-600/60">token_user</code> no localStorage.
+            <div className="mt-5 text-center">
+              <span className="text-xs text-cr-dark-400">Não tem conta? </span>
+              <Link href="/app/cadastro" className="text-xs font-bold text-cr-yellow-600 hover:text-cr-yellow-500 transition-colors">
+                Criar conta
+              </Link>
+            </div>
           </div>
         </div>
       </div>

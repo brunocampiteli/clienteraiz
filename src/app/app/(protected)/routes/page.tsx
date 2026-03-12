@@ -116,7 +116,7 @@ function RouteCard({
               {isLocked && <Badge variant="neutral">Bloqueada</Badge>}
             </div>
 
-            <div className="mt-1 flex items-center gap-3 text-[11px] text-cr-dark-400">
+            <div className="mt-1 flex items-center gap-3 text-[11px] text-cr-dark-400 flex-wrap">
               <span>{total} bares</span>
               <span>•</span>
               <span className="inline-flex items-center gap-0.5">
@@ -125,6 +125,12 @@ function RouteCard({
                 ))}
                 {" "}{route.difficulty}
               </span>
+              {route.totalChallenges > 0 && (
+                <>
+                  <span>•</span>
+                  <span className="text-cr-yellow-700 font-semibold">🎯 {route.totalChallenges} desafio{route.totalChallenges > 1 ? "s" : ""}</span>
+                </>
+              )}
               <span>•</span>
               <span className="inline-flex items-center gap-1">
                 <IconUsers className="h-3 w-3" />
@@ -241,6 +247,29 @@ function RouteCard({
                       )}
                     </div>
                   </div>
+                  {bar.minimumSpend > 0 && (
+                    <div className="mt-1 text-[10px] text-cr-dark-400">
+                      💰 Mín. R$ {bar.minimumSpend.toFixed(2)}
+                    </div>
+                  )}
+                  {bar.challengeTitle && (
+                    <div className={[
+                      "mt-1.5 flex items-center gap-1.5 rounded-lg px-2 py-1.5 text-[10px]",
+                      bar.challengeCompleted
+                        ? "bg-cr-green-50 border border-cr-green-200"
+                        : "bg-cr-yellow-50 border border-cr-yellow-200",
+                    ].join(" ")}>
+                      <span>{bar.challengeEmoji}</span>
+                      <span className={[
+                        "font-bold",
+                        bar.challengeCompleted ? "text-cr-green-700" : "text-cr-dark-600",
+                      ].join(" ")}>
+                        {bar.challengeTitle}
+                      </span>
+                      <span className="text-cr-yellow-700 font-bold">+{bar.challengePoints}pts</span>
+                      {bar.challengeCompleted && <span className="text-cr-green-600">✓</span>}
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

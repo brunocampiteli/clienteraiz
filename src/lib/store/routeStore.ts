@@ -8,6 +8,7 @@ import type {
   RouteBarEntry,
   RouteParticipation,
   RouteBarVisit,
+  RouteBarChallengeCompletion,
   RouteInput,
 } from "@/lib/types";
 import {
@@ -49,16 +50,30 @@ function seedRoutes(): Route[] {
   }));
 }
 
+// Sample challenges for seeded routes
+const SAMPLE_CHALLENGES: Record<string, { title: string; description: string; emoji: string; points: number }> = {
+  "rb_ar_1_0": { title: "Caça ao Mascote", description: "Encontre o cachorro de cerâmica escondido no bar e tire uma foto", emoji: "🐕", points: 30 },
+  "rb_ar_1_2": { title: "Selfie no Balcão", description: "Tire uma selfie com o bartender e poste no Instagram", emoji: "🤳", points: 25 },
+  "rb_ar_2_1": { title: "Adivinhe a Cerveja", description: "Peça uma cerveja às cegas e tente adivinhar a marca", emoji: "🍺", points: 20 },
+};
+
 function seedRouteBars(): RouteBarEntry[] {
   const entries: RouteBarEntry[] = [];
   for (const r of mockAdminRoutes) {
     r.barIds.forEach((barId, idx) => {
+      const rbId = `rb_${r.id}_${idx}`;
+      const challenge = SAMPLE_CHALLENGES[rbId] ?? null;
       entries.push({
-        id: `rb_${r.id}_${idx}`,
+        id: rbId,
         routeId: r.id,
         barId,
         position: idx,
-        points: 50, // default points
+        points: 50,
+        minimumSpend: 25, // R$25 default
+        challengeTitle: challenge?.title ?? null,
+        challengeDescription: challenge?.description ?? null,
+        challengeEmoji: challenge?.emoji ?? null,
+        challengePoints: challenge?.points ?? 0,
       });
     });
   }
@@ -66,7 +81,6 @@ function seedRouteBars(): RouteBarEntry[] {
 }
 
 function seedParticipations(): RouteParticipation[] {
-  // Ana Paula participates in "Rota do Centro" (active) and "Tour Cervejeiro" (completed)
   return [
     {
       id: "rp_1",
@@ -88,41 +102,18 @@ function seedParticipations(): RouteParticipation[] {
 }
 
 function seedBarVisits(): RouteBarVisit[] {
-  // Ana visited bar_1 and bar_3 in "Rota do Centro"
-  // Ana visited all 3 bars in "Tour Cervejeiro"
   return [
-    // Rota do Centro (ar_1): bar_1, bar_3 visited
-    {
-      id: "rbv_1",
-      routeParticipationId: "rp_1",
-      routeBarId: "rb_ar_1_0", // bar_1
-      visitedAt: "2026-02-18T20:00:00Z",
-    },
-    {
-      id: "rbv_2",
-      routeParticipationId: "rp_1",
-      routeBarId: "rb_ar_1_1", // bar_3
-      visitedAt: "2026-02-19T21:00:00Z",
-    },
-    // Tour Cervejeiro (ar_4): all visited
-    {
-      id: "rbv_3",
-      routeParticipationId: "rp_2",
-      routeBarId: "rb_ar_4_0", // bar_4
-      visitedAt: "2026-02-12T19:00:00Z",
-    },
-    {
-      id: "rbv_4",
-      routeParticipationId: "rp_2",
-      routeBarId: "rb_ar_4_1", // bar_1
-      visitedAt: "2026-02-13T20:00:00Z",
-    },
-    {
-      id: "rbv_5",
-      routeParticipationId: "rp_2",
-      routeBarId: "rb_ar_4_2", // bar_2
-      visitedAt: "2026-02-16T18:00:00Z",
-    },
+    { id: "rbv_1", routeParticipationId: "rp_1", routeBarId: "rb_ar_1_0", visitedAt: "2026-02-18T20:00:00Z", receiptAmount: 45.00 },
+    { id: "rbv_2", routeParticipationId: "rp_1", routeBarId: "rb_ar_1_1", visitedAt: "2026-02-19T21:00:00Z", receiptAmount: 32.50 },
+    { id: "rbv_3", routeParticipationId: "rp_2", routeBarId: "rb_ar_4_0", visitedAt: "2026-02-12T19:00:00Z", receiptAmount: 55.00 },
+    { id: "rbv_4", routeParticipationId: "rp_2", routeBarId: "rb_ar_4_1", visitedAt: "2026-02-13T20:00:00Z", receiptAmount: 38.00 },
+    { id: "rbv_5", routeParticipationId: "rp_2", routeBarId: "rb_ar_4_2", visitedAt: "2026-02-16T18:00:00Z", receiptAmount: 60.00 },
+  ];
+}
+
+function seedChallengeCompletions(): RouteBarChallengeCompletion[] {
+  return [
+    { id: "rcc_1", routeParticipationId: "rp_1", routeBarId: "rb_ar_1_0", completedAt: "2026-02-18T20:30:00Z", proofUrl: null },
   ];
 }
 
@@ -133,6 +124,7 @@ export type RouteStore = {
   routeBars: RouteBarEntry[];
   participations: RouteParticipation[];
   barVisits: RouteBarVisit[];
+  challengeCompletions: RouteBarChallengeCompletion[];
 };
 
 /* ── Initial state ── */
@@ -142,6 +134,7 @@ export function createInitialStore(): RouteStore {
     routeBars: seedRouteBars(),
     participations: seedParticipations(),
     barVisits: seedBarVisits(),
+    challengeCompletions: seedChallengeCompletions(),
   };
 }
 
@@ -173,13 +166,21 @@ export function addRoute(
     updatedAt: now,
   };
 
-  const newBars: RouteBarEntry[] = input.barIds.map((barId, idx) => ({
-    id: `rb_${routeId}_${idx}`,
-    routeId,
-    barId,
-    position: idx,
-    points: input.barPoints[barId] ?? 50,
-  }));
+  const newBars: RouteBarEntry[] = input.barIds.map((barId, idx) => {
+    const challenge = input.barChallenges?.[barId] ?? null;
+    return {
+      id: `rb_${routeId}_${idx}`,
+      routeId,
+      barId,
+      position: idx,
+      points: input.barPoints[barId] ?? 50,
+      minimumSpend: input.barMinimumSpend?.[barId] ?? 0,
+      challengeTitle: challenge?.title ?? null,
+      challengeDescription: challenge?.description ?? null,
+      challengeEmoji: challenge?.emoji ?? null,
+      challengePoints: challenge?.points ?? 0,
+    };
+  });
 
   return {
     store: {
@@ -218,15 +219,22 @@ export function updateRoute(
       : r
   );
 
-  // Replace route bars
   const otherBars = store.routeBars.filter((rb) => rb.routeId !== routeId);
-  const newBars: RouteBarEntry[] = input.barIds.map((barId, idx) => ({
-    id: `rb_${routeId}_${idx}`,
-    routeId,
-    barId,
-    position: idx,
-    points: input.barPoints[barId] ?? 50,
-  }));
+  const newBars: RouteBarEntry[] = input.barIds.map((barId, idx) => {
+    const challenge = input.barChallenges?.[barId] ?? null;
+    return {
+      id: `rb_${routeId}_${idx}`,
+      routeId,
+      barId,
+      position: idx,
+      points: input.barPoints[barId] ?? 50,
+      minimumSpend: input.barMinimumSpend?.[barId] ?? 0,
+      challengeTitle: challenge?.title ?? null,
+      challengeDescription: challenge?.description ?? null,
+      challengeEmoji: challenge?.emoji ?? null,
+      challengePoints: challenge?.points ?? 0,
+    };
+  });
 
   return {
     ...store,
@@ -241,7 +249,6 @@ export function removeRoute(store: RouteStore, routeId: string): RouteStore {
     routes: store.routes.filter((r) => r.id !== routeId),
     routeBars: store.routeBars.filter((rb) => rb.routeId !== routeId),
     participations: store.participations.filter((p) => p.routeId !== routeId),
-    // barVisits referencing deleted participations will be orphaned but harmless
   };
 }
 
@@ -250,7 +257,6 @@ export function joinRoute(
   userId: string,
   routeId: string
 ): RouteStore {
-  // Check if already participating
   const existing = store.participations.find(
     (p) => p.routeId === routeId && p.userId === userId
   );
@@ -265,7 +271,6 @@ export function joinRoute(
     completedAt: null,
   };
 
-  // Increment participants count
   const routes = store.routes.map((r) =>
     r.id === routeId
       ? { ...r, participantsCount: r.participantsCount + 1 }
@@ -282,9 +287,9 @@ export function joinRoute(
 export function recordBarVisit(
   store: RouteStore,
   participationId: string,
-  routeBarId: string
+  routeBarId: string,
+  receiptAmount?: number
 ): RouteStore {
-  // Check if already visited
   const existing = store.barVisits.find(
     (v) =>
       v.routeParticipationId === participationId &&
@@ -297,11 +302,39 @@ export function recordBarVisit(
     routeParticipationId: participationId,
     routeBarId,
     visitedAt: new Date().toISOString(),
+    receiptAmount: receiptAmount ?? null,
   };
 
   return {
     ...store,
     barVisits: [...store.barVisits, visit],
+  };
+}
+
+export function completeChallengeForBar(
+  store: RouteStore,
+  participationId: string,
+  routeBarId: string,
+  proofUrl?: string
+): RouteStore {
+  const existing = store.challengeCompletions.find(
+    (c) =>
+      c.routeParticipationId === participationId &&
+      c.routeBarId === routeBarId
+  );
+  if (existing) return store;
+
+  const completion: RouteBarChallengeCompletion = {
+    id: `rcc_${uid()}`,
+    routeParticipationId: participationId,
+    routeBarId,
+    completedAt: new Date().toISOString(),
+    proofUrl: proofUrl ?? null,
+  };
+
+  return {
+    ...store,
+    challengeCompletions: [...store.challengeCompletions, completion],
   };
 }
 
@@ -364,6 +397,15 @@ export function getVisitsForParticipation(
 ): RouteBarVisit[] {
   return store.barVisits.filter(
     (v) => v.routeParticipationId === participationId
+  );
+}
+
+export function getChallengeCompletionsForParticipation(
+  store: RouteStore,
+  participationId: string
+): RouteBarChallengeCompletion[] {
+  return store.challengeCompletions.filter(
+    (c) => c.routeParticipationId === participationId
   );
 }
 

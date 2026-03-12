@@ -18,6 +18,7 @@ import {
   getRouteBars,
   getUserParticipation,
   getVisitsForParticipation,
+  getChallengeCompletionsForParticipation,
   getBarInfo,
 } from "@/lib/store/routeStore";
 import { triggerBarVisit } from "@/lib/services/visitTrigger";
@@ -108,7 +109,11 @@ export function RouteProvider({ children }: { children: React.ReactNode }) {
       const visits = participation
         ? getVisitsForParticipation(store, participation.id)
         : [];
+      const challengeCompletions = participation
+        ? getChallengeCompletionsForParticipation(store, participation.id)
+        : [];
       const visitedRouteBarIds = new Set(visits.map((v) => v.routeBarId));
+      const completedChallengeBarIds = new Set(challengeCompletions.map((c) => c.routeBarId));
 
       const barsWithInfo: RouteBarWithInfo[] = bars.map((rb) => {
         const info = getBarInfo(rb.barId);
@@ -118,14 +123,22 @@ export function RouteProvider({ children }: { children: React.ReactNode }) {
           neighborhood: info?.neighborhood ?? "",
           city: info?.city ?? "",
           visited: visitedRouteBarIds.has(rb.id),
+          challengeCompleted: completedChallengeBarIds.has(rb.id),
         };
       });
+
+      const totalChallenges = bars.filter((rb) => rb.challengeTitle).length;
+      const challengesCompleted = bars.filter(
+        (rb) => rb.challengeTitle && completedChallengeBarIds.has(rb.id)
+      ).length;
 
       return {
         ...route,
         bars: barsWithInfo,
         participation,
         visitedCount: visits.length,
+        challengesCompleted,
+        totalChallenges,
       };
     },
     [store]
