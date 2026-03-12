@@ -89,6 +89,8 @@ export default function CadastroPage() {
       const cpfClean = cpf.replace(/\D/g, "");
       const phoneClean = whatsapp.replace(/\D/g, "");
 
+      const siteUrl = window.location.origin; // https://clienteraiz.cozirpb.com em prod
+
       const { data, error: signUpError } = await supabase.auth.signUp({
         email: email.trim().toLowerCase(),
         password: senha,
@@ -98,6 +100,7 @@ export default function CadastroPage() {
             cpf: cpfClean,
             phone: phoneClean,
           },
+          emailRedirectTo: `${siteUrl}/app/login`,
         },
       });
 
