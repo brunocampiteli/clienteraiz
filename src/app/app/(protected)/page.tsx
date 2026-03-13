@@ -5,8 +5,9 @@ import Image from "next/image";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
-import { currentUser, bars as appBars, pointsHistory } from "@/lib/mockUserData";
+import { bars as appBars, pointsHistory } from "@/lib/mockUserData";
 import { useRoutes } from "@/lib/context/RouteContext";
+import { useUser } from "@/lib/context/UserContext";
 
 function formatCurrency(v: number) {
   return v.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -43,13 +44,14 @@ function IconReceipt(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-const CURRENT_USER_ID = "app_usr_1";
-
 export default function AppHomePage() {
+  const { user } = useUser();
   const { getUserRoutes } = useRoutes();
   const recommended = appBars.slice(0, 3);
 
-  const userRoutes = getUserRoutes(CURRENT_USER_ID);
+  // Use real user ID for routes, fallback to mock for now
+  const userId = user?.id ?? "app_usr_1";
+  const userRoutes = getUserRoutes(userId);
   const activeRoute = userRoutes.find(
     (r) => r.active && r.participation?.status === "active"
   );
@@ -57,19 +59,21 @@ export default function AppHomePage() {
   const recentPoints = pointsHistory.filter((p) => p.status === "approved").slice(0, 3);
   const pendingCount = pointsHistory.filter((p) => p.status === "pending").length;
 
+  const firstName = user?.name?.split(" ")[0] ?? "Usuário";
+
   return (
     <div className="space-y-5">
       {/* Greeting */}
       <div className="flex items-center gap-3">
         <div
           className="flex h-12 w-12 items-center justify-center rounded-full text-lg font-bold text-cr-dark-800 shadow-md ring-2 ring-cr-yellow-600/30"
-          style={{ background: "#FBC02D" }}
+          style={{ background: user?.avatarColor ?? "#FBC02D" }}
         >
-          {currentUser.name.charAt(0)}
+          {firstName.charAt(0).toUpperCase()}
         </div>
         <div>
           <div className="text-sm text-cr-dark-500">{getGreeting()},</div>
-          <div className="text-xl font-display text-cr-dark-800 tracking-wider">{currentUser.name.toUpperCase()}</div>
+          <div className="text-xl font-display text-cr-dark-800 tracking-wider">{firstName.toUpperCase()}</div>
         </div>
       </div>
 
@@ -78,22 +82,22 @@ export default function AppHomePage() {
         <div className="rounded-2xl bg-cr-dark-800 p-3.5 text-white shadow-md relative overflow-hidden">
           <div className="absolute top-0 right-0 w-16 h-16 bg-cr-yellow-600/10 rounded-full -translate-y-1/2 translate-x-1/2" />
           <div className="text-[10px] font-bold text-cr-dark-400 uppercase tracking-wider">Pontos</div>
-          <div className="mt-1 text-2xl font-display text-cr-yellow-600 tracking-wider">{currentUser.pointsTotal.toLocaleString()}</div>
-          <div className="mt-0.5 text-[10px] text-cr-dark-400">+{currentUser.pointsThisMonth} este mes</div>
+          <div className="mt-1 text-2xl font-display text-cr-yellow-600 tracking-wider">{(user?.pointsTotal ?? 0).toLocaleString()}</div>
+          <div className="mt-0.5 text-[10px] text-cr-dark-400">+{user?.pointsThisMonth ?? 0} este mes</div>
         </div>
         <div className="rounded-2xl bg-cr-burgundy-800 p-3.5 text-white shadow-md relative overflow-hidden">
           <div className="absolute top-0 right-0 w-16 h-16 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
           <div className="text-[10px] font-bold text-cr-burgundy-300 uppercase tracking-wider">Nivel</div>
-          <div className="mt-1 text-sm font-display text-white leading-tight tracking-wider">RAIZ BRONZE</div>
+          <div className="mt-1 text-sm font-display text-white leading-tight tracking-wider">{(user?.level ?? "Raiz Bronze").toUpperCase()}</div>
           <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-white/20">
-            <div className="h-full rounded-full bg-cr-yellow-600" style={{ width: `${currentUser.levelProgress}%` }} />
+            <div className="h-full rounded-full bg-cr-yellow-600" style={{ width: `${user?.levelProgress ?? 0}%` }} />
           </div>
         </div>
         <div className="rounded-2xl bg-cr-green-700 p-3.5 text-white shadow-md relative overflow-hidden">
           <div className="absolute top-0 right-0 w-16 h-16 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-          <div className="text-[10px] font-bold text-cr-green-300 uppercase tracking-wider">Ranking</div>
-          <div className="mt-1 text-2xl font-display text-white tracking-wider">#7</div>
-          <div className="mt-0.5 text-[10px] text-cr-green-300">{currentUser.barsVisited} bares</div>
+          <div className="text-[10px] font-bold text-cr-green-300 uppercase tracking-wider">Bares</div>
+          <div className="mt-1 text-2xl font-display text-white tracking-wider">{user?.barsVisited ?? 0}</div>
+          <div className="mt-0.5 text-[10px] text-cr-green-300">{user?.receiptsApproved ?? 0} notas</div>
         </div>
       </div>
 

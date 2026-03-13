@@ -5,9 +5,8 @@ import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { useRoutes } from "@/lib/context/RouteContext";
+import { useUser } from "@/lib/context/UserContext";
 import type { RouteWithProgress } from "@/lib/types";
-
-const CURRENT_USER_ID = "app_usr_1";
 
 type TabKey = "active" | "completed" | "all";
 
@@ -305,9 +304,11 @@ function RouteCard({
 
 export default function AppRoutesPage() {
   const { getUserRoutes, participateInRoute } = useRoutes();
+  const { user } = useUser();
   const [tab, setTab] = React.useState<TabKey>("active");
 
-  const allRoutes = getUserRoutes(CURRENT_USER_ID);
+  const userId = user?.id ?? "app_usr_1";
+  const allRoutes = getUserRoutes(userId);
 
   // Only show active routes to user
   const visibleRoutes = allRoutes.filter((r) => r.active || r.participation?.status === "completed");
@@ -328,7 +329,7 @@ export default function AppRoutesPage() {
   ];
 
   function handleJoin(routeId: string) {
-    participateInRoute(CURRENT_USER_ID, routeId);
+    participateInRoute(userId, routeId);
   }
 
   return (

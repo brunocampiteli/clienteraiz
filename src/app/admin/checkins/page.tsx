@@ -34,6 +34,31 @@ const statusVariants: Record<CheckIn["status"], "warning" | "success" | "danger"
   rejected: "danger",
 };
 
+function GpsBadge({ status, distance }: { status?: string; distance?: number }) {
+  if (status === "match") {
+    return (
+      <span className="inline-flex items-center gap-1 text-xs font-semibold text-cr-green-700">
+        <span className="inline-block h-2 w-2 rounded-full bg-cr-green-500" />
+        GPS OK {distance != null && `(${distance}m)`}
+      </span>
+    );
+  }
+  if (status === "no_match") {
+    return (
+      <span className="inline-flex items-center gap-1 text-xs font-semibold text-cr-gold-700">
+        <span className="inline-block h-2 w-2 rounded-full bg-cr-gold-500" />
+        Longe {distance != null && `(${distance}m)`}
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center gap-1 text-xs font-semibold text-cr-brown-400">
+      <span className="inline-block h-2 w-2 rounded-full bg-cr-brown-300" />
+      Sem GPS
+    </span>
+  );
+}
+
 // Map user names to IDs for mock route triggers
 const USER_NAME_TO_ID: Record<string, string> = {
   "Ana Paula": "app_usr_1",
@@ -69,7 +94,6 @@ export default function AdminCheckinsPage() {
         c.id === id ? { ...c, status: "approved" as const } : c,
       ),
     );
-    // Trigger route bar visit when checkin is approved
     if (checkin) {
       const userId = USER_NAME_TO_ID[checkin.userName];
       const barId = checkin.barId;
@@ -96,6 +120,12 @@ export default function AdminCheckinsPage() {
     setSelected(null);
   }
 
+  // Get bar info for selected checkin
+  const selectedBar = React.useMemo(() => {
+    if (!selected) return null;
+    return bars.find((b) => b.id === selected.barId) ?? null;
+  }, [selected]);
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -104,7 +134,7 @@ export default function AdminCheckinsPage() {
           Check-ins Instagram
         </h1>
         <p className="mt-1 text-sm text-cr-brown-500">
-          Modere os check-ins enviados pelos usuários
+          Modere os check-ins com verificação GPS + Instagram
         </p>
       </div>
 
@@ -177,6 +207,7 @@ export default function AdminCheckinsPage() {
               <TH>Usuário</TH>
               <TH>Bar</TH>
               <TH>Instagram</TH>
+              <TH>GPS</TH>
               <TH>Pontos</TH>
               <TH>Status</TH>
               <TH>Ações</TH>
@@ -192,6 +223,9 @@ export default function AdminCheckinsPage() {
                 <TD className="text-sm text-cr-brown-600">{c.barName}</TD>
                 <TD className="font-mono text-xs text-cr-brown-500">
                   {c.instagramHandle || "—"}
+                </TD>
+                <TD>
+                  <GpsBadge status={c.gpsMatchStatus} distance={c.distanceMeters} />
                 </TD>
                 <TD className="whitespace-nowrap font-medium text-cr-green-700">+{c.points}</TD>
                 <TD>
@@ -214,7 +248,7 @@ export default function AdminCheckinsPage() {
             ))}
             {filtered.length === 0 && (
               <TR>
-                <TD colSpan={7} className="py-10 text-center text-sm text-cr-brown-400">
+                <TD colSpan={8} className="py-10 text-center text-sm text-cr-brown-400">
                   Nenhum check-in encontrado
                 </TD>
               </TR>
@@ -261,7 +295,7 @@ export default function AdminCheckinsPage() {
                   <div className="mt-0.5 font-medium text-cr-brown-900">{formatDate(selected.date)}</div>
                 </div>
                 <div>
-                  <div className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Instagram</div>
+                  <div className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Instagram do usuário</div>
                   <div className="mt-0.5 font-medium text-cr-brown-900">
                     {selected.instagramHandle || "Não informado"}
                   </div>
@@ -278,6 +312,44 @@ export default function AdminCheckinsPage() {
                     </Badge>
                   </div>
                 </div>
+              </div>
+
+              {/* GPS Verification Section */}
+              <div className={[
+                "rounded-xl border p-4",
+                selected.gpsMatchStatus === "match"
+                  ? "border-cr-green-200 bg-cr-green-50"
+                  : selected.gpsMatchStatus === "no_match"
+                  ? "border-cr-gold-200 bg-cr-gold-50"
+                  : "border-cr-brown-100 bg-cr-brown-50",
+              ].join(" ")}>
+                <div className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500 mb-2">
+                  Verificação GPS
+                </div>
+                <div className="flex items-center justify-between">
+                  <GpsBadge status={selected.gpsMatchStatus} distance={selected.distanceMeters} />
+                  {selectedBar?.instagramHandle && (
+                    <span className="text-xs text-cr-brown-500">
+                      Instagram do bar: <span className="font-mono font-semibold">{selectedBar.instagramHandle}</span>
+                    </span>
+                  )}
+                </div>
+                {(selected.userLatitude != null || selectedBar?.latitude != null) && (
+                  <div className="mt-2 grid grid-cols-2 gap-2 text-[11px] text-cr-brown-400">
+                    <div>
+                      <span className="font-semibold">Usuário:</span>{" "}
+                      {selected.userLatitude != null
+                        ? `${selected.userLatitude.toFixed(4)}, ${selected.userLongitude?.toFixed(4)}`
+                        : "N/A"}
+                    </div>
+                    <div>
+                      <span className="font-semibold">Bar:</span>{" "}
+                      {selectedBar?.latitude != null
+                        ? `${selectedBar.latitude.toFixed(4)}, ${selectedBar.longitude?.toFixed(4)}`
+                        : "N/A"}
+                    </div>
+                  </div>
+                )}
               </div>
 
               {selected.rejectionReason && (

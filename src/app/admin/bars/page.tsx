@@ -29,6 +29,7 @@ export default function BarsListPage() {
         b.neighborhood.toLowerCase().includes(query) ||
         b.address.toLowerCase().includes(query)
         || b.cep.toLowerCase().includes(query)
+        || (b.instagramHandle ?? "").toLowerCase().includes(query)
       );
     });
   }, [q]);
@@ -61,6 +62,7 @@ export default function BarsListPage() {
               <TH>CNPJ</TH>
               <TH>Cidade</TH>
               <TH>UF</TH>
+              <TH>Instagram</TH>
               <TH>Consumo mínimo</TH>
               <TH>Status</TH>
             </TR>
@@ -75,6 +77,7 @@ export default function BarsListPage() {
                 <TD className="whitespace-nowrap">{b.cnpj}</TD>
                 <TD>{b.city}</TD>
                 <TD>{b.state}</TD>
+                <TD className="font-mono text-xs text-cr-brown-500">{b.instagramHandle || "—"}</TD>
                 <TD className="whitespace-nowrap">{formatCurrency(b.minimumSpend)}</TD>
                 <TD>
                   {b.active ? <Badge variant="success">Ativo</Badge> : <Badge variant="neutral">Inativo</Badge>}

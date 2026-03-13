@@ -3,8 +3,8 @@
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
-import { clearUserToken } from "@/lib/auth";
-import { currentUser, achievements } from "@/lib/mockUserData";
+import { achievements } from "@/lib/mockUserData";
+import { useUser } from "@/lib/context/UserContext";
 
 function IconLogout(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -14,16 +14,36 @@ function IconLogout(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
+function formatPhone(phone: string | null) {
+  if (!phone) return "—";
+  const d = phone.replace(/\D/g, "");
+  if (d.length === 11) return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
+  if (d.length === 10) return `(${d.slice(0, 2)}) ${d.slice(2, 6)}-${d.slice(6)}`;
+  return phone;
+}
+
+function formatCpf(cpf: string | null) {
+  if (!cpf) return "—";
+  const d = cpf.replace(/\D/g, "");
+  if (d.length === 11) return `${d.slice(0, 3)}.${d.slice(3, 6)}.${d.slice(6, 9)}-${d.slice(9)}`;
+  return cpf;
+}
+
 export default function AppProfilePage() {
   const router = useRouter();
+  const { user, signOut } = useUser();
 
-  function logout() {
-    clearUserToken();
+  async function logout() {
+    await signOut();
     router.replace("/app/login");
   }
 
   const unlockedCount = achievements.filter((a) => a.unlocked).length;
-  const progressPct = Math.round((currentUser.pointsTotal / currentUser.nextLevelPoints) * 100);
+  const progressPct = user
+    ? Math.min(100, Math.round((user.pointsTotal / Math.max(1, user.nextLevelPoints)) * 100))
+    : 0;
+
+  const firstName = user?.name?.split(" ")[0] ?? "Usuário";
 
   return (
     <div className="space-y-4">
@@ -34,23 +54,23 @@ export default function AppProfilePage() {
         <div className="relative">
           <div
             className="mx-auto flex h-20 w-20 items-center justify-center rounded-full text-3xl font-bold text-cr-dark-800 shadow-lg ring-4 ring-cr-yellow-600/30"
-            style={{ background: "#FBC02D" }}
+            style={{ background: user?.avatarColor ?? "#FBC02D" }}
           >
-            {currentUser.name.charAt(0)}
+            {firstName.charAt(0).toUpperCase()}
           </div>
-          <div className="mt-3 text-2xl font-display text-cr-cream-100 tracking-wider">{currentUser.name.toUpperCase()}</div>
-          <div className="mt-0.5 text-sm text-cr-dark-400">{currentUser.email}</div>
+          <div className="mt-3 text-2xl font-display text-cr-cream-100 tracking-wider">{(user?.name ?? "").toUpperCase()}</div>
+          <div className="mt-0.5 text-sm text-cr-dark-400">{user?.email ?? ""}</div>
 
           <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-cr-dark-700 px-4 py-1.5">
             <span className="text-sm">⭐</span>
-            <span className="text-sm font-display text-cr-yellow-600 tracking-wider">{currentUser.level.toUpperCase()}</span>
+            <span className="text-sm font-display text-cr-yellow-600 tracking-wider">{(user?.level ?? "Raiz Bronze").toUpperCase()}</span>
           </div>
 
           {/* Level Progress */}
           <div className="mt-4">
             <div className="flex items-center justify-between mb-1 text-xs text-cr-dark-400">
-              <span className="uppercase tracking-wider">{currentUser.level}</span>
-              <span className="uppercase tracking-wider">{currentUser.nextLevel}</span>
+              <span className="uppercase tracking-wider">{user?.level ?? "Raiz Bronze"}</span>
+              <span className="uppercase tracking-wider">{user?.nextLevel ?? "Raiz Prata"}</span>
             </div>
             <div className="h-2 w-full overflow-hidden rounded-full bg-cr-dark-600">
               <div
@@ -59,7 +79,7 @@ export default function AppProfilePage() {
               />
             </div>
             <div className="mt-1 text-[11px] text-cr-dark-400">
-              {currentUser.pointsTotal.toLocaleString()} / {currentUser.nextLevelPoints.toLocaleString()} pontos
+              {(user?.pointsTotal ?? 0).toLocaleString()} / {(user?.nextLevelPoints ?? 2000).toLocaleString()} pontos
             </div>
           </div>
         </div>
@@ -68,20 +88,20 @@ export default function AppProfilePage() {
       {/* Stats Grid */}
       <div className="grid grid-cols-4 gap-2">
         <div className="rounded-2xl border border-cr-dark-200 bg-white p-3 text-center shadow-sm">
-          <div className="text-lg font-display text-cr-dark-800 tracking-wider">{currentUser.pointsTotal.toLocaleString()}</div>
+          <div className="text-lg font-display text-cr-dark-800 tracking-wider">{(user?.pointsTotal ?? 0).toLocaleString()}</div>
           <div className="text-[9px] text-cr-dark-400 mt-0.5 font-bold uppercase tracking-wider">Pontos</div>
         </div>
         <div className="rounded-2xl border border-cr-dark-200 bg-white p-3 text-center shadow-sm">
-          <div className="text-lg font-display text-cr-dark-800 tracking-wider">{currentUser.barsVisited}</div>
+          <div className="text-lg font-display text-cr-dark-800 tracking-wider">{user?.barsVisited ?? 0}</div>
           <div className="text-[9px] text-cr-dark-400 mt-0.5 font-bold uppercase tracking-wider">Bares</div>
         </div>
         <div className="rounded-2xl border border-cr-dark-200 bg-white p-3 text-center shadow-sm">
-          <div className="text-lg font-display text-cr-dark-800 tracking-wider">{currentUser.receiptsApproved}</div>
+          <div className="text-lg font-display text-cr-dark-800 tracking-wider">{user?.receiptsApproved ?? 0}</div>
           <div className="text-[9px] text-cr-dark-400 mt-0.5 font-bold uppercase tracking-wider">Notas</div>
         </div>
         <div className="rounded-2xl border border-cr-dark-200 bg-white p-3 text-center shadow-sm">
-          <div className="text-lg font-display text-cr-dark-800 tracking-wider">#7</div>
-          <div className="text-[9px] text-cr-dark-400 mt-0.5 font-bold uppercase tracking-wider">Ranking</div>
+          <div className="text-lg font-display text-cr-dark-800 tracking-wider">{user?.levelProgress ?? 0}%</div>
+          <div className="text-[9px] text-cr-dark-400 mt-0.5 font-bold uppercase tracking-wider">Nivel</div>
         </div>
       </div>
 
@@ -91,30 +111,36 @@ export default function AppProfilePage() {
         <div className="space-y-0">
           <div className="flex items-center justify-between py-2.5 border-b border-cr-dark-100">
             <div className="text-xs text-cr-dark-400 font-bold uppercase tracking-wider">Nome</div>
-            <div className="text-sm font-semibold text-cr-dark-800">{currentUser.name}</div>
+            <div className="text-sm font-semibold text-cr-dark-800">{user?.name ?? "—"}</div>
           </div>
           <div className="flex items-center justify-between py-2.5 border-b border-cr-dark-100">
             <div className="text-xs text-cr-dark-400 font-bold uppercase tracking-wider">E-mail</div>
-            <div className="text-sm font-semibold text-cr-dark-800">{currentUser.email}</div>
+            <div className="text-sm font-semibold text-cr-dark-800">{user?.email ?? "—"}</div>
           </div>
           <div className="flex items-center justify-between py-2.5 border-b border-cr-dark-100">
-            <div className="text-xs text-cr-dark-400 font-bold uppercase tracking-wider">Telefone</div>
-            <div className="text-sm font-semibold text-cr-dark-800">{currentUser.phone}</div>
+            <div className="text-xs text-cr-dark-400 font-bold uppercase tracking-wider">CPF</div>
+            <div className="text-sm font-semibold text-cr-dark-800">{formatCpf(user?.cpf ?? null)}</div>
+          </div>
+          <div className="flex items-center justify-between py-2.5 border-b border-cr-dark-100">
+            <div className="text-xs text-cr-dark-400 font-bold uppercase tracking-wider">WhatsApp</div>
+            <div className="text-sm font-semibold text-cr-dark-800">{formatPhone(user?.phone ?? null)}</div>
           </div>
           <div className="flex items-center justify-between py-2.5 border-b border-cr-dark-100">
             <div className="text-xs text-cr-dark-400 font-bold uppercase tracking-wider">Cidade</div>
-            <div className="text-sm font-semibold text-cr-dark-800">{currentUser.city}</div>
+            <div className="text-sm font-semibold text-cr-dark-800">{user?.city ?? "—"}</div>
           </div>
           <div className="flex items-center justify-between py-2.5">
             <div className="text-xs text-cr-dark-400 font-bold uppercase tracking-wider">Membro desde</div>
             <div className="text-sm font-semibold text-cr-dark-800">
-              {new Date(currentUser.memberSince).toLocaleDateString("pt-BR", { month: "long", year: "numeric" })}
+              {user?.createdAt
+                ? new Date(user.createdAt).toLocaleDateString("pt-BR", { month: "long", year: "numeric" })
+                : "—"}
             </div>
           </div>
         </div>
       </Card>
 
-      {/* Achievements */}
+      {/* Achievements (still mock) */}
       <div>
         <div className="mb-3 flex items-center justify-between">
           <div className="text-base font-display text-cr-dark-800 tracking-wider">CONQUISTAS</div>

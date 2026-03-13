@@ -6,8 +6,7 @@ import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { useRoutes } from "@/lib/context/RouteContext";
-
-const CURRENT_USER_ID = "app_usr_1";
+import { useUser } from "@/lib/context/UserContext";
 
 const difficultyConfig = {
   "fácil": { label: "Fácil", color: "text-cr-green-700 bg-cr-green-100", dots: 1 },
@@ -48,8 +47,10 @@ export default function RouteDetailsPage() {
   const params = useParams();
   const routeId = params.id as string;
   const { getRouteWithProgress, participateInRoute } = useRoutes();
+  const { user } = useUser();
 
-  const route = getRouteWithProgress(CURRENT_USER_ID, routeId);
+  const userId = user?.id ?? "app_usr_1";
+  const route = getRouteWithProgress(userId, routeId);
 
   if (!route) {
     return (
@@ -76,7 +77,7 @@ export default function RouteDetailsPage() {
 
   function handleJoin() {
     if (!route) return;
-    participateInRoute(CURRENT_USER_ID, route.id);
+    participateInRoute(userId, route.id);
   }
 
   return (

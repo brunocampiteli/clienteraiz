@@ -4,7 +4,8 @@ import * as React from "react";
 import { useSearchParams } from "next/navigation";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
-import { bars, currentUser, pointsHistory } from "@/lib/mockUserData";
+import { bars, pointsHistory } from "@/lib/mockUserData";
+import { useUser } from "@/lib/context/UserContext";
 
 function IconTrendUp(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -16,6 +17,7 @@ function IconTrendUp(props: React.SVGProps<SVGSVGElement>) {
 
 export default function AppPointsPage() {
   const searchParams = useSearchParams();
+  const { user } = useUser();
   const barId = searchParams.get("barId");
   const receiptSent = searchParams.get("receiptSent");
   const bar = React.useMemo(() => {
@@ -27,8 +29,10 @@ export default function AppPointsPage() {
   const pendingPoints = pointsHistory.filter((p) => p.status === "pending");
   const thisMonth = approvedPoints.reduce((sum, p) => sum + p.points, 0);
 
-  const progressPct = Math.min(100, Math.round((currentUser.pointsTotal / currentUser.nextLevelPoints) * 100));
-  const remaining = currentUser.nextLevelPoints - currentUser.pointsTotal;
+  const pointsTotal = user?.pointsTotal ?? 0;
+  const nextLevelPoints = user?.nextLevelPoints ?? 2000;
+  const progressPct = Math.min(100, Math.round((pointsTotal / Math.max(1, nextLevelPoints)) * 100));
+  const remaining = nextLevelPoints - pointsTotal;
 
   return (
     <div className="space-y-4">
@@ -66,22 +70,22 @@ export default function AppPointsPage() {
           <div>
             <div className="text-xs font-bold text-cr-dark-400 uppercase tracking-wider">Total de pontos</div>
             <div className="mt-1 text-5xl font-display text-cr-yellow-600 tracking-wider">
-              {currentUser.pointsTotal.toLocaleString()}
+              {pointsTotal.toLocaleString()}
             </div>
             <div className="mt-1 flex items-center gap-1.5 text-xs text-cr-dark-400">
               <IconTrendUp className="h-3.5 w-3.5 text-cr-green-500" />
-              +{currentUser.pointsThisMonth} este mes
+              +{user?.pointsThisMonth ?? 0} este mes
             </div>
           </div>
           <div className="rounded-xl bg-cr-dark-700 px-3 py-1.5 text-xs font-display text-cr-cream-100 tracking-wider uppercase">
-            {currentUser.level}
+            {user?.level ?? "Raiz Bronze"}
           </div>
         </div>
 
         {/* Level Progress */}
         <div className="mt-5 relative">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs text-cr-dark-400 uppercase tracking-wider">Progresso para {currentUser.nextLevel}</span>
+            <span className="text-xs text-cr-dark-400 uppercase tracking-wider">Progresso para {user?.nextLevel ?? "Raiz Prata"}</span>
             <span className="text-xs font-bold text-cr-yellow-600">{progressPct}%</span>
           </div>
           <div className="h-2.5 w-full overflow-hidden rounded-full bg-cr-dark-600">
@@ -99,11 +103,11 @@ export default function AppPointsPage() {
       {/* Quick Stats */}
       <div className="grid grid-cols-3 gap-3">
         <div className="rounded-2xl border border-cr-dark-200 bg-white p-3 text-center shadow-sm">
-          <div className="text-xl font-display text-cr-dark-800 tracking-wider">{currentUser.barsVisited}</div>
+          <div className="text-xl font-display text-cr-dark-800 tracking-wider">{user?.barsVisited ?? 0}</div>
           <div className="text-[10px] text-cr-dark-400 mt-0.5 uppercase tracking-wider font-bold">Bares</div>
         </div>
         <div className="rounded-2xl border border-cr-dark-200 bg-white p-3 text-center shadow-sm">
-          <div className="text-xl font-display text-cr-dark-800 tracking-wider">{currentUser.receiptsApproved}</div>
+          <div className="text-xl font-display text-cr-dark-800 tracking-wider">{user?.receiptsApproved ?? 0}</div>
           <div className="text-[10px] text-cr-dark-400 mt-0.5 uppercase tracking-wider font-bold">Notas</div>
         </div>
         <div className="rounded-2xl border border-cr-dark-200 bg-white p-3 text-center shadow-sm">

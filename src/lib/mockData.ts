@@ -10,6 +10,9 @@ export type Bar = {
   cep: string;
   minimumSpend: number;
   active: boolean;
+  instagramHandle?: string;
+  latitude?: number;
+  longitude?: number;
 };
 
 export type User = {
@@ -49,6 +52,9 @@ export const bars: Bar[] = [
     cep: "01000-000",
     minimumSpend: 50,
     active: true,
+    instagramHandle: "@bardocentro",
+    latitude: -23.5505,
+    longitude: -46.6333,
   },
   {
     id: "bar_2",
@@ -62,6 +68,9 @@ export const bars: Bar[] = [
     cep: "13000-000",
     minimumSpend: 40,
     active: true,
+    instagramHandle: "@vilapub",
+    latitude: -22.9099,
+    longitude: -47.0626,
   },
   {
     id: "bar_3",
@@ -75,6 +84,9 @@ export const bars: Bar[] = [
     cep: "22250-000",
     minimumSpend: 35,
     active: false,
+    instagramHandle: "@botecodapraca",
+    latitude: -22.9519,
+    longitude: -43.1858,
   },
   {
     id: "bar_4",
@@ -88,6 +100,9 @@ export const bars: Bar[] = [
     cep: "80000-000",
     minimumSpend: 60,
     active: true,
+    instagramHandle: "@choppecia",
+    latitude: -25.4411,
+    longitude: -49.2763,
   },
 ];
 
@@ -126,15 +141,19 @@ export type Prize = {
   id: string;
   name: string;
   period: string;
-  topRank?: 1 | 2 | 3;
+  topRank?: number;
+  description?: string;
+  emoji?: string;
 };
 
 export const prizes: Prize[] = [
-  { id: "prize_1", name: "Kit Cliente Raiz", period: "2026-01", topRank: 1 },
-  { id: "prize_2", name: "Vale Chopp", period: "2026-01", topRank: 2 },
-  { id: "prize_3", name: "Camiseta Oficial", period: "2026-01", topRank: 3 },
-  { id: "prize_4", name: "Boné Cliente Raiz", period: "2025-12", topRank: 1 },
-  { id: "prize_5", name: "Copo personalizado", period: "2025-12", topRank: 2 },
+  { id: "prize_1", name: "Kit Cliente Raiz Premium", period: "2026-01", topRank: 1, emoji: "🏆", description: "Kit completo com camiseta, copo, abridor e boné" },
+  { id: "prize_2", name: "Balde de Cerveja Eisenbahn", period: "2026-01", topRank: 2, emoji: "🍺", description: "Balde com 6 cervejas premium" },
+  { id: "prize_3", name: "Camiseta + Copo CR", period: "2026-01", topRank: 3, emoji: "🥉", description: "Camiseta oficial + copo personalizado" },
+  { id: "prize_6", name: "Vale Chopp R$50", period: "2026-01", topRank: 4, emoji: "🍻", description: "Vale consumo em qualquer bar parceiro" },
+  { id: "prize_7", name: "Abridor Cliente Raiz", period: "2026-01", topRank: 5, emoji: "🎁", description: "Abridor exclusivo personalizado" },
+  { id: "prize_4", name: "Boné Cliente Raiz", period: "2025-12", topRank: 1, emoji: "🏆", description: "Boné exclusivo edição limitada" },
+  { id: "prize_5", name: "Copo personalizado", period: "2025-12", topRank: 2, emoji: "🍺", description: "Copo 500ml com logo CR" },
 ];
 
 export type Challenge = {
@@ -298,6 +317,10 @@ export type CheckIn = {
   status: "pending" | "approved" | "rejected";
   points: number;
   rejectionReason?: string;
+  userLatitude?: number;
+  userLongitude?: number;
+  gpsMatchStatus?: "match" | "no_match" | "unavailable";
+  distanceMeters?: number;
 };
 
 export const checkins: CheckIn[] = [
@@ -311,6 +334,10 @@ export const checkins: CheckIn[] = [
     instagramHandle: "@anapaula_cr",
     status: "pending",
     points: 30,
+    userLatitude: -23.5508,
+    userLongitude: -46.6335,
+    gpsMatchStatus: "match",
+    distanceMeters: 45,
   },
   {
     id: "ck_2",
@@ -322,6 +349,10 @@ export const checkins: CheckIn[] = [
     instagramHandle: "@brunolima",
     status: "approved",
     points: 30,
+    userLatitude: -22.9101,
+    userLongitude: -47.0628,
+    gpsMatchStatus: "match",
+    distanceMeters: 30,
   },
   {
     id: "ck_3",
@@ -334,6 +365,10 @@ export const checkins: CheckIn[] = [
     status: "rejected",
     points: 30,
     rejectionReason: "Story não mostra marcação do bar",
+    userLatitude: -25.4500,
+    userLongitude: -49.2800,
+    gpsMatchStatus: "no_match",
+    distanceMeters: 1050,
   },
   {
     id: "ck_4",
@@ -344,6 +379,7 @@ export const checkins: CheckIn[] = [
     imageUrl: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&w=800&q=60",
     status: "approved",
     points: 30,
+    gpsMatchStatus: "unavailable",
   },
 ];
 

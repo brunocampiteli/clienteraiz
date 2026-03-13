@@ -13,21 +13,27 @@ export default function RankingPage() {
   const ranking = React.useMemo(() => getAdminRanking(period), [period]);
   const top3 = React.useMemo(() => ranking.slice(0, 3), [ranking]);
 
-  const prizesForPeriod = React.useMemo(() => prizes.filter((p) => p.period === period), [period]);
-  const prizeTop1 = React.useMemo(() => prizesForPeriod.find((p) => p.topRank === 1) ?? null, [prizesForPeriod]);
-  const prizeTop2 = React.useMemo(() => prizesForPeriod.find((p) => p.topRank === 2) ?? null, [prizesForPeriod]);
-  const prizeTop3 = React.useMemo(() => prizesForPeriod.find((p) => p.topRank === 3) ?? null, [prizesForPeriod]);
+  const prizesForPeriod = React.useMemo(
+    () => prizes.filter((p) => p.period === period && p.topRank).sort((a, b) => (a.topRank ?? 99) - (b.topRank ?? 99)),
+    [period],
+  );
+  const prizesMap = React.useMemo(
+    () => new Map(prizesForPeriod.map((p) => [p.topRank!, p])),
+    [prizesForPeriod],
+  );
 
   const positionBadgeVariant = (pos: number) => {
     if (pos === 1) return "gold" as const;
     if (pos === 2) return "neutral" as const;
-    return "burgundy" as const;
+    if (pos === 3) return "burgundy" as const;
+    return "success" as const;
   };
 
   const positionIcon = (pos: number) => {
     if (pos === 1) return "🥇";
     if (pos === 2) return "🥈";
-    return "🥉";
+    if (pos === 3) return "🥉";
+    return `#${pos}`;
   };
 
   return (
@@ -35,7 +41,9 @@ export default function RankingPage() {
       {/* Page header */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-cr-brown-900 font-display">Ranking</h1>
-        <p className="mt-1 text-sm text-cr-brown-500">Ranking do mês (reseta todo mês) &bull; premiados: Top 1, 2 e 3</p>
+        <p className="mt-1 text-sm text-cr-brown-500">
+          Ranking do mês (reseta todo mês) &bull; {prizesForPeriod.length} posição(ões) premiada(s)
+        </p>
       </div>
 
       {/* Period selector */}
@@ -43,7 +51,7 @@ export default function RankingPage() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h2 className="text-sm font-bold tracking-tight text-cr-brown-900">Período</h2>
-            <p className="mt-1 text-xs text-cr-brown-500">Selecione o mês/ano para ver os ganhadores daquele mês</p>
+            <p className="mt-1 text-xs text-cr-brown-500">Selecione o mês/ano para ver os ganhadores</p>
           </div>
           <div className="w-full sm:max-w-[220px]">
             <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Mês/Ano</label>
@@ -65,7 +73,7 @@ export default function RankingPage() {
       {/* Top 3 podium cards */}
       <div className="grid gap-4 lg:grid-cols-3">
         {top3.map((item) => {
-          const prize = item.position === 1 ? prizeTop1 : item.position === 2 ? prizeTop2 : prizeTop3;
+          const prize = prizesMap.get(item.position);
           return (
             <Card key={item.position} className={item.position === 1 ? "ring-2 ring-cr-gold-400/50" : ""}>
               <div className="flex items-start justify-between">
@@ -82,33 +90,67 @@ export default function RankingPage() {
               </div>
               <div className="mt-4 rounded-lg border border-cr-brown-100 bg-cr-brown-50 px-3 py-2">
                 <span className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Prêmio</span>
-                <div className="mt-1 text-sm font-semibold text-cr-brown-900">{prize?.name ?? "—"}</div>
+                <div className="mt-1 flex items-center gap-2">
+                  {prize?.emoji && <span className="text-lg">{prize.emoji}</span>}
+                  <div>
+                    <div className="text-sm font-semibold text-cr-brown-900">{prize?.name ?? "—"}</div>
+                    {prize?.description && (
+                      <div className="text-xs text-cr-brown-500">{prize.description}</div>
+                    )}
+                  </div>
+                </div>
               </div>
             </Card>
           );
         })}
       </div>
 
-      {/* Prizes of the month */}
+      {/* Prizes of the month - dynamic N positions */}
       <Card>
         <div className="mb-4">
           <h2 className="text-sm font-bold tracking-tight text-cr-brown-900">Prêmios do mês</h2>
-          <p className="mt-1 text-xs text-cr-brown-500">Vinculados ao Top 1/2/3 do período selecionado</p>
+          <p className="mt-1 text-xs text-cr-brown-500">
+            {prizesForPeriod.length} prêmio(s) configurado(s) para o período {period}
+          </p>
         </div>
-        <div className="grid gap-3 sm:grid-cols-3">
-          <div className="rounded-xl border border-cr-gold-200 bg-cr-gold-50 p-4">
-            <span className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Top 1</span>
-            <div className="mt-2 text-sm font-bold text-cr-brown-900">{prizeTop1?.name ?? "—"}</div>
+        {prizesForPeriod.length > 0 ? (
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {prizesForPeriod.map((prize) => (
+              <div
+                key={prize.id}
+                className={[
+                  "rounded-xl border p-4",
+                  prize.topRank === 1
+                    ? "border-cr-gold-200 bg-cr-gold-50"
+                    : prize.topRank === 2
+                    ? "border-cr-brown-200 bg-cr-brown-50"
+                    : prize.topRank === 3
+                    ? "border-cr-gold-100 bg-cr-cream-50"
+                    : "border-cr-brown-100 bg-white",
+                ].join(" ")}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <Badge variant={positionBadgeVariant(prize.topRank!)}>
+                    {prize.topRank}º lugar
+                  </Badge>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">{prize.emoji || "🏆"}</span>
+                  <div>
+                    <div className="text-sm font-bold text-cr-brown-900">{prize.name}</div>
+                    {prize.description && (
+                      <div className="text-xs text-cr-brown-500 mt-0.5">{prize.description}</div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="rounded-xl border border-cr-brown-100 bg-cr-brown-50 p-4">
-            <span className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Top 2</span>
-            <div className="mt-2 text-sm font-bold text-cr-brown-900">{prizeTop2?.name ?? "—"}</div>
+        ) : (
+          <div className="py-8 text-center text-sm text-cr-brown-400">
+            Nenhum prêmio configurado para este período
           </div>
-          <div className="rounded-xl border border-cr-brown-100 bg-cr-brown-50 p-4">
-            <span className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Top 3</span>
-            <div className="mt-2 text-sm font-bold text-cr-brown-900">{prizeTop3?.name ?? "—"}</div>
-          </div>
-        </div>
+        )}
       </Card>
 
       {/* Full ranking table */}
@@ -123,25 +165,39 @@ export default function RankingPage() {
               <TH>Posição</TH>
               <TH>Usuário</TH>
               <TH>Pontos</TH>
+              <TH>Prêmio</TH>
             </TR>
           </THead>
           <TBody>
-            {ranking.map((r) => (
-              <TR key={r.position}>
-                <TD className="whitespace-nowrap font-medium">
-                  {r.position <= 3 ? (
-                    <span className="inline-flex items-center gap-1.5">
-                      <span>{positionIcon(r.position)}</span>
-                      <span>#{r.position}</span>
-                    </span>
-                  ) : (
-                    <span className="text-cr-brown-500">#{r.position}</span>
-                  )}
-                </TD>
-                <TD>{r.userName}</TD>
-                <TD className="whitespace-nowrap font-semibold">{r.points}</TD>
-              </TR>
-            ))}
+            {ranking.map((r) => {
+              const prize = prizesMap.get(r.position);
+              return (
+                <TR key={r.position} className={prize ? "bg-cr-gold-50/50" : ""}>
+                  <TD className="whitespace-nowrap font-medium">
+                    {r.position <= 3 ? (
+                      <span className="inline-flex items-center gap-1.5">
+                        <span>{positionIcon(r.position)}</span>
+                        <span>#{r.position}</span>
+                      </span>
+                    ) : (
+                      <span className="text-cr-brown-500">#{r.position}</span>
+                    )}
+                  </TD>
+                  <TD>{r.userName}</TD>
+                  <TD className="whitespace-nowrap font-semibold">{r.points}</TD>
+                  <TD>
+                    {prize ? (
+                      <span className="inline-flex items-center gap-1.5 text-sm">
+                        <span>{prize.emoji || "🏆"}</span>
+                        <span className="font-medium text-cr-brown-800">{prize.name}</span>
+                      </span>
+                    ) : (
+                      <span className="text-sm text-cr-brown-300">—</span>
+                    )}
+                  </TD>
+                </TR>
+              );
+            })}
           </TBody>
         </Table>
       </Card>

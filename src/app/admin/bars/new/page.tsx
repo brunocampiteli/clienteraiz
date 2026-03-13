@@ -17,6 +17,9 @@ export default function NewBarPage() {
   const [address, setAddress] = React.useState("");
   const [cep, setCep] = React.useState("");
   const [minimumSpend, setMinimumSpend] = React.useState("");
+  const [instagramHandle, setInstagramHandle] = React.useState("");
+  const [latitude, setLatitude] = React.useState("");
+  const [longitude, setLongitude] = React.useState("");
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -40,6 +43,9 @@ export default function NewBarPage() {
       return;
     }
 
+    const latNum = latitude.trim() ? Number(latitude) : undefined;
+    const lngNum = longitude.trim() ? Number(longitude) : undefined;
+
     console.log("[new bar]", {
       name: fantasyName,
       legalName,
@@ -50,6 +56,9 @@ export default function NewBarPage() {
       address,
       cep,
       minimumSpend: minimumSpendNumber,
+      instagramHandle: instagramHandle.trim() || undefined,
+      latitude: latNum,
+      longitude: lngNum,
     });
     router.push("/admin/bars");
   }
@@ -114,6 +123,38 @@ export default function NewBarPage() {
               placeholder="Ex.: 50"
             />
           </div>
+
+          <div>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Instagram do bar</label>
+            <Input
+              value={instagramHandle}
+              onChange={(e) => setInstagramHandle(e.target.value)}
+              placeholder="@nomedobar"
+            />
+            <p className="mt-1 text-[11px] text-cr-brown-400">Usado para verificar check-ins via stories</p>
+          </div>
+
+          <div className="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Latitude</label>
+              <Input
+                value={latitude}
+                onChange={(e) => setLatitude(e.target.value)}
+                inputMode="decimal"
+                placeholder="Ex.: -23.5505"
+              />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Longitude</label>
+              <Input
+                value={longitude}
+                onChange={(e) => setLongitude(e.target.value)}
+                inputMode="decimal"
+                placeholder="Ex.: -46.6333"
+              />
+            </div>
+          </div>
+          <p className="-mt-3 text-[11px] text-cr-brown-400">Busque as coordenadas no Google Maps (clique com botão direito no local)</p>
 
           <div className="flex items-center gap-3 pt-2">
             <Button type="submit" variant="primary">Salvar</Button>

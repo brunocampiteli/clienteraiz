@@ -30,6 +30,9 @@ export type AppBar = {
   rating: number;
   category: string;
   prizes: { id: string; name: string; points: number }[];
+  instagramHandle?: string;
+  latitude?: number;
+  longitude?: number;
 };
 
 export type PointsHistoryItem = {
@@ -140,6 +143,9 @@ export const bars: AppBar[] = [
       { id: "p1", name: "Camiseta Cliente Raiz", points: 900 },
       { id: "p2", name: "Vale Chopp", points: 450 },
     ],
+    instagramHandle: "@bardocentro",
+    latitude: -23.5505,
+    longitude: -46.6333,
   },
   {
     id: "app_bar_2",
@@ -159,6 +165,9 @@ export const bars: AppBar[] = [
       { id: "p3", name: "Caneca personalizada", points: 700 },
       { id: "p4", name: "Combo petiscos", points: 500 },
     ],
+    instagramHandle: "@vilapub",
+    latitude: -22.9099,
+    longitude: -47.0626,
   },
   {
     id: "app_bar_3",
@@ -175,6 +184,9 @@ export const bars: AppBar[] = [
     rating: 4.8,
     category: "Choperia",
     prizes: [{ id: "p5", name: "Boné Cliente Raiz", points: 650 }],
+    instagramHandle: "@choppecia",
+    latitude: -25.4411,
+    longitude: -49.2763,
   },
   {
     id: "app_bar_4",
@@ -191,6 +203,9 @@ export const bars: AppBar[] = [
     rating: 4.3,
     category: "Boteco",
     prizes: [{ id: "p6", name: "Vale sobremesa", points: 300 }],
+    instagramHandle: "@botecodapraca",
+    latitude: -22.9519,
+    longitude: -43.1858,
   },
 ];
 
@@ -308,6 +323,10 @@ export type UserCheckIn = {
   status: "pending" | "approved" | "rejected";
   points: number;
   rejectionReason?: string;
+  userLatitude?: number;
+  userLongitude?: number;
+  gpsMatchStatus?: "match" | "no_match" | "unavailable";
+  distanceMeters?: number;
 };
 
 export const userCheckins: UserCheckIn[] = [
@@ -320,6 +339,10 @@ export const userCheckins: UserCheckIn[] = [
     instagramHandle: "@anapaula_cr",
     status: "pending",
     points: 30,
+    userLatitude: -23.5508,
+    userLongitude: -46.6335,
+    gpsMatchStatus: "match",
+    distanceMeters: 45,
   },
   {
     id: "uck_2",
@@ -330,6 +353,10 @@ export const userCheckins: UserCheckIn[] = [
     instagramHandle: "@anapaula_cr",
     status: "approved",
     points: 30,
+    userLatitude: -22.9101,
+    userLongitude: -47.0628,
+    gpsMatchStatus: "match",
+    distanceMeters: 30,
   },
   {
     id: "uck_3",
@@ -340,6 +367,7 @@ export const userCheckins: UserCheckIn[] = [
     instagramHandle: "@anapaula_cr",
     status: "approved",
     points: 30,
+    gpsMatchStatus: "unavailable",
   },
 ];
 
