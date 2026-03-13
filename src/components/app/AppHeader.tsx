@@ -47,7 +47,7 @@ export function AppHeader() {
     <header className="sticky top-0 z-30 bg-cr-dark-800 border-b border-cr-dark-700">
       <div className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-3">
-          <Image src="/brand/logo.png" alt="Cliente Raiz" width={32} height={32} className="h-8 w-8 object-contain" />
+          <Image src="/brand/logo.png" alt="Cliente Raiz" width={40} height={40} className="h-10 w-10 object-contain" />
           <div className="text-lg font-display text-cr-cream-100 tracking-wider">{title}</div>
         </div>
         <div className="relative">

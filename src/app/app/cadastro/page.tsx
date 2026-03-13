@@ -183,8 +183,8 @@ export default function CadastroPage() {
         <div className="w-full">
           {/* Logo */}
           <div className="mb-6 text-center">
-            <div className="mx-auto mb-4 flex h-18 w-18 items-center justify-center">
-              <Image src="/brand/logo.png" alt="Cliente Raiz" width={72} height={72} className="h-18 w-18 object-contain drop-shadow-lg" priority />
+            <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center">
+              <Image src="/brand/logo.png" alt="Cliente Raiz" width={96} height={96} className="h-24 w-24 object-contain drop-shadow-lg" priority />
             </div>
             <div className="text-3xl font-display text-cr-yellow-600 tracking-wider">CLIENTE RAIZ</div>
             <div className="mt-1 text-xs font-semibold text-cr-dark-400 tracking-widest uppercase">Crie sua conta</div>

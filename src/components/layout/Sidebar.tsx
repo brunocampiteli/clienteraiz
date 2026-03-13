@@ -101,7 +101,7 @@ export function Sidebar({ onNavigate }: Props) {
       {/* Brand */}
       <div className="flex h-[4.5rem] items-center px-5 border-b border-cr-brown-800/40">
         <div className="flex items-center gap-3">
-          <Image src="/brand/logo.png" alt="Cliente Raiz" width={40} height={40} className="h-10 w-10 object-contain" />
+          <Image src="/brand/logo.png" alt="Cliente Raiz" width={48} height={48} className="h-12 w-12 object-contain" />
           <div>
             <div className="text-sm font-bold text-cr-brown-50 font-display tracking-wider">CLIENTE RAIZ</div>
             <div className="text-[10px] font-semibold uppercase tracking-widest text-cr-gold-600">Painel Admin</div>
