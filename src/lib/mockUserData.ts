@@ -38,10 +38,13 @@ export type AppBar = {
 export type PointsHistoryItem = {
   id: string;
   date: string;
-  barId: string;
-  barName: string;
+  barId?: string;
+  barName?: string;
+  routeName?: string;
   points: number;
-  status: "approved" | "pending" | "rejected";
+  type: "route_bar" | "challenge" | "route_bonus";
+  description: string;
+  status: "approved" | "pending";
 };
 
 export type RankingItem = {
@@ -210,13 +213,16 @@ export const bars: AppBar[] = [
 ];
 
 export const pointsHistory: PointsHistoryItem[] = [
-  { id: "ph_1", date: "2026-02-22", barId: "app_bar_1", barName: "Bar do Centro", points: 120, status: "approved" },
-  { id: "ph_2", date: "2026-02-20", barId: "app_bar_2", barName: "Vila Pub", points: 80, status: "approved" },
-  { id: "ph_5", date: "2026-02-19", barId: "app_bar_3", barName: "Chopp & Cia", points: 60, status: "pending" },
-  { id: "ph_3", date: "2026-02-15", barId: "app_bar_1", barName: "Bar do Centro", points: 60, status: "approved" },
-  { id: "ph_4", date: "2026-02-10", barId: "app_bar_3", barName: "Chopp & Cia", points: 140, status: "approved" },
-  { id: "ph_6", date: "2026-01-28", barId: "app_bar_4", barName: "Boteco da Praça", points: 35, status: "approved" },
-  { id: "ph_7", date: "2026-01-20", barId: "app_bar_2", barName: "Vila Pub", points: 80, status: "rejected" },
+  { id: "ph_1", date: "2026-02-22", barId: "app_bar_1", barName: "Bar do Centro", routeName: "Rota do Centro", points: 50, type: "route_bar", description: "Visita ao bar na rota", status: "approved" },
+  { id: "ph_2", date: "2026-02-22", barId: "app_bar_1", barName: "Bar do Centro", routeName: "Rota do Centro", points: 30, type: "challenge", description: "Desafio: Caça ao Mascote", status: "approved" },
+  { id: "ph_3", date: "2026-02-20", barId: "app_bar_2", barName: "Vila Pub", routeName: "Tour Cervejeiro", points: 40, type: "route_bar", description: "Visita ao bar na rota", status: "approved" },
+  { id: "ph_4", date: "2026-02-20", routeName: "Tour Cervejeiro", points: 150, type: "route_bonus", description: "Bônus: rota completa!", status: "approved" },
+  { id: "ph_5", date: "2026-02-19", barId: "app_bar_3", barName: "Chopp & Cia", routeName: "Tour Cervejeiro", points: 60, type: "route_bar", description: "Visita ao bar na rota", status: "approved" },
+  { id: "ph_6", date: "2026-02-15", barId: "app_bar_4", barName: "Boteco da Praça", routeName: "Rota do Centro", points: 35, type: "route_bar", description: "Visita ao bar na rota", status: "approved" },
+  { id: "ph_7", date: "2026-02-10", barId: "app_bar_3", barName: "Chopp & Cia", routeName: "Tour Cervejeiro", points: 60, type: "route_bar", description: "Visita ao bar na rota", status: "approved" },
+  { id: "ph_8", date: "2026-02-10", barId: "app_bar_3", routeName: "Tour Cervejeiro", points: 25, type: "challenge", description: "Desafio: Selfie no Balcão", status: "approved" },
+  { id: "ph_9", date: "2026-01-28", barId: "app_bar_1", barName: "Bar do Centro", routeName: "Tour Cervejeiro", points: 50, type: "route_bar", description: "Visita ao bar na rota", status: "approved" },
+  { id: "ph_10", date: "2026-02-23", barId: "app_bar_2", barName: "Vila Pub", routeName: "Rota do Centro", points: 40, type: "route_bar", description: "Visita ao bar na rota", status: "pending" },
 ];
 
 const avatarColors = ["#2D6A4F", "#C8962E", "#5C3D2E", "#3B7A57", "#8B6514", "#7A5240"];
@@ -321,7 +327,6 @@ export type UserCheckIn = {
   imageUrl: string;
   instagramHandle?: string;
   status: "pending" | "approved" | "rejected";
-  points: number;
   rejectionReason?: string;
   userLatitude?: number;
   userLongitude?: number;
@@ -338,7 +343,6 @@ export const userCheckins: UserCheckIn[] = [
     imageUrl: "https://images.unsplash.com/photo-1546622891-02c72c1537b6?auto=format&fit=crop&w=800&q=60",
     instagramHandle: "@anapaula_cr",
     status: "pending",
-    points: 30,
     userLatitude: -23.5508,
     userLongitude: -46.6335,
     gpsMatchStatus: "match",
@@ -352,7 +356,6 @@ export const userCheckins: UserCheckIn[] = [
     imageUrl: "https://images.unsplash.com/photo-1574169208507-84376144848b?auto=format&fit=crop&w=800&q=60",
     instagramHandle: "@anapaula_cr",
     status: "approved",
-    points: 30,
     userLatitude: -22.9101,
     userLongitude: -47.0628,
     gpsMatchStatus: "match",
@@ -366,7 +369,6 @@ export const userCheckins: UserCheckIn[] = [
     imageUrl: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=800&q=60",
     instagramHandle: "@anapaula_cr",
     status: "approved",
-    points: 30,
     gpsMatchStatus: "unavailable",
   },
 ];

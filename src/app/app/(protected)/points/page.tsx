@@ -44,7 +44,7 @@ export default function AppPointsPage() {
             <div>
               <div className="text-sm font-bold text-cr-green-800">Nota enviada com sucesso!</div>
               <div className="mt-0.5 text-xs text-cr-green-700">
-                Sua nota esta em analise. Os pontos serao confirmados apos aprovacao.
+                Sua nota esta em analise. A visita sera confirmada apos aprovacao.
               </div>
             </div>
           </div>
@@ -62,6 +62,19 @@ export default function AppPointsPage() {
           </div>
         </div>
       )}
+
+      {/* Info Banner - Points come from routes */}
+      <div className="rounded-2xl border border-cr-dark-200 bg-cr-cream-50 p-4">
+        <div className="flex items-center gap-3">
+          <div className="text-2xl">🗺️</div>
+          <div>
+            <div className="text-sm font-bold text-cr-dark-800">Pontos vêm das rotas</div>
+            <div className="text-xs text-cr-dark-500 mt-0.5">
+              Visite bares nas rotas, complete desafios e ganhe bônus ao terminar rotas!
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Points Summary */}
       <div className="overflow-hidden rounded-2xl bg-cr-dark-800 p-5 text-white shadow-lg relative">
@@ -129,12 +142,15 @@ export default function AppPointsPage() {
             {pendingPoints.map((p) => (
               <div key={p.id} className="flex items-center gap-3 rounded-2xl border border-cr-yellow-300 bg-cr-yellow-50 px-4 py-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-full bg-cr-yellow-200 text-sm">
-                  📝
+                  {p.type === "challenge" ? "🎯" : p.type === "route_bonus" ? "🏆" : "📍"}
                 </div>
                 <div className="flex-1">
-                  <div className="text-sm font-semibold text-cr-dark-800">{p.barName}</div>
+                  <div className="text-sm font-semibold text-cr-dark-800">{p.description}</div>
                   <div className="text-[11px] text-cr-dark-400">
-                    {new Date(p.date).toLocaleDateString("pt-BR")}
+                    {p.routeName && <span className="font-medium">{p.routeName}</span>}
+                    {p.barName && p.routeName && " • "}
+                    {p.barName}
+                    {" • "}{new Date(p.date).toLocaleDateString("pt-BR")}
                   </div>
                 </div>
                 <div className="text-right">
@@ -154,17 +170,22 @@ export default function AppPointsPage() {
           {approvedPoints.map((p) => (
             <div key={p.id} className="flex items-center gap-3 px-4 py-3">
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-cr-green-100 text-sm">
-                🍺
+                {p.type === "challenge" ? "🎯" : p.type === "route_bonus" ? "🏆" : "📍"}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="text-sm font-semibold text-cr-dark-800 truncate">{p.barName}</div>
+                <div className="text-sm font-semibold text-cr-dark-800 truncate">{p.description}</div>
                 <div className="text-[11px] text-cr-dark-400">
-                  {new Date(p.date).toLocaleDateString("pt-BR")}
+                  {p.routeName && <span className="font-medium">{p.routeName}</span>}
+                  {p.barName && p.routeName && " • "}
+                  {p.barName}
+                  {" • "}{new Date(p.date).toLocaleDateString("pt-BR")}
                 </div>
               </div>
               <div className="text-right">
                 <div className="text-sm font-bold text-cr-green-700">+{p.points}</div>
-                <div className="text-[10px] text-cr-green-600 font-semibold">Aprovado</div>
+                <div className="text-[10px] text-cr-green-600 font-semibold">
+                  {p.type === "route_bar" ? "Visita" : p.type === "challenge" ? "Desafio" : "Bônus"}
+                </div>
               </div>
             </div>
           ))}

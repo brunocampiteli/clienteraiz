@@ -315,7 +315,6 @@ export type CheckIn = {
   imageUrl: string;
   instagramHandle?: string;
   status: "pending" | "approved" | "rejected";
-  points: number;
   rejectionReason?: string;
   userLatitude?: number;
   userLongitude?: number;
@@ -333,7 +332,6 @@ export const checkins: CheckIn[] = [
     imageUrl: "https://images.unsplash.com/photo-1546622891-02c72c1537b6?auto=format&fit=crop&w=800&q=60",
     instagramHandle: "@anapaula_cr",
     status: "pending",
-    points: 30,
     userLatitude: -23.5508,
     userLongitude: -46.6335,
     gpsMatchStatus: "match",
@@ -348,7 +346,6 @@ export const checkins: CheckIn[] = [
     imageUrl: "https://images.unsplash.com/photo-1574169208507-84376144848b?auto=format&fit=crop&w=800&q=60",
     instagramHandle: "@brunolima",
     status: "approved",
-    points: 30,
     userLatitude: -22.9101,
     userLongitude: -47.0628,
     gpsMatchStatus: "match",
@@ -363,7 +360,6 @@ export const checkins: CheckIn[] = [
     imageUrl: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=800&q=60",
     instagramHandle: "@carlasouza",
     status: "rejected",
-    points: 30,
     rejectionReason: "Story não mostra marcação do bar",
     userLatitude: -25.4500,
     userLongitude: -49.2800,
@@ -378,7 +374,6 @@ export const checkins: CheckIn[] = [
     barId: "bar_1",
     imageUrl: "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?auto=format&fit=crop&w=800&q=60",
     status: "approved",
-    points: 30,
     gpsMatchStatus: "unavailable",
   },
 ];

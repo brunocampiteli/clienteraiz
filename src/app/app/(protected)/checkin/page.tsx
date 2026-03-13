@@ -427,7 +427,7 @@ export default function UserCheckinsPage() {
 
             <div className="rounded-xl bg-cr-dark-50 border border-cr-dark-100 p-3 text-center">
               <div className="text-xs text-cr-dark-500">
-                Você ganhará <span className="font-bold text-cr-green-700">+30 pontos</span> quando aprovado
+                Check-in serve como <span className="font-bold text-cr-green-700">comprovação de visita</span> para suas rotas
               </div>
             </div>
 
@@ -472,7 +472,7 @@ export default function UserCheckinsPage() {
                 Check-in enviado com sucesso!
               </div>
               <div className="text-xs text-green-600">
-                Aguardando aprovação. Você ganhará 30 pontos bônus quando aprovado.
+                Aguardando aprovação do admin para validar sua visita.
               </div>
             </div>
           </div>
@@ -495,9 +495,9 @@ export default function UserCheckinsPage() {
         </Card>
         <Card className="!p-3 text-center">
           <div className="text-lg font-bold text-cr-brown-600 font-display">
-            {userCheckins.filter((c) => c.status === "approved").reduce((s, c) => s + c.points, 0)}
+            {userCheckins.filter((c) => c.status === "rejected").length}
           </div>
-          <div className="text-[11px] text-cr-brown-500">Pontos ganhos</div>
+          <div className="text-[11px] text-cr-brown-500">Rejeitados</div>
         </Card>
       </div>
 
@@ -576,10 +576,7 @@ export default function UserCheckinsPage() {
                   </div>
                   <div className="shrink-0 text-right">
                     {c.status === "approved" ? (
-                      <>
-                        <Badge variant="success">Aprovado</Badge>
-                        <div className="mt-1 text-xs font-bold text-cr-green-700">+{c.points} pts</div>
-                      </>
+                      <Badge variant="success">Aprovado</Badge>
                     ) : (
                       <Badge variant="danger">Rejeitado</Badge>
                     )}

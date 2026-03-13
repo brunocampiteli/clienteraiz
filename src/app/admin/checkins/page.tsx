@@ -208,7 +208,6 @@ export default function AdminCheckinsPage() {
               <TH>Bar</TH>
               <TH>Instagram</TH>
               <TH>GPS</TH>
-              <TH>Pontos</TH>
               <TH>Status</TH>
               <TH>Ações</TH>
             </TR>
@@ -227,7 +226,6 @@ export default function AdminCheckinsPage() {
                 <TD>
                   <GpsBadge status={c.gpsMatchStatus} distance={c.distanceMeters} />
                 </TD>
-                <TD className="whitespace-nowrap font-medium text-cr-green-700">+{c.points}</TD>
                 <TD>
                   <Badge variant={statusVariants[c.status]}>
                     {statusLabels[c.status]}
@@ -248,7 +246,7 @@ export default function AdminCheckinsPage() {
             ))}
             {filtered.length === 0 && (
               <TR>
-                <TD colSpan={8} className="py-10 text-center text-sm text-cr-brown-400">
+                <TD colSpan={7} className="py-10 text-center text-sm text-cr-brown-400">
                   Nenhum check-in encontrado
                 </TD>
               </TR>
@@ -299,10 +297,6 @@ export default function AdminCheckinsPage() {
                   <div className="mt-0.5 font-medium text-cr-brown-900">
                     {selected.instagramHandle || "Não informado"}
                   </div>
-                </div>
-                <div>
-                  <div className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Pontos</div>
-                  <div className="mt-0.5 font-bold text-cr-green-700">+{selected.points}</div>
                 </div>
                 <div>
                   <div className="text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Status</div>
@@ -388,7 +382,7 @@ export default function AdminCheckinsPage() {
                       className="flex-1"
                       onClick={() => approve(selected.id)}
                     >
-                      Aprovar (+{selected.points} pts)
+                      Aprovar
                     </Button>
                     <Button
                       variant="danger"
