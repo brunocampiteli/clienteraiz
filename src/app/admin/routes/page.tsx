@@ -78,6 +78,7 @@ export default function AdminRoutesPage() {
   const [active, setActive] = React.useState(true);
 
   // Per-bar settings
+  const [barPoints, setBarPoints] = React.useState<Record<string, string>>({});
   const [barMinSpend, setBarMinSpend] = React.useState<Record<string, string>>({});
   const [barChallenges, setBarChallenges] = React.useState<Record<string, BarChallenge | null>>({});
   const [expandedBar, setExpandedBar] = React.useState<string | null>(null);
@@ -101,6 +102,7 @@ export default function AdminRoutesPage() {
     setBonusPoints("200");
     setDifficulty("fácil");
     setActive(true);
+    setBarPoints({});
     setBarMinSpend({});
     setBarChallenges({});
     setExpandedBar(null);
@@ -116,10 +118,13 @@ export default function AdminRoutesPage() {
 
     const barMinimumSpend: Record<string, number> = {};
     const barChallengesInput: Record<string, BarChallenge | null> = {};
+    const barPointsInput: Record<string, number> = {};
 
     for (const barId of barIds) {
       barMinimumSpend[barId] = parseFloat(barMinSpend[barId] || "0") || 0;
       barChallengesInput[barId] = barChallenges[barId] ?? null;
+      const pts = parseInt(barPoints[barId] || "0") || 0;
+      if (pts > 0) barPointsInput[barId] = pts;
     }
 
     const input: RouteInput = {
@@ -134,7 +139,7 @@ export default function AdminRoutesPage() {
       bonusPoints: Number.isFinite(parsedPoints) ? Math.max(0, parsedPoints) : 0,
       active,
       barIds,
-      barPoints: {},
+      barPoints: barPointsInput,
       barMinimumSpend,
       barChallenges: barChallengesInput,
     };
@@ -210,9 +215,11 @@ export default function AdminRoutesPage() {
     setActive(route.active);
 
     // Load per-bar settings
+    const pts: Record<string, string> = {};
     const minSpend: Record<string, string> = {};
     const challenges: Record<string, BarChallenge | null> = {};
     for (const rb of routeBarEntries) {
+      pts[rb.barId] = rb.points > 0 ? String(rb.points) : "50";
       minSpend[rb.barId] = rb.minimumSpend > 0 ? String(rb.minimumSpend) : "";
       challenges[rb.barId] = rb.challengeTitle
         ? {
@@ -223,6 +230,7 @@ export default function AdminRoutesPage() {
           }
         : null;
     }
+    setBarPoints(pts);
     setBarMinSpend(minSpend);
     setBarChallenges(challenges);
     setExpandedBar(null);
@@ -239,7 +247,7 @@ export default function AdminRoutesPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-cr-brown-900 font-display">Rotas</h1>
-        <p className="mt-1 text-sm text-cr-brown-500">Cadastre rotas com desafios em cada bar e consumo mínimo</p>
+        <p className="mt-1 text-sm text-cr-brown-500">Cadastre rotas com pontos, desafios e consumo mínimo por bar</p>
       </div>
 
       {/* Form */}
@@ -295,8 +303,9 @@ export default function AdminRoutesPage() {
           </div>
 
           <div className="lg:col-span-1">
-            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Pontos bônus</label>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-cr-brown-500">Pontos da rota</label>
             <Input value={bonusPoints} onChange={(e) => setBonusPoints(e.target.value)} placeholder="200" inputMode="numeric" />
+            <p className="mt-0.5 text-[10px] text-cr-brown-400">Ganhos ao completar a rota</p>
           </div>
 
           <div className="lg:col-span-2 flex items-end">
@@ -376,6 +385,7 @@ export default function AdminRoutesPage() {
                           <span className="flex-1 text-sm font-medium text-cr-brown-800">{barName(id)}</span>
 
                           {/* Indicators */}
+                          <span className="text-[10px] font-bold text-cr-gold-700" title="Pontos por visita">{barPoints[id] || "50"}pts</span>
                           {challenge && <span className="text-xs" title="Tem desafio">{challenge.emoji}</span>}
                           {parseFloat(minSpend) > 0 && <span className="text-[10px] font-bold text-cr-green-700" title="Consumo mínimo">R${minSpend}</span>}
 
@@ -395,6 +405,22 @@ export default function AdminRoutesPage() {
                         {/* Expanded config */}
                         {isExpanded && (
                           <div className="border-t border-cr-brown-100 bg-white p-3 space-y-3">
+                            {/* Points per visit */}
+                            <div>
+                              <label className="mb-1 block text-[10px] font-bold uppercase tracking-wider text-cr-brown-500">
+                                📍 Pontos por visita
+                              </label>
+                              <input
+                                type="number"
+                                min="0"
+                                value={barPoints[id] || "50"}
+                                onChange={(e) => setBarPoints((prev) => ({ ...prev, [id]: e.target.value }))}
+                                placeholder="50"
+                                className="h-9 w-24 rounded-lg border border-cr-brown-200 bg-cr-brown-50 px-3 text-sm text-cr-brown-800 outline-none focus:ring-2 focus:ring-cr-gold-400/40"
+                              />
+                              <p className="mt-0.5 text-[10px] text-cr-brown-400">Pontos ganhos ao visitar este bar na rota</p>
+                            </div>
+
                             {/* Minimum Spend */}
                             <div>
                               <label className="mb-1 block text-[10px] font-bold uppercase tracking-wider text-cr-brown-500">
@@ -488,7 +514,7 @@ export default function AdminRoutesPage() {
                                     />
                                   </div>
                                   <div>
-                                    <label className="mb-0.5 block text-[10px] text-cr-brown-400">Pontos extras pelo desafio</label>
+                                    <label className="mb-0.5 block text-[10px] text-cr-brown-400">Pontos do desafio</label>
                                     <input
                                       type="number"
                                       min="0"
@@ -581,6 +607,7 @@ export default function AdminRoutesPage() {
                           <div className="flex items-center gap-1">
                             <span className="font-semibold text-cr-gold-700">{i + 1}.</span>
                             <span className="text-cr-brown-600">{barName(rb.barId)}</span>
+                            <span className="text-[10px] font-bold text-cr-gold-700">{rb.points}pts</span>
                             {rb.minimumSpend > 0 && (
                               <span className="text-[10px] font-bold text-cr-green-700">R${rb.minimumSpend}</span>
                             )}
@@ -608,7 +635,7 @@ export default function AdminRoutesPage() {
                   </TD>
                   <TD>
                     <div className="text-sm text-cr-brown-800">{r.prize || "—"}</div>
-                    {r.bonusPoints > 0 && <div className="mt-0.5 text-xs text-cr-gold-700">+{r.bonusPoints} pts</div>}
+                    {r.bonusPoints > 0 && <div className="mt-0.5 text-xs text-cr-gold-700">+{r.bonusPoints} pts ao completar</div>}
                   </TD>
                   <TD>
                     <div className="text-sm font-semibold text-cr-brown-900">{r.participantsCount}</div>
