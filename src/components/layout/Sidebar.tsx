@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -98,10 +99,7 @@ export function Sidebar({ onNavigate }: Props) {
       {/* Brand */}
       <div className="flex h-[4.5rem] items-center px-5 border-b border-cr-brown-800/40">
         <div className="flex items-center gap-3">
-          <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-cr-gold-500 to-cr-gold-700 text-sm font-bold text-white shadow-lg shadow-cr-gold-600/20">
-            CR
-            <div className="absolute inset-0 rounded-xl ring-1 ring-white/10" />
-          </div>
+          <Image src="/brand/logo.png" alt="Cliente Raiz" width={40} height={40} className="h-10 w-10 object-contain" />
           <div>
             <div className="text-sm font-bold text-cr-brown-50 font-display tracking-wider">CLIENTE RAIZ</div>
             <div className="text-[10px] font-semibold uppercase tracking-widest text-cr-gold-600">Painel Admin</div>

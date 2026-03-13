@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { supabase } from "@/lib/supabase";
@@ -76,14 +77,8 @@ export default function LoginPage() {
       <div className="relative mx-auto flex min-h-screen max-w-md items-center justify-center px-6">
         <div className="w-full">
           <div className="mb-8 text-center">
-            <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-cr-yellow-600 shadow-xl shadow-cr-yellow-600/20">
-              <svg viewBox="0 0 40 40" fill="none" className="h-10 w-10">
-                <path d="M13 8h14l2 4H11l2-4Z" fill="#212121" />
-                <path d="M11 12h18v16a5 5 0 01-5 5h-8a5 5 0 01-5-5V12Z" fill="#212121" />
-                <path d="M29 16h3a3 3 0 013 3v4a3 3 0 01-3 3h-3" stroke="#212121" strokeWidth="2" />
-                <path d="M17 12v-2c0-1 1.5-3 3-3s3 2 3 3" stroke="#212121" strokeWidth="1.5" strokeLinecap="round" />
-                <ellipse cx="20" cy="10" rx="3" ry="2" fill="#FFF9C4" opacity="0.7" />
-              </svg>
+            <div className="mx-auto mb-5 flex h-24 w-24 items-center justify-center">
+              <Image src="/brand/logo.png" alt="Cliente Raiz" width={96} height={96} className="h-24 w-24 object-contain drop-shadow-lg" priority />
             </div>
             <div className="text-4xl font-display text-cr-yellow-600 tracking-wider">CLIENTE RAIZ</div>
             <div className="mt-1 text-sm font-semibold text-cr-dark-400 tracking-widest uppercase">Area Administrativa</div>

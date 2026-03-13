@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { NotificationsPanel } from "@/components/app/NotificationsPanel";
 import { countUnread, readNotifications, subscribeNotifications } from "@/lib/notifications";
@@ -46,13 +47,7 @@ export function AppHeader() {
     <header className="sticky top-0 z-30 bg-cr-dark-800 border-b border-cr-dark-700">
       <div className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-cr-yellow-600">
-            <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4">
-              <path d="M8 4h8l1.5 3H6.5L8 4Z" fill="#212121" />
-              <path d="M6.5 7h11v10a3.5 3.5 0 01-3.5 3.5h-4A3.5 3.5 0 016.5 17V7Z" fill="#212121" />
-              <path d="M17.5 10h2a2 2 0 012 2v2a2 2 0 01-2 2h-2" stroke="#212121" strokeWidth="1.5" />
-            </svg>
-          </div>
+          <Image src="/brand/logo.png" alt="Cliente Raiz" width={32} height={32} className="h-8 w-8 object-contain" />
           <div className="text-lg font-display text-cr-cream-100 tracking-wider">{title}</div>
         </div>
         <div className="relative">
