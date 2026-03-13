@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
-import { achievements } from "@/lib/mockUserData";
+import { adminAchievements, userAchievementAssignments } from "@/lib/mockData";
 import { useUser } from "@/lib/context/UserContext";
 
 function IconLogout(props: React.SVGProps<SVGSVGElement>) {
@@ -37,6 +37,24 @@ export default function AppProfilePage() {
     await signOut();
     router.replace("/app/login");
   }
+
+  // Derive achievements from centralized data
+  // In mock, user "app_usr_1" maps to "usr_1" in assignments. In prod, will use real user.id
+  const mockUserId = "usr_1"; // TODO: map real user.id when Supabase is connected
+  const userAssignments = userAchievementAssignments.filter((ua) => ua.userId === mockUserId);
+  const userAssignedIds = new Set(userAssignments.map((ua) => ua.achievementId));
+
+  const achievements = adminAchievements.map((a) => {
+    const assignment = userAssignments.find((ua) => ua.achievementId === a.id);
+    return {
+      id: a.id,
+      title: a.title,
+      description: a.description,
+      emoji: a.emoji,
+      unlocked: userAssignedIds.has(a.id),
+      date: assignment?.unlockedAt,
+    };
+  });
 
   const unlockedCount = achievements.filter((a) => a.unlocked).length;
   const progressPct = user

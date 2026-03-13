@@ -432,3 +432,53 @@ export const receipts: Receipt[] = [
       "https://images.unsplash.com/photo-1554224154-22dec7ec8818?auto=format&fit=crop&w=1400&q=60",
   },
 ];
+
+// ═══════════════════════════════════════════════════
+// Achievements / Conquistas
+// ═══════════════════════════════════════════════════
+
+export type AdminAchievement = {
+  id: string;
+  title: string;
+  description: string;
+  emoji: string;
+  conditionType?: string; // bars_visited, points_total, receipts_approved, routes_completed, ranking_top
+  conditionValue?: number;
+  createdAt: string;
+};
+
+export type UserAchievementAssignment = {
+  id: string;
+  userId: string;
+  achievementId: string;
+  unlockedAt: string;
+};
+
+export const conditionTypeLabels: Record<string, string> = {
+  bars_visited: "Bares visitados",
+  points_total: "Pontos acumulados",
+  receipts_approved: "Notas aprovadas",
+  routes_completed: "Rotas completadas",
+  ranking_top: "Top ranking",
+};
+
+export const adminAchievements: AdminAchievement[] = [
+  { id: "ach_1", title: "Primeiro Bar", description: "Visitou seu primeiro bar", emoji: "🎉", conditionType: "bars_visited", conditionValue: 1, createdAt: "2025-10-01" },
+  { id: "ach_2", title: "Nota Aprovada", description: "Primeira nota fiscal aprovada", emoji: "✅", conditionType: "receipts_approved", conditionValue: 1, createdAt: "2025-10-01" },
+  { id: "ach_3", title: "5 Bares", description: "Visitou 5 bares diferentes", emoji: "⭐", conditionType: "bars_visited", conditionValue: 5, createdAt: "2025-10-01" },
+  { id: "ach_4", title: "Top 10", description: "Entrou no Top 10 do ranking", emoji: "🏆", conditionType: "ranking_top", conditionValue: 10, createdAt: "2025-10-01" },
+  { id: "ach_5", title: "Rota Completa", description: "Completou uma rota inteira", emoji: "🗺️", conditionType: "routes_completed", conditionValue: 1, createdAt: "2025-10-01" },
+  { id: "ach_6", title: "Raiz de Verdade", description: "Acumulou 5000 pontos", emoji: "👑", conditionType: "points_total", conditionValue: 5000, createdAt: "2025-10-01" },
+];
+
+export const userAchievementAssignments: UserAchievementAssignment[] = [
+  { id: "ua_1", userId: "usr_1", achievementId: "ach_1", unlockedAt: "2025-11-10" },
+  { id: "ua_2", userId: "usr_1", achievementId: "ach_2", unlockedAt: "2025-11-10" },
+  { id: "ua_3", userId: "usr_1", achievementId: "ach_3", unlockedAt: "2025-12-15" },
+  { id: "ua_4", userId: "usr_1", achievementId: "ach_5", unlockedAt: "2026-02-20" },
+  { id: "ua_5", userId: "usr_2", achievementId: "ach_1", unlockedAt: "2025-11-20" },
+  { id: "ua_6", userId: "usr_2", achievementId: "ach_2", unlockedAt: "2025-11-22" },
+  { id: "ua_7", userId: "usr_4", achievementId: "ach_1", unlockedAt: "2025-12-01" },
+  { id: "ua_8", userId: "usr_4", achievementId: "ach_3", unlockedAt: "2026-01-15" },
+  { id: "ua_9", userId: "usr_4", achievementId: "ach_4", unlockedAt: "2026-02-01" },
+];

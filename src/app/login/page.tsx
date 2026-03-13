@@ -78,7 +78,7 @@ export default function LoginPage() {
         <div className="w-full">
           <div className="mb-8 text-center">
             <div className="mx-auto mb-5 flex h-24 w-24 items-center justify-center">
-              <Image src="/brand/logo.png" alt="Cliente Raiz" width={96} height={96} className="h-24 w-24 object-contain drop-shadow-lg" priority />
+              <Image src="/brand/logo.png" alt="Cliente Raiz" width={126} height={126} className="h-24 w-24 object-contain drop-shadow-lg" priority />
             </div>
             <div className="text-4xl font-display text-cr-yellow-600 tracking-wider">CLIENTE RAIZ</div>
             <div className="mt-1 text-sm font-semibold text-cr-dark-400 tracking-widest uppercase">Area Administrativa</div>

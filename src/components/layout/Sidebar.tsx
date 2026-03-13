@@ -38,6 +38,7 @@ const items: Item[] = [
   { label: "Check-ins", href: "/admin/checkins", icon: "camera" },
   { label: "Rotas & Desafios", href: "/admin/routes", icon: "map" },
   { label: "Prêmios", href: "/admin/prizes", icon: "gift" },
+  { label: "Conquistas", href: "/admin/achievements", icon: "award" },
   { label: "Redes sociais", href: "/admin/social", icon: "share" },
   { label: "Notificações push", href: "/admin/notifications", icon: "bell" },
 ];
@@ -56,6 +57,7 @@ function IconSvg({ name, className }: { name: string; className?: string }) {
     case "map": return <svg {...props}><path d="M1 6v16l7-4 8 4 7-4V2l-7 4-8-4-7 4z" /><path d="M8 2v16M16 6v16" /></svg>;
     case "target": return <svg {...props}><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></svg>;
     case "gift": return <svg {...props}><path d="M20 12v10H4V12" /><path d="M2 7h20v5H2z" /><path d="M12 22V7" /><path d="M12 7H7.5a2.5 2.5 0 110-5C11 2 12 7 12 7z" /><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z" /></svg>;
+    case "award": return <svg {...props}><circle cx="12" cy="8" r="6" /><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" /></svg>;
     case "dollar": return <svg {...props}><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" /></svg>;
     case "share": return <svg {...props}><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98" /></svg>;
     case "bell": return <svg {...props}><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.73 21a2 2 0 01-3.46 0" /></svg>;
